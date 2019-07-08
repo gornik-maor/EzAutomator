@@ -120,7 +120,7 @@
 .choicebox-main
 {
 	-fx-border-color: transparent;
-	 -fx-mark-color: white;
+	 -fx-mark-color: black;
     -fx-background-color: derive(-fx-secondary, 10%);
     -fx-background-radius: 0px;
     -fx-border-radius: 0px;

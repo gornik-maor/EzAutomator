@@ -15,8 +15,9 @@ import java.util.Arrays;
 public class Action {
     private String action;
     private String comment;
-    private ArrayList coordinates;
-    private int delay;
+    private ArrayList<Integer> coordinates;
+    private ArrayList<String> sendKeys;
+    private String delay;
     
     /**
      * Default constructor
@@ -25,14 +26,16 @@ public class Action {
         this.action = "";
         this.comment = "";
         this.coordinates = new ArrayList(Arrays.asList());
-        this.delay = 0;
+        this.sendKeys  = new ArrayList(Arrays.asList());
+        this.delay = "0";
     }
     
-    public Action(String action, String comment, ArrayList coordinates, int delay) {
+    public Action(String action, String comment, ArrayList coordinates, ArrayList sendKeys, String delay) {
         this.action = action;
         this.comment = comment;
         this.coordinates = coordinates;
-        this.delay = delay;
+        this.sendKeys = sendKeys;
+        this.delay = delay + " m/s";
     }
 
     public String getAction() {
@@ -51,19 +54,27 @@ public class Action {
         this.comment = comment;
     }
 
-    public ArrayList getCoordinates() {
+    public ArrayList<Integer> getCoordinates() {
         return coordinates;
     }
 
-    public void setCoordinates(ArrayList coordinates) {
+    public void setCoordinates(ArrayList<Integer> coordinates) {
         this.coordinates = coordinates;
     }
 
-    public int getDelay() {
+    public ArrayList<String> getSendKeys() {
+        return sendKeys;
+    }
+
+    public void setSendKeys(ArrayList<String> sendKeys) {
+        this.sendKeys = sendKeys;
+    }
+
+    public String getDelay() {
         return delay;
     }
 
-    public void setDelay(int delay) {
+    public void setDelay(String delay) {
         this.delay = delay;
     }
 }

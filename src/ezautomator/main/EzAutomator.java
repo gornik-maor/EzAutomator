@@ -29,18 +29,22 @@ public class EzAutomator extends Application {
         stage.setResizable(false);
         stage.setTitle("EzAutomator");
         stage.show();
-        
-        /** Events for main window
-         * Click first, then drag.
+
+        /**
+         * Events for main window Click first, then drag.
          */
         root.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                // Calculating the difference between the cursor and the stage to later add it to allow the cursor to stay at the same
+                // position without teleporting it to a different place
                 diffX = stage.getX() - event.getScreenX();
                 diffY = stage.getY() - event.getScreenY();
 
 //                System.out.println("Event: " + event.getScreenX() + " " + event.getScreenY());
 //                System.out.println("Stage: " + stage.getX() + " " + stage.getY());
+//                System.out.println("DiffX: " + diffX);
+//                System.out.println("DiffY: " + diffY);
             }
         });
 
@@ -48,8 +52,17 @@ public class EzAutomator extends Application {
         root.setOnMouseDragged(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                // Helps my cursor stay at the same position when dragging the window instead of teleporting to the top most-left corner
                 stage.setX(event.getScreenX() + diffX);
                 stage.setY(event.getScreenY() + diffY);
+
+//                System.out.println("Dragged Event: " + event.getScreenX() + " " + event.getScreenY());
+//                System.out.println("Dragged Stage: " + stage.getX() + " " + stage.getY());
+//                System.out.println("New diffX: " + event.getScreenX() + diffX);
+//                System.out.println("New diffY: " + event.getScreenY() + diffY);
+                    
+//                  System.out.println("X: " + event.getScreenX() + " + " + diffX + " = " + (event.getScreenX() + diffX));
+//                  System.out.println("Y: " + event.getScreenY() + " + " + diffY + " = " + (event.getScreenY() + diffY));
             }
         });
     }

@@ -86,9 +86,9 @@
                                              </font>
                                           </Text>
                                           <JFXTextField fx:id="txtComment" layoutX="129.0" layoutY="65.0" prefHeight="37.0" prefWidth="315.0" promptText="Enter Comment" />
-                                          <Button layoutX="280.0" layoutY="118.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="155.0" text="Remove">
+                                          <Button layoutX="280.0" layoutY="118.0" mnemonicParsing="false" onMouseClicked="#removeAction" prefHeight="42.0" prefWidth="155.0" text="Remove">
                                              <graphic>
-                                                <ImageView fx:id="btnRemove" fitHeight="28.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                                <ImageView fx:id="btnRemove" fitHeight="28.0" fitWidth="30.0" onMouseClicked="#removeAction" pickOnBounds="true" preserveRatio="true">
                                                    <image>
                                                       <Image url="@../icons/remove.png" />
                                                    </image>
