@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="391.0" prefWidth="124.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Button mnemonicParsing="false" prefHeight="79.0" prefWidth="124.0" text="Import" />
+      <Button mnemonicParsing="false" prefHeight="79.0" prefWidth="124.0" text="Export" />
+      <Button mnemonicParsing="false" prefHeight="79.0" prefWidth="124.0" text="Rules" />
+      <Button mnemonicParsing="false" prefHeight="79.0" prefWidth="124.0" text="Version" />
+      <Button mnemonicParsing="false" prefHeight="79.0" prefWidth="124.0" text="Settings" />
+   </children>
+</VBox>
