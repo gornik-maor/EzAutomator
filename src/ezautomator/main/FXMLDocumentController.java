@@ -1,6 +1,8 @@
 package ezautomator.main;
 
 import com.jfoenix.controls.JFXTextField;
+import com.sun.javafx.beans.event.AbstractNotifyListener;
+import com.sun.javafx.property.adapter.PropertyDescriptor;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -10,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
+import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -34,6 +37,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Callback;
 import javafx.util.Duration;
 
 /**
@@ -53,6 +57,9 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private ImageView closeBtn;
+
+    @FXML
+    private ImageView minBtn;
 
     @FXML
     private RadioButton rdoRunF;
@@ -77,18 +84,34 @@ public class FXMLDocumentController implements Initializable {
     private static Stage mainStage;
 
     @FXML
-    void closeApp() {
+    void closeApp(MouseEvent event) {
         Platform.exit();
     }
 
     @FXML
-    void closeBtnChangeHover() {
+    void minApp(MouseEvent event) {
+        Stage subStage = (Stage) minBtn.getScene().getWindow();
+        subStage.setIconified(true);
+    }
+
+    @FXML
+    void closeBtnChangeHover(MouseEvent event) {
         closeBtn.setImage(new Image("/ezautomator/icons/close-hover.png"));
     }
 
     @FXML
-    void closeBtnChangeLeave() {
+    void closeBtnChangeLeave(MouseEvent event) {
         closeBtn.setImage(new Image("/ezautomator/icons/close.png"));
+    }
+
+    @FXML
+    void minBtnChangeHover(MouseEvent event) {
+        minBtn.setImage(new Image("/ezautomator/icons/minimize-hover.png"));
+    }
+
+    @FXML
+    void minBtnChangeLeave(MouseEvent event) {
+        minBtn.setImage(new Image("/ezautomator/icons/minimize.png"));
     }
 
     @FXML
@@ -105,9 +128,8 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     void onActionsBoxPressed(MouseEvent event) {
-        if (!actionTable.getItems().isEmpty()) {
-            //actionsBox.getItems().clear();
-            //populateActionsBox();
+        if (actionsBox.getItems().isEmpty()) {
+            populateActionsBox();
         }
     }
 
@@ -126,34 +148,52 @@ public class FXMLDocumentController implements Initializable {
         }
 
         // Change Listener for choicebox
-        actionsBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observableValue, Number prevIndex, Number newIndex) {
-                String selectedAction = actionsBox.getItems().get((int) newIndex);
+        if (!actionsBox.getItems().isEmpty()) {
+            actionsBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+                @Override
+                public void changed(ObservableValue<? extends Number> observableValue, Number prevIndex, Number newIndex) {
+                    String selectedAction = actionsBox.getItems().get((int) newIndex);
 
-                if (selectedAction.startsWith("Click")) {
-                    setPaneID(1);
-                } else {
-                    setPaneID(2);
-                }
+                    if (selectedAction.startsWith("Click")) {
+                        setPaneID(1);
+                    } else if(selectedAction.startsWith("Send")) {
+                        setPaneID(2);
+                    } else {
+                        // Confirmation window goes here
+                    }
 
-                try {
-                    Stage currStage = (Stage) root.getScene().getWindow();
-                    mainStage = currStage;
-                    StackPane subRoot = FXMLLoader.load(getClass().getResource("/ezautomator/subForms/SetupWindow.FXML"));
-                    Stage subStage = new Stage();
-                    subStage.initStyle(StageStyle.UNDECORATED);
-                    subStage.initModality(Modality.APPLICATION_MODAL);
-                    subStage.getIcons().add(new Image("/ezautomator/icons/icon.png"));
-                    subStage.setTitle("EzAutomator");
-                    subStage.setScene(new Scene(subRoot));
-                    currStage.setIconified(true);
-                    subStage.show();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    try {
+                        Stage currStage = (Stage) root.getScene().getWindow();
+                        mainStage = currStage;
+                        StackPane subRoot = FXMLLoader.load(getClass().getResource("/ezautomator/subForms/SetupWindow.FXML"));
+                        Stage subStage = new Stage();
+                        subStage.initStyle(StageStyle.UNDECORATED);
+                        subStage.initModality(Modality.APPLICATION_MODAL);
+                        subStage.getIcons().add(new Image("/ezautomator/icons/icon.png"));
+                        subStage.setTitle("EzAutomator");
+                        subStage.setScene(new Scene(subRoot));
+                        currStage.setIconified(true);
+                        subStage.show();
+                        if (!actionsBox.getItems().isEmpty()) {
+                            actionsBox.getItems().clear();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        });
+            });
+            
+            /**
+             * https://stackoverflow.com/questions/25509031/javafx-tableview-sort-policy
+             */
+//            actionTable.sortPolicyProperty().set(new Callback<TableView<Action>, Boolean>() {
+//                @Override
+//                public Boolean call(TableView<Action> param) {
+//                    System.out.println("implement desired sorting rules");
+//                    return false;
+//                }
+//            });
+        }
     }
 
     /**
@@ -170,27 +210,32 @@ public class FXMLDocumentController implements Initializable {
         // Setting up the action column
         TableColumn<Action, String> actionColumn = new TableColumn<>("Action");
         actionColumn.setMinWidth(80);
+        actionColumn.setSortable(false);
         actionColumn.setCellValueFactory(new PropertyValueFactory<>("action"));
 
         // Setting up the comment column
         TableColumn<Action, String> commentColumn = new TableColumn<>("Comment");
         commentColumn.setMinWidth(100);
+        commentColumn.setSortable(false);
         commentColumn.setCellValueFactory(new PropertyValueFactory<>("comment"));
 
         // Setting up the coordinates column
         TableColumn<Action, ArrayList> coordinatesColumn = new TableColumn<>("Coordinates");
         coordinatesColumn.setMinWidth(100);
+        coordinatesColumn.setSortable(false);
         coordinatesColumn.setCellValueFactory(new PropertyValueFactory<>("coordinates"));
 
         // Setting up the keys column
         TableColumn<Action, ArrayList> sendKeysColumn = new TableColumn<>("Keys");
         sendKeysColumn.setMinWidth(50);
+        sendKeysColumn.setSortable(false);
         sendKeysColumn.setCellValueFactory(new PropertyValueFactory<>("sendKeys"));
 
         // Setting up the delay column
         TableColumn<Action, String> delayColumn = new TableColumn<>("Delay");
         delayColumn.setCellValueFactory(new PropertyValueFactory<>("delay"));
         delayColumn.setMinWidth(50);
+        delayColumn.setSortable(false);
         actionTable.getColumns().addAll(actionColumn, commentColumn, coordinatesColumn, sendKeysColumn, delayColumn);
     }
 
@@ -206,7 +251,7 @@ public class FXMLDocumentController implements Initializable {
      * Populating the choice box
      */
     public void populateActionsBox() {
-        actionsBox.getItems().addAll("Click on specified coordinates", "Send Keys");
+        actionsBox.getItems().addAll("Click on specified coordinates", "Send Keys", "Confirmation");
     }
 
     /**

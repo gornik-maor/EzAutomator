@@ -57,7 +57,7 @@
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <TableView fx:id="actionTable" layoutX="7.0" layoutY="7.0" prefHeight="312.0" prefWidth="462.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="10.0">
+                                    <TableView fx:id="actionTable" layoutX="7.0" layoutY="7.0" prefHeight="312.0" prefWidth="462.0" styleClass="table-column" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="10.0">
                                       <columns>
                                         <TableColumn prefWidth="75.0" text="C1" />
                                         <TableColumn prefWidth="75.0" text="C2" />
@@ -156,6 +156,11 @@
                   </JFXTabPane>
                </top>
             </BorderPane>
+            <ImageView fx:id="minBtn" fitHeight="21.0" fitWidth="21.0" layoutX="402.0" layoutY="10.0" onMouseClicked="#minApp" onMouseEntered="#minBtnChangeHover" onMouseExited="#minBtnChangeLeave" pickOnBounds="true" preserveRatio="true" styleClass="image-view">
+               <image>
+                  <Image url="@../icons/minimize.png" />
+               </image>
+            </ImageView>
          </children>
       </Pane>
    </children>

@@ -25,6 +25,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  * FXML Controller class
@@ -69,7 +70,8 @@ public class SetupWindowController implements Initializable {
     private double diffX;
 
     private double diffY;
-    
+
+    private ArrayList<Timer> timers = new ArrayList<>();
 
     private static ArrayList<Integer> coordinates = new ArrayList<>();
     private static ArrayList<String> keys = new ArrayList<>();
@@ -78,6 +80,7 @@ public class SetupWindowController implements Initializable {
     void closeApp(MouseEvent event) {
         Stage stage = (Stage) root.getScene().getWindow();
         FXMLDocumentController.getPrimaryStage().setIconified(false);
+        CancelTimers();
         stage.close();
     }
 
@@ -95,8 +98,9 @@ public class SetupWindowController implements Initializable {
     void captureCoordinates(MouseEvent event) {
         // Would you like to capture specific coordinates? (Y/N)
         FXMLDocumentController.getPrimaryStage().setIconified(true);
-        
+
         Timer ptTimer = new Timer();
+        timers.add(ptTimer);
         ptTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -118,7 +122,6 @@ public class SetupWindowController implements Initializable {
         } else {
             paneClick.setDisable(true);
         }
-        
 
         /**
          * Form movement implementation
@@ -143,6 +146,25 @@ public class SetupWindowController implements Initializable {
                 stage.setX(event.getScreenX() + diffX);
                 stage.setY(event.getScreenY() + diffY);
             }
+        });
+        
+        // Ensuring the timer has stopped even though the user has closed the program through a different way
+        // other than simply clickling the exit button
+        FXMLDocumentController.getPrimaryStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                CancelTimers();
+            }
+        });
+    }
+
+    /**
+     *
+     * @param timers
+     */
+    private void CancelTimers() {
+        timers.forEach((Timer timer) -> {
+            timer.cancel();
         });
     }
 

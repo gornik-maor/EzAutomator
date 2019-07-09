@@ -18,6 +18,10 @@ public class EzAutomator extends Application {
 
     public static Boolean isSplashLoaded = false;
     public static Boolean isMaximized = false;
+
+    private static void showErrorDialog(Throwable e) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     double diffX;
     double diffY;
 
@@ -31,6 +35,9 @@ public class EzAutomator extends Application {
         stage.setResizable(false);
         stage.setTitle("EzAutomator");
         stage.show();
+
+        // Catching all excpetions thrown in JavaFX's Application Thread and filtering
+        Thread.setDefaultUncaughtExceptionHandler(EzAutomator::showError);
 
         /**
          * Events for main window Click first, then drag.
@@ -61,6 +68,14 @@ public class EzAutomator extends Application {
      */
     public static void main(String[] args) {
         launch(args);
+    }
+
+    private static void showError(Thread t, Throwable e) {
+        if (e instanceof ArrayIndexOutOfBoundsException) {
+            System.err.println("***Ignorable exception was thrown*** (" + e.toString() + ")");
+        } else {
+            e.printStackTrace();
+        }
     }
 
 }
