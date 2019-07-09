@@ -1,7 +1,6 @@
 package ezautomator.main;
 
 import com.jfoenix.controls.JFXTextField;
-import ezautomator.subForms.SetupWindowController;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -10,6 +9,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -18,8 +18,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -33,6 +31,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
@@ -73,10 +72,13 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Button btnRun;
 
+    private static int ID;
+
+    private static Stage mainStage;
+
     @FXML
     void closeApp() {
-        Stage tempStage = (Stage) closeBtn.getScene().getWindow();
-        tempStage.close();
+        Platform.exit();
     }
 
     @FXML
@@ -101,6 +103,14 @@ public class FXMLDocumentController implements Initializable {
         }
     }
 
+    @FXML
+    void onActionsBoxPressed(MouseEvent event) {
+        if (!actionTable.getItems().isEmpty()) {
+            //actionsBox.getItems().clear();
+            //populateActionsBox();
+        }
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         if (!EzAutomator.isSplashLoaded) {
@@ -115,24 +125,29 @@ public class FXMLDocumentController implements Initializable {
             addAction(new Action("Keys", "Notepad", test2, test3, "100"));
         }
 
+        // Change Listener for choicebox
         actionsBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observableValue, Number prevIndex, Number newIndex) {
                 String selectedAction = actionsBox.getItems().get((int) newIndex);
 
-                SetupWindowController subController = new SetupWindowController();
-
                 if (selectedAction.startsWith("Click")) {
-                    //subController.disablePane(1);
+                    setPaneID(1);
                 } else {
-                    //subController.disablePane(2);
+                    setPaneID(2);
                 }
 
                 try {
+                    Stage currStage = (Stage) root.getScene().getWindow();
+                    mainStage = currStage;
                     StackPane subRoot = FXMLLoader.load(getClass().getResource("/ezautomator/subForms/SetupWindow.FXML"));
                     Stage subStage = new Stage();
                     subStage.initStyle(StageStyle.UNDECORATED);
+                    subStage.initModality(Modality.APPLICATION_MODAL);
+                    subStage.getIcons().add(new Image("/ezautomator/icons/icon.png"));
+                    subStage.setTitle("EzAutomator");
                     subStage.setScene(new Scene(subRoot));
+                    currStage.setIconified(true);
                     subStage.show();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -192,6 +207,33 @@ public class FXMLDocumentController implements Initializable {
      */
     public void populateActionsBox() {
         actionsBox.getItems().addAll("Click on specified coordinates", "Send Keys");
+    }
+
+    /**
+     * Tracking user's action choice
+     *
+     * @return
+     */
+    public static int getPaneID() {
+        return ID;
+    }
+
+    /**
+     * Tracking user's action choice
+     *
+     * @param ID
+     */
+    public static void setPaneID(int ID) {
+        FXMLDocumentController.ID = ID;
+    }
+
+    /**
+     * Returning main stage
+     *
+     * @return
+     */
+    public static Stage getPrimaryStage() {
+        return mainStage;
     }
 
     /**

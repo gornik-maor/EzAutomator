@@ -65,7 +65,7 @@
                                     </TableView>
                                     <Pane layoutX="14.0" layoutY="326.0" prefHeight="174.0" prefWidth="453.0" styleClass="custom-alert">
                                        <children>
-                                          <ChoiceBox fx:id="actionsBox" layoutX="109.0" layoutY="13.0" prefHeight="35.0" prefWidth="335.0" styleClass="choicebox-main" />
+                                          <ChoiceBox fx:id="actionsBox" layoutX="109.0" layoutY="13.0" onMousePressed="#onActionsBoxPressed" prefHeight="35.0" prefWidth="335.0" styleClass="choicebox-main" />
                                           <Text fill="WHITE" layoutX="14.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select Action">
                                              <font>
                                                 <Font size="15.0" />

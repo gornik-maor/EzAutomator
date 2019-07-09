@@ -5,6 +5,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -25,6 +26,7 @@ public class EzAutomator extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("/ezautomator/main/FXMLDocument.fxml"));
         Scene scene = new Scene(root);
         stage.setScene(scene);
+        stage.getIcons().add(new Image("/ezautomator/icons/icon.png"));
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setResizable(false);
         stage.setTitle("EzAutomator");
@@ -40,11 +42,6 @@ public class EzAutomator extends Application {
                 // position without teleporting it to a different place
                 diffX = stage.getX() - event.getScreenX();
                 diffY = stage.getY() - event.getScreenY();
-
-//                System.out.println("Event: " + event.getScreenX() + " " + event.getScreenY());
-//                System.out.println("Stage: " + stage.getX() + " " + stage.getY());
-//                System.out.println("DiffX: " + diffX);
-//                System.out.println("DiffY: " + diffY);
             }
         });
 
@@ -55,14 +52,6 @@ public class EzAutomator extends Application {
                 // Helps my cursor stay at the same position when dragging the window instead of teleporting to the top most-left corner
                 stage.setX(event.getScreenX() + diffX);
                 stage.setY(event.getScreenY() + diffY);
-
-//                System.out.println("Dragged Event: " + event.getScreenX() + " " + event.getScreenY());
-//                System.out.println("Dragged Stage: " + stage.getX() + " " + stage.getY());
-//                System.out.println("New diffX: " + event.getScreenX() + diffX);
-//                System.out.println("New diffY: " + event.getScreenY() + diffY);
-                    
-//                  System.out.println("X: " + event.getScreenX() + " + " + diffX + " = " + (event.getScreenX() + diffX));
-//                  System.out.println("Y: " + event.getScreenY() + " + " + diffY + " = " + (event.getScreenY() + diffY));
             }
         });
     }

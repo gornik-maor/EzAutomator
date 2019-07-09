@@ -6,8 +6,15 @@
 package ezautomator.subForms;
 
 import com.jfoenix.controls.JFXTextField;
+import ezautomator.main.FXMLDocumentController;
+import java.awt.MouseInfo;
+import java.awt.PointerInfo;
+import java.awt.Point;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -39,7 +46,7 @@ public class SetupWindowController implements Initializable {
     private JFXTextField xValueTxt;
 
     @FXML
-    private Button genBtn;
+    private Button capKeysBtn;
 
     @FXML
     private JFXTextField fKeyTxt;
@@ -62,10 +69,15 @@ public class SetupWindowController implements Initializable {
     private double diffX;
 
     private double diffY;
+    
+
+    private static ArrayList<Integer> coordinates = new ArrayList<>();
+    private static ArrayList<String> keys = new ArrayList<>();
 
     @FXML
     void closeApp(MouseEvent event) {
         Stage stage = (Stage) root.getScene().getWindow();
+        FXMLDocumentController.getPrimaryStage().setIconified(false);
         stage.close();
     }
 
@@ -79,13 +91,35 @@ public class SetupWindowController implements Initializable {
         closeBtn.setImage(new Image("/ezautomator/icons/close.png"));
     }
 
+    @FXML
+    void captureCoordinates(MouseEvent event) {
+        // Would you like to capture specific coordinates? (Y/N)
+        FXMLDocumentController.getPrimaryStage().setIconified(true);
+        
+        Timer ptTimer = new Timer();
+        ptTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                PointerInfo mouseCursor = MouseInfo.getPointerInfo();
+                Point screenPoint = mouseCursor.getLocation();
+                xValueTxt.setText(String.valueOf(screenPoint.getX()));
+                yValueTxt.setText(String.valueOf(screenPoint.getY()));
+            }
+        }, 0, 250);
+    }
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-//        paneKeys.setDisable(true);
+        if (FXMLDocumentController.getPaneID() == 1) {
+            paneKeys.setDisable(true);
+        } else {
+            paneClick.setDisable(true);
+        }
         
+
         /**
          * Form movement implementation
          */
@@ -110,20 +144,21 @@ public class SetupWindowController implements Initializable {
                 stage.setY(event.getScreenY() + diffY);
             }
         });
-
     }
 
-    public void disablePane(int ID) {
-        switch (ID) {
-            case 1:
-                paneKeys.setDisable(true);
-                break;
-            case 2:
-                paneClick.setDisable(true);
-                break;
-            default:
-                System.out.println("Invalid ID");
-                break;
+    public static ArrayList<Integer> getClickPoint() {
+        if (coordinates.size() > 0) {
+            return coordinates;
+        } else {
+            return null;
+        }
+    }
+
+    public static ArrayList<String> getKeys() {
+        if (keys.size() > 0) {
+            return keys;
+        } else {
+            return null;
         }
     }
 }
