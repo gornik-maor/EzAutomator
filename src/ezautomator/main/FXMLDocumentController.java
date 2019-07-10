@@ -3,6 +3,7 @@ package ezautomator.main;
 import com.jfoenix.controls.JFXTextField;
 import com.sun.javafx.beans.event.AbstractNotifyListener;
 import com.sun.javafx.property.adapter.PropertyDescriptor;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -39,6 +40,10 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import javafx.util.Duration;
+import org.jnativehook.GlobalScreen;
+import org.jnativehook.NativeHookException;
+import org.jnativehook.keyboard.NativeKeyEvent;
+import org.jnativehook.keyboard.NativeKeyListener;
 
 /**
  *
@@ -156,7 +161,7 @@ public class FXMLDocumentController implements Initializable {
 
                     if (selectedAction.startsWith("Click")) {
                         setPaneID(1);
-                    } else if(selectedAction.startsWith("Send")) {
+                    } else if (selectedAction.startsWith("Send")) {
                         setPaneID(2);
                     } else {
                         // Confirmation window goes here
@@ -182,7 +187,35 @@ public class FXMLDocumentController implements Initializable {
                     }
                 }
             });
-            
+
+            NativeKeyListener keyListener = new NativeKeyListener() {
+
+                @Override
+                public void nativeKeyPressed(NativeKeyEvent nke) {
+                    System.out.println("Pressed: " + nke.getRawCode());
+                    if(nke.getRawCode() == KeyEvent.VK_TAB) {
+                        System.out.println("Tab key was pressed");
+                    }
+                }
+
+                @Override
+                public void nativeKeyReleased(NativeKeyEvent nke) {
+                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+
+                @Override
+                public void nativeKeyTyped(NativeKeyEvent nke) {
+
+                }
+            };
+
+            try {
+                GlobalScreen.registerNativeHook();
+                GlobalScreen.addNativeKeyListener(keyListener);
+            } catch (NativeHookException ex) {
+                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
             /**
              * https://stackoverflow.com/questions/25509031/javafx-tableview-sort-policy
              */
