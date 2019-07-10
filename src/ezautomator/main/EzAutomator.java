@@ -19,9 +19,6 @@ public class EzAutomator extends Application {
     public static Boolean isSplashLoaded = false;
     public static Boolean isMaximized = false;
 
-    private static void showErrorDialog(Throwable e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     double diffX;
     double diffY;
 

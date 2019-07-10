@@ -188,33 +188,33 @@ public class FXMLDocumentController implements Initializable {
                 }
             });
 
-            NativeKeyListener keyListener = new NativeKeyListener() {
-
-                @Override
-                public void nativeKeyPressed(NativeKeyEvent nke) {
-                    System.out.println("Pressed: " + nke.getRawCode());
-                    if(nke.getRawCode() == KeyEvent.VK_TAB) {
-                        System.out.println("Tab key was pressed");
-                    }
-                }
-
-                @Override
-                public void nativeKeyReleased(NativeKeyEvent nke) {
-                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                }
-
-                @Override
-                public void nativeKeyTyped(NativeKeyEvent nke) {
-
-                }
-            };
-
-            try {
-                GlobalScreen.registerNativeHook();
-                GlobalScreen.addNativeKeyListener(keyListener);
-            } catch (NativeHookException ex) {
-                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+//            NativeKeyListener keyListener = new NativeKeyListener() {
+//
+//                @Override
+//                public void nativeKeyPressed(NativeKeyEvent nke) {
+//                    System.out.println("Pressed: " + nke.getRawCode());
+//                    if(nke.getRawCode() == KeyEvent.VK_TAB) {
+//                        System.out.println("Tab key was pressed");
+//                    }
+//                }
+//
+//                @Override
+//                public void nativeKeyReleased(NativeKeyEvent nke) {
+//                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//                }
+//
+//                @Override
+//                public void nativeKeyTyped(NativeKeyEvent nke) {
+//
+//                }
+//            };
+//
+//            try {
+//                GlobalScreen.registerNativeHook();
+//                GlobalScreen.addNativeKeyListener(keyListener);
+//            } catch (NativeHookException ex) {
+//                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+//            }
 
             /**
              * https://stackoverflow.com/questions/25509031/javafx-tableview-sort-policy

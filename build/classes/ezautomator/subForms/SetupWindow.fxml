@@ -73,7 +73,7 @@
                   <JFXTextField fx:id="fKeyTxt" layoutX="81.0" layoutY="26.0" prefHeight="37.0" prefWidth="147.0" promptText="Enter" />
                </children>
             </Pane>
-            <Button fx:id="btnProceed" layoutX="12.0" layoutY="242.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="462.0" styleClass="common-label" text="Proceed" />
+            <Button fx:id="btnProceed" layoutX="12.0" layoutY="242.0" mnemonicParsing="false" onMouseClicked="#proceedOnClick" prefHeight="39.0" prefWidth="462.0" styleClass="common-label" text="Proceed" />
          </children>
       </Pane>
    </children>

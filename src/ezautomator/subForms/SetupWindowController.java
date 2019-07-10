@@ -10,11 +10,16 @@ import ezautomator.main.FXMLDocumentController;
 import java.awt.MouseInfo;
 import java.awt.PointerInfo;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -26,6 +31,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import org.jnativehook.GlobalScreen;
+import org.jnativehook.NativeHookException;
+import org.jnativehook.keyboard.NativeKeyEvent;
+import org.jnativehook.keyboard.NativeKeyListener;
+import static sun.management.snmp.jvminstr.JvmThreadInstanceEntryImpl.ThreadStateMap.Byte0.runnable;
 
 /**
  * FXML Controller class
@@ -81,6 +91,11 @@ public class SetupWindowController implements Initializable {
         Stage stage = (Stage) root.getScene().getWindow();
         FXMLDocumentController.getPrimaryStage().setIconified(false);
         CancelTimers();
+        try {
+            GlobalScreen.unregisterNativeHook();
+        } catch (NativeHookException ex) {
+            Logger.getLogger(SetupWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         stage.close();
     }
 
@@ -96,20 +111,30 @@ public class SetupWindowController implements Initializable {
 
     @FXML
     void captureCoordinates(MouseEvent event) {
-        // Would you like to capture specific coordinates? (Y/N)
-        FXMLDocumentController.getPrimaryStage().setIconified(true);
+        System.out.println("fired man!");
+        startCapCoordinates();
+    }
 
-        Timer ptTimer = new Timer();
-        timers.add(ptTimer);
-        ptTimer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                PointerInfo mouseCursor = MouseInfo.getPointerInfo();
-                Point screenPoint = mouseCursor.getLocation();
-                xValueTxt.setText(String.valueOf(screenPoint.getX()));
-                yValueTxt.setText(String.valueOf(screenPoint.getY()));
-            }
-        }, 0, 250);
+    @FXML
+    void proceedOnClick(MouseEvent event) {
+        // Checking which pane is enabled
+        switch (FXMLDocumentController.getPaneID()) {
+            case 1:
+                System.out.println("PANE 1 is SELECTED");
+                // Working with the first pane
+                // add more
+                break;
+            case 2:
+                System.out.println("PANE 2 is SELECTED");
+                // Working with the second pane
+                // add more
+                break;
+            case 3:
+                System.out.println("PANE 2 is SELECTED");
+                // Working with the third pane
+                // add more
+                break;
+        }
     }
 
     /**
@@ -147,15 +172,40 @@ public class SetupWindowController implements Initializable {
                 stage.setY(event.getScreenY() + diffY);
             }
         });
-        
+
         // Ensuring the timer has stopped even though the user has closed the program through a different way
         // other than simply clickling the exit button
         FXMLDocumentController.getPrimaryStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
-                CancelTimers();
+                try {
+                    CancelTimers();
+                    GlobalScreen.unregisterNativeHook();
+                } catch (NativeHookException ex) {
+                    Logger.getLogger(SetupWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
+
+        enableListener();
+
+    }
+
+    public void startCapCoordinates() {
+        // Would you like to capture specific coordinates? (Y/N)
+        FXMLDocumentController.getPrimaryStage().setIconified(true);
+
+        Timer ptTimer = new Timer();
+        timers.add(ptTimer);
+        ptTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                PointerInfo mouseCursor = MouseInfo.getPointerInfo();
+                Point screenPoint = mouseCursor.getLocation();
+                xValueTxt.setText(String.valueOf(screenPoint.getX()));
+                yValueTxt.setText(String.valueOf(screenPoint.getY()));
+            }
+        }, 0, 250);
     }
 
     /**
@@ -166,6 +216,8 @@ public class SetupWindowController implements Initializable {
         timers.forEach((Timer timer) -> {
             timer.cancel();
         });
+
+        timers.clear();
     }
 
     public static ArrayList<Integer> getClickPoint() {
@@ -181,6 +233,52 @@ public class SetupWindowController implements Initializable {
             return keys;
         } else {
             return null;
+        }
+    }
+
+    public void enableListener() {
+        NativeKeyListener keyListener = new NativeKeyListener() {
+
+            @Override
+            public void nativeKeyPressed(NativeKeyEvent nke) {
+
+                switch (nke.getRawCode()) {
+                    case KeyEvent.VK_F1: {
+                        // Allowing the user to continue capturing coordinates
+                        // on screen
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                System.out.println("running later! lmao");
+                                startCapCoordinates();
+                            }
+                        });
+                    }
+                    break;
+
+                    case KeyEvent.VK_F2:
+                        // Disabling coordinates screen capture when F2 is pressed
+                        CancelTimers();
+                        break;
+                }
+            }
+
+            @Override
+            public void nativeKeyReleased(NativeKeyEvent nke) {
+//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void nativeKeyTyped(NativeKeyEvent nke) {
+
+            }
+        };
+
+        try {
+            GlobalScreen.registerNativeHook();
+            GlobalScreen.addNativeKeyListener(keyListener);
+        } catch (NativeHookException ex) {
+            Logger.getLogger(SetupWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
