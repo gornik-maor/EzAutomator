@@ -88,6 +88,8 @@ public class FXMLDocumentController implements Initializable {
 
     private static Stage mainStage;
 
+    private static Action tempAction;
+
     @FXML
     void closeApp(MouseEvent event) {
         Platform.exit();
@@ -136,6 +138,11 @@ public class FXMLDocumentController implements Initializable {
         if (actionsBox.getItems().isEmpty()) {
             populateActionsBox();
         }
+    }
+
+    @FXML
+    void onClickRunScript(ActionEvent event) {
+        addAction(tempAction);
     }
 
     @Override
@@ -215,7 +222,6 @@ public class FXMLDocumentController implements Initializable {
 //            } catch (NativeHookException ex) {
 //                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
 //            }
-
             /**
              * https://stackoverflow.com/questions/25509031/javafx-tableview-sort-policy
              */
@@ -227,6 +233,18 @@ public class FXMLDocumentController implements Initializable {
 //                }
 //            });
         }
+    }
+
+    /**
+     *
+     * @param newAction
+     * @return
+     */
+    public static void recieveActionType(Action newAction) {
+        if (newAction != null) {
+            tempAction = newAction;
+        }
+        tempAction = null;
     }
 
     /**

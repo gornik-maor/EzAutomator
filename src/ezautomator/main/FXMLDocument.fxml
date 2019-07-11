@@ -98,7 +98,7 @@
                                        </children></Pane>
                                     <Pane layoutX="14.0" layoutY="508.0" prefHeight="65.0" prefWidth="454.0" styleClass="custom-alert">
                                        <children>
-                                          <Button fx:id="btnRun" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="256.0" text="Run">
+                                          <Button fx:id="btnRun" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#onClickRunScript" prefHeight="42.0" prefWidth="256.0" text="Run">
                                              <graphic>
                                                 <ImageView fitHeight="28.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                                                    <image>

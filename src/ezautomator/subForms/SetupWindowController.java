@@ -6,6 +6,7 @@
 package ezautomator.subForms;
 
 import com.jfoenix.controls.JFXTextField;
+import ezautomator.main.Action;
 import ezautomator.main.FXMLDocumentController;
 import java.awt.MouseInfo;
 import java.awt.PointerInfo;
@@ -13,13 +14,13 @@ import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -35,7 +36,6 @@ import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
-import static sun.management.snmp.jvminstr.JvmThreadInstanceEntryImpl.ThreadStateMap.Byte0.runnable;
 
 /**
  * FXML Controller class
@@ -111,7 +111,6 @@ public class SetupWindowController implements Initializable {
 
     @FXML
     void captureCoordinates(MouseEvent event) {
-        System.out.println("fired man!");
         startCapCoordinates();
     }
 
@@ -122,7 +121,14 @@ public class SetupWindowController implements Initializable {
             case 1:
                 System.out.println("PANE 1 is SELECTED");
                 // Working with the first pane
-                // add more
+                if (!xValueTxt.getText().isEmpty() && !yValueTxt.getText().isEmpty()) {
+                    // PROBLEM OCCURS HERE
+                     int tempX = Integer.parseInt(xValueTxt.getText());
+                     int tempY = Integer.parseInt(yValueTxt.getText());
+//                    ArrayList<Integer> tempCoordinates = new ArrayList(Arrays.asList(tempX, tempY));
+//                    Action tempAction = new Action("Click", null, tempCoordinates, null, null);
+//                    FXMLDocumentController.recieveActionType(tempAction);
+                }
                 break;
             case 2:
                 System.out.println("PANE 2 is SELECTED");
@@ -246,13 +252,17 @@ public class SetupWindowController implements Initializable {
                     case KeyEvent.VK_F1: {
                         // Allowing the user to continue capturing coordinates
                         // on screen
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                System.out.println("running later! lmao");
-                                startCapCoordinates();
-                            }
-                        });
+                        try {
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    System.out.println("running later! lmao");
+                                    startCapCoordinates();
+                                }
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                     break;
 
