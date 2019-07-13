@@ -1,9 +1,7 @@
 package ezautomator.main;
 
 import com.jfoenix.controls.JFXTextField;
-import com.sun.javafx.beans.event.AbstractNotifyListener;
-import com.sun.javafx.property.adapter.PropertyDescriptor;
-import java.awt.event.KeyEvent;
+import ezautomator.alert.AlertController;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -13,7 +11,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
-import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -38,12 +35,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.Callback;
 import javafx.util.Duration;
-import org.jnativehook.GlobalScreen;
-import org.jnativehook.NativeHookException;
-import org.jnativehook.keyboard.NativeKeyEvent;
-import org.jnativehook.keyboard.NativeKeyListener;
 
 /**
  *
@@ -89,6 +81,8 @@ public class FXMLDocumentController implements Initializable {
     private static Stage mainStage;
 
     private static Action tempAction;
+
+    private static ChoiceBox<String> tempCBox;
 
     @FXML
     void closeApp(MouseEvent event) {
@@ -141,8 +135,26 @@ public class FXMLDocumentController implements Initializable {
     }
 
     @FXML
-    void onClickRunScript(ActionEvent event) {
-        addAction(tempAction);
+    void onActionAddition(MouseEvent event) {
+        // Setting up an alert
+        AlertController alert = new AlertController();
+        getPrimaryStage().setIconified(true);
+        loadAlert();
+
+        if (tempAction != null && !txtComment.getText().isEmpty()) {
+            tempAction.setComment(txtComment.getText());
+            addAction(tempAction);
+            actionsBox.getItems().clear();
+        } else {
+            // Create my own custom expection
+            System.out.println("null!");
+        }
+
+    }
+
+    @FXML
+    void onClickRunScript(MouseEvent event) {
+
     }
 
     @Override
@@ -151,6 +163,8 @@ public class FXMLDocumentController implements Initializable {
             //loadSpalshScreen();
             populateActionsBox();
             populateColumns();
+            tempCBox = actionsBox;
+
             ArrayList test1 = new ArrayList(Arrays.asList(1234, 3));
             ArrayList test2 = new ArrayList(Arrays.asList());
             addAction(new Action("Click", "iSYS", test1, test2, "50"));
@@ -186,9 +200,9 @@ public class FXMLDocumentController implements Initializable {
                         subStage.setScene(new Scene(subRoot));
                         currStage.setIconified(true);
                         subStage.show();
-                        if (!actionsBox.getItems().isEmpty()) {
-                            actionsBox.getItems().clear();
-                        }
+//                        if (!actionsBox.getItems().isEmpty()) {
+//                            actionsBox.getItems().clear();
+//                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -241,9 +255,11 @@ public class FXMLDocumentController implements Initializable {
      * @return
      */
     public static void recieveActionType(Action newAction) {
-        if (newAction != null) {
+        if (!newAction.getAction().isEmpty() && !newAction.getCoordinates().isEmpty()) {
             tempAction = newAction;
+            return;
         }
+        // throw custom exception
         tempAction = null;
     }
 
@@ -333,6 +349,19 @@ public class FXMLDocumentController implements Initializable {
     }
 
     /**
+     * Returning actions box
+     *
+     * @return
+     */
+    public static ChoiceBox<String> getActionsBox() {
+        if (tempCBox != null) {
+            return tempCBox;
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * Loading the welcome screen
      */
     private void loadSpalshScreen() {
@@ -384,4 +413,19 @@ public class FXMLDocumentController implements Initializable {
         }
     }
 
+    private void loadAlert() {
+        try {
+            StackPane alertPane = FXMLLoader.load(getClass().getResource("/ezautomator/alert/Alert.fxml"));
+            Stage alertStage = new Stage();
+            alertStage.initStyle(StageStyle.UNDECORATED);
+            alertStage.initModality(Modality.APPLICATION_MODAL);
+            alertStage.getIcons().add(new Image("/ezautomator/icons/icon.png"));
+            alertStage.setTitle("EzAutomator");
+            alertStage.setScene(new Scene(alertPane));
+            alertStage.setIconified(true);
+            alertStage.show();
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

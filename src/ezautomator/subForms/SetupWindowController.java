@@ -77,14 +77,16 @@ public class SetupWindowController implements Initializable {
     @FXML
     private Pane paneKeys;
 
+    private boolean isCapturing;
+
     private double diffX;
 
     private double diffY;
 
-    private ArrayList<Timer> timers = new ArrayList<>();
+    private final ArrayList<Timer> timers = new ArrayList<>();
 
-    private static ArrayList<Integer> coordinates = new ArrayList<>();
-    private static ArrayList<String> keys = new ArrayList<>();
+    private static final ArrayList<Integer> coordinates = new ArrayList<>();
+    private static final ArrayList<String> keys = new ArrayList<>();
 
     @FXML
     void closeApp(MouseEvent event) {
@@ -96,6 +98,12 @@ public class SetupWindowController implements Initializable {
         } catch (NativeHookException ex) {
             Logger.getLogger(SetupWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        // Ensuring the user has captured the desired point on the screen
+        if (xValueTxt.getText().isEmpty() && yValueTxt.getText().isEmpty()) {
+            FXMLDocumentController.getActionsBox().getItems().clear();
+        }
+
         stage.close();
     }
 
@@ -111,7 +119,18 @@ public class SetupWindowController implements Initializable {
 
     @FXML
     void captureCoordinates(MouseEvent event) {
-        startCapCoordinates();
+        if (!isCapturing) {
+            // [ADD] Create a getter for the current stage for this class
+            Stage currStage = (Stage) btnProceed.getScene().getWindow();
+            currStage.setIconified(true);
+            startCapCoordinates();
+        } else {
+            closeBtn.requestFocus();
+            xValueTxt.setText("");
+            yValueTxt.setText("");
+            CancelTimers();
+        }
+        isCapturing = !isCapturing;
     }
 
     @FXML
@@ -122,12 +141,27 @@ public class SetupWindowController implements Initializable {
                 System.out.println("PANE 1 is SELECTED");
                 // Working with the first pane
                 if (!xValueTxt.getText().isEmpty() && !yValueTxt.getText().isEmpty()) {
-                    // PROBLEM OCCURS HERE
-                     int tempX = Integer.parseInt(xValueTxt.getText());
-                     int tempY = Integer.parseInt(yValueTxt.getText());
-//                    ArrayList<Integer> tempCoordinates = new ArrayList(Arrays.asList(tempX, tempY));
-//                    Action tempAction = new Action("Click", null, tempCoordinates, null, null);
-//                    FXMLDocumentController.recieveActionType(tempAction);
+
+//                    double tempX = Double.parseDouble(xValueTxt.getText());
+//                    double tempY = Double.parseDouble(yValueTxt.getText());
+                    int tempX = (int) Integer.parseInt(xValueTxt.getText());
+                    int tempY = (int) Integer.parseInt(yValueTxt.getText());
+
+                    ArrayList<Integer> tempCoordinates = new ArrayList(Arrays.asList(tempX, tempY));
+                    ArrayList<String> tempKeys = new ArrayList(Arrays.asList());
+                    Action tempAction = new Action("Click", "", tempCoordinates, tempKeys, "");
+                    FXMLDocumentController.recieveActionType(tempAction);
+
+                    try {
+                        GlobalScreen.unregisterNativeHook();
+                    } catch (NativeHookException ex) {
+                        Logger.getLogger(SetupWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    // Close this stage
+                    Stage currStage = (Stage) btnProceed.getScene().getWindow();
+                    FXMLDocumentController.getPrimaryStage().setIconified(false);
+                    currStage.close();
                 }
                 break;
             case 2:
@@ -208,8 +242,8 @@ public class SetupWindowController implements Initializable {
             public void run() {
                 PointerInfo mouseCursor = MouseInfo.getPointerInfo();
                 Point screenPoint = mouseCursor.getLocation();
-                xValueTxt.setText(String.valueOf(screenPoint.getX()));
-                yValueTxt.setText(String.valueOf(screenPoint.getY()));
+                xValueTxt.setText(String.valueOf(screenPoint.getX()).replace(".0", ""));
+                yValueTxt.setText(String.valueOf(screenPoint.getY()).replace(".0", ""));
             }
         }, 0, 250);
     }
@@ -256,7 +290,8 @@ public class SetupWindowController implements Initializable {
                             Platform.runLater(new Runnable() {
                                 @Override
                                 public void run() {
-                                    System.out.println("running later! lmao");
+                                    // Minimizing this form
+                                    getSubStage().setIconified(true);
                                     startCapCoordinates();
                                 }
                             });
@@ -269,6 +304,14 @@ public class SetupWindowController implements Initializable {
                     case KeyEvent.VK_F2:
                         // Disabling coordinates screen capture when F2 is pressed
                         CancelTimers();
+
+                        // Bringing back-up the form (Running on a seperated thread)
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                getSubStage().setIconified(false);
+                            }
+                        });
                         break;
                 }
             }
@@ -290,5 +333,10 @@ public class SetupWindowController implements Initializable {
         } catch (NativeHookException ex) {
             Logger.getLogger(SetupWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public Stage getSubStage() {
+        Stage currStage = (Stage) btnProceed.getScene().getWindow();
+        return currStage;
     }
 }

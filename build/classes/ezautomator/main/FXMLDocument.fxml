@@ -71,7 +71,7 @@
                                                 <Font size="15.0" />
                                              </font>
                                           </Text>
-                                          <Button fx:id="btnAdd" layoutX="17.0" layoutY="118.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="251.0" text="Add">
+                                          <Button fx:id="btnAdd" layoutX="17.0" layoutY="118.0" mnemonicParsing="false" onMousePressed="#onActionAddition" prefHeight="42.0" prefWidth="251.0" text="Add">
                                              <graphic>
                                                 <ImageView fitHeight="28.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                                    <image>

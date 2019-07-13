@@ -13,12 +13,13 @@ import java.util.Arrays;
  * @author Abwatts
  */
 public class Action {
+
     private String action;
     private String comment;
     private ArrayList<Integer> coordinates;
     private ArrayList<String> sendKeys;
     private String delay;
-    
+
     /**
      * Default constructor
      */
@@ -26,16 +27,21 @@ public class Action {
         this.action = "";
         this.comment = "";
         this.coordinates = new ArrayList(Arrays.asList());
-        this.sendKeys  = new ArrayList(Arrays.asList());
+        this.sendKeys = new ArrayList(Arrays.asList());
         this.delay = "0";
     }
-    
+
     public Action(String action, String comment, ArrayList coordinates, ArrayList sendKeys, String delay) {
         this.action = action;
         this.comment = comment;
         this.coordinates = coordinates;
         this.sendKeys = sendKeys;
-        this.delay = delay + " m/s";
+        
+        if (delay.equals("")) {
+            this.delay = delay + "0 m/s";
+        } else {
+            this.delay = delay + " m/s";
+        }
     }
 
     public String getAction() {
