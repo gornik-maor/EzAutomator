@@ -5,16 +5,27 @@
  */
 package ezautomator.alert;
 
+import ezautomator.main.FXMLDocumentController;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 
 /**
  * FXML Controller class
@@ -34,6 +45,9 @@ public class AlertController implements Initializable {
 
     @FXML
     private Button btnOne;
+
+    @FXML
+    private StackPane root;
 
     @FXML
     void closeApp(MouseEvent event) {
@@ -62,6 +76,7 @@ public class AlertController implements Initializable {
                 result = true;
                 break;
         }
+
         closeForm();
     }
 
@@ -81,9 +96,15 @@ public class AlertController implements Initializable {
 
     private boolean result;
 
-    private int btnOneID;
+    private int btnOneID, btnTwoID;
 
-    private int btnTwoID;
+    private double diffX, diffY;
+
+    private Stage callerStage;
+
+    private Stage currStage;
+
+    private AlertController alertCls;
 
     /**
      * Initializes the controller class.
@@ -91,40 +112,125 @@ public class AlertController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+
+        /**
+         * Events for main window Click first, then drag.
+         */
+        root.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                // Calculating the difference between the cursor and the stage to later add it to allow the cursor to stay at the same
+                // position without teleporting it to a different place
+                diffX = getCurrStage().getX() - event.getScreenX();
+                diffY = getCurrStage().getY() - event.getScreenY();
+            }
+        });
+
+        // Ensuring that the stage moves a fixed number (that we calculated when the user first clicked the stage) of spaces
+        root.setOnMouseDragged(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                // Helps my cursor stay at the same position when dragging the window instead of teleporting to the top most-left corner
+                getCurrStage().setX(event.getScreenX() + diffX);
+                getCurrStage().setY(event.getScreenY() + diffY);
+            }
+        });
     }
 
     public void setMessage(String message) {
         if (!message.isEmpty()) {
             displayLbl.setText(message);
+            regainFocus();
         }
     }
 
     public void setBtnOneTxt(String text) {
         if (!text.isEmpty()) {
             btnOne.setText(text);
+            regainFocus();
         }
     }
 
     public void setBtnTwoTxt(String text) {
         if (!text.isEmpty()) {
             btnTwo.setText(text);
+            regainFocus();
         }
     }
 
-    public boolean getResult() {
-        return result;
+    private Stage getCurrStage() {
+        Stage currStage = (Stage) root.getScene().getWindow();
+        return currStage;
     }
 
     public void setYesNo(int btnOne, int btnTwo) {
-        if (btnOne == 0 && btnTwo == 0) {
             btnOneID = btnOne;
             btnTwoID = btnTwo;
+            regainFocus();
+    }
+
+    public void onResultFocus(Stage focusedStage) {
+        if (focusedStage != null) {
+            callerStage = focusedStage;
+        } else {
+            // throw exception!
         }
     }
 
     private void closeForm() {
-        Stage currStage = (Stage) closeBtn.getScene().getWindow();
-        currStage.close();
+        //FXMLDocumentController.getPrimaryStage().setIconified(false);
+        if (callerStage != null) {
+            callerStage.setIconified(false);
+        }
+        getCurrStage().close();
     }
 
+    private void regainFocus() {
+        if (!getCurrStage().isFocused()) {
+            getCurrStage().setIconified(false);
+        }
+    }
+
+    public AlertController loadAlert() {
+        try {
+            FXMLLoader fxmlLoader
+                    = new FXMLLoader(getClass().getResource("/ezautomator/alert/Alert.fxml"));
+            StackPane alertPane = fxmlLoader.load();
+            setAlertCls(fxmlLoader.getController());
+            Stage alertStage = new Stage();
+            alertStage.initStyle(StageStyle.UNDECORATED);
+            alertStage.initModality(Modality.APPLICATION_MODAL);
+            alertStage.getIcons().add(new Image("/ezautomator/icons/icon.png"));
+            alertStage.setTitle("EzAutomator");
+            alertStage.setScene(new Scene(alertPane));
+//            alertStage.show();
+            currStage = alertStage;
+            return fxmlLoader.getController();
+
+        } catch (IOException ex) {
+            Logger.getLogger(AlertController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    /**
+     * return on window closed
+     *
+     * @return
+     */
+    public boolean getResult() {
+        Stage stage = (Stage) root.getScene().getWindow();
+        stage.showAndWait();
+        return result;
+    }
+
+    public void setAlertCls(AlertController alertCls) {
+        if (alertCls != null) {
+            this.alertCls = alertCls;
+        }
+    }
+
+    public AlertController getAlertCls() {
+        return alertCls;
+    }
 }

@@ -2,6 +2,7 @@ package ezautomator.main;
 
 import com.jfoenix.controls.JFXTextField;
 import ezautomator.alert.AlertController;
+import ezautomator.delay.DelayFormController;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -82,7 +83,11 @@ public class FXMLDocumentController implements Initializable {
 
     private static Action tempAction;
 
+    private static int actionDelay;
+
     private static ChoiceBox<String> tempCBox;
+
+    private AlertController alertClass;
 
     @FXML
     void closeApp(MouseEvent event) {
@@ -137,9 +142,36 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     void onActionAddition(MouseEvent event) {
         // Setting up an alert
-        AlertController alert = new AlertController();
+
+//        AlertController alert = new AlertController();
+//        alert.onResultFocus(getPrimaryStage());
         getPrimaryStage().setIconified(true);
-        loadAlert();
+
+//        loadAlert();
+//        getAlertCls().onResultFocus(mainStage);
+//        getAlertCls().setMessage("TestTwo");
+//        getAlertCls().setYesNo(1, 0);
+
+        AlertController alertClss = new AlertController();
+        AlertController currAlertClss = alertClss.loadAlert();
+        currAlertClss.setMessage("WORK PLEASE!");
+        // Setting left button for yes and right for no
+        currAlertClss.setYesNo(1, 0);
+        currAlertClss.onResultFocus(mainStage);
+        System.out.println(currAlertClss.getResult());
+//        newOne.getResult();
+
+//        if(test != null) {
+//            System.out.println("not null!!!!!!");
+//        }
+        
+//        boolean result = test.loadAlert();
+//        if (test != null) {
+//            boolean result = test.loadAlert();
+//            System.out.println(result);
+//        } else {
+//            System.out.println("test is null");
+//        }
 
         if (tempAction != null && !txtComment.getText().isEmpty()) {
             tempAction.setComment(txtComment.getText());
@@ -208,44 +240,6 @@ public class FXMLDocumentController implements Initializable {
                     }
                 }
             });
-
-//            NativeKeyListener keyListener = new NativeKeyListener() {
-//
-//                @Override
-//                public void nativeKeyPressed(NativeKeyEvent nke) {
-//                    System.out.println("Pressed: " + nke.getRawCode());
-//                    if(nke.getRawCode() == KeyEvent.VK_TAB) {
-//                        System.out.println("Tab key was pressed");
-//                    }
-//                }
-//
-//                @Override
-//                public void nativeKeyReleased(NativeKeyEvent nke) {
-//                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//                }
-//
-//                @Override
-//                public void nativeKeyTyped(NativeKeyEvent nke) {
-//
-//                }
-//            };
-//
-//            try {
-//                GlobalScreen.registerNativeHook();
-//                GlobalScreen.addNativeKeyListener(keyListener);
-//            } catch (NativeHookException ex) {
-//                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-            /**
-             * https://stackoverflow.com/questions/25509031/javafx-tableview-sort-policy
-             */
-//            actionTable.sortPolicyProperty().set(new Callback<TableView<Action>, Boolean>() {
-//                @Override
-//                public Boolean call(TableView<Action> param) {
-//                    System.out.println("implement desired sorting rules");
-//                    return false;
-//                }
-//            });
         }
     }
 
@@ -261,6 +255,17 @@ public class FXMLDocumentController implements Initializable {
         }
         // throw custom exception
         tempAction = null;
+    }
+
+    /**
+     * Setting an action delay based on the user's preference
+     *
+     * @param delay
+     */
+    public static void recieveDelay(int delay) {
+        if (delay != 0) {
+            actionDelay = delay;
+        }
     }
 
     /**
@@ -415,17 +420,30 @@ public class FXMLDocumentController implements Initializable {
 
     private void loadAlert() {
         try {
-            StackPane alertPane = FXMLLoader.load(getClass().getResource("/ezautomator/alert/Alert.fxml"));
+//            StackPane alertPane = FXMLLoader.load(getClass().getResource("/ezautomator/alert/Alert.fxml"));
+            FXMLLoader fxmlLoader
+                    = new FXMLLoader(getClass().getResource("/ezautomator/alert/Alert.fxml"));
+            StackPane alertPane = fxmlLoader.load();
+            setAlertCls(fxmlLoader.getController());
             Stage alertStage = new Stage();
             alertStage.initStyle(StageStyle.UNDECORATED);
             alertStage.initModality(Modality.APPLICATION_MODAL);
             alertStage.getIcons().add(new Image("/ezautomator/icons/icon.png"));
             alertStage.setTitle("EzAutomator");
             alertStage.setScene(new Scene(alertPane));
-            alertStage.setIconified(true);
             alertStage.show();
         } catch (IOException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private AlertController getAlertCls() {
+        return alertClass;
+    }
+
+    private void setAlertCls(AlertController alertCls) {
+        if (alertCls != null) {
+            this.alertClass = alertCls;
         }
     }
 }
