@@ -5,7 +5,6 @@
  */
 package ezautomator.alert;
 
-import ezautomator.main.FXMLDocumentController;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -25,7 +24,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
 
 /**
  * FXML Controller class
@@ -102,8 +100,6 @@ public class AlertController implements Initializable {
 
     private Stage callerStage;
 
-    private Stage currStage;
-
     private AlertController alertCls;
 
     /**
@@ -114,7 +110,7 @@ public class AlertController implements Initializable {
         // TODO
 
         /**
-         * Events for main window Click first, then drag.
+         * Allowing the user to drag the form
          */
         root.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
@@ -137,13 +133,21 @@ public class AlertController implements Initializable {
         });
     }
 
+    /**
+     * Setting the alert message
+     * @param message 
+     */
     public void setMessage(String message) {
         if (!message.isEmpty()) {
             displayLbl.setText(message);
             regainFocus();
         }
     }
-
+    
+    /**
+     * Setting the first button text
+     * @param text 
+     */
     public void setBtnOneTxt(String text) {
         if (!text.isEmpty()) {
             btnOne.setText(text);
@@ -151,6 +155,10 @@ public class AlertController implements Initializable {
         }
     }
 
+    /**
+     * Setting the second button text
+     * @param text 
+     */
     public void setBtnTwoTxt(String text) {
         if (!text.isEmpty()) {
             btnTwo.setText(text);
@@ -158,17 +166,31 @@ public class AlertController implements Initializable {
         }
     }
 
+    /**
+     * Retrieving a stage instance
+     * @return 
+     */
     private Stage getCurrStage() {
         Stage currStage = (Stage) root.getScene().getWindow();
         return currStage;
     }
 
+    /**
+     * Setting the representation of each button
+     * @param btnOne can either represent true or false
+     * @param btnTwo can either represent true or false
+     */
     public void setYesNo(int btnOne, int btnTwo) {
             btnOneID = btnOne;
             btnTwoID = btnTwo;
             regainFocus();
     }
 
+    /**
+     * Setting the form that will recieve the focus once the
+     * program has closed
+     * @param focusedStage 
+     */
     public void onResultFocus(Stage focusedStage) {
         if (focusedStage != null) {
             callerStage = focusedStage;
@@ -177,6 +199,9 @@ public class AlertController implements Initializable {
         }
     }
 
+    /**
+     * Bringing the focus to the desired form
+     */
     private void closeForm() {
         //FXMLDocumentController.getPrimaryStage().setIconified(false);
         if (callerStage != null) {
@@ -185,12 +210,19 @@ public class AlertController implements Initializable {
         getCurrStage().close();
     }
 
+    /**
+     * Regaining focus to the alert once a component was modified
+     */
     private void regainFocus() {
         if (!getCurrStage().isFocused()) {
             getCurrStage().setIconified(false);
         }
     }
 
+    /**
+     * Loading the alert and returning a reference to the current class
+     * @return 
+     */
     public AlertController loadAlert() {
         try {
             FXMLLoader fxmlLoader
@@ -203,8 +235,6 @@ public class AlertController implements Initializable {
             alertStage.getIcons().add(new Image("/ezautomator/icons/icon.png"));
             alertStage.setTitle("EzAutomator");
             alertStage.setScene(new Scene(alertPane));
-//            alertStage.show();
-            currStage = alertStage;
             return fxmlLoader.getController();
 
         } catch (IOException ex) {
@@ -214,9 +244,8 @@ public class AlertController implements Initializable {
     }
 
     /**
-     * return on window closed
-     *
-     * @return
+     * Displaying the alert and waiting for the user to select a result
+     * @return 
      */
     public boolean getResult() {
         Stage stage = (Stage) root.getScene().getWindow();
@@ -224,12 +253,20 @@ public class AlertController implements Initializable {
         return result;
     }
 
+    /**
+     * Setting the instance of the alert class
+     * @param alertCls 
+     */
     public void setAlertCls(AlertController alertCls) {
         if (alertCls != null) {
             this.alertCls = alertCls;
         }
     }
 
+    /**
+     * Getting an instance of the alert class
+     * @return 
+     */
     public AlertController getAlertCls() {
         return alertCls;
     }

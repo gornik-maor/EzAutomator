@@ -141,37 +141,19 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     void onActionAddition(MouseEvent event) {
-        // Setting up an alert
-
-//        AlertController alert = new AlertController();
-//        alert.onResultFocus(getPrimaryStage());
         getPrimaryStage().setIconified(true);
-
-//        loadAlert();
-//        getAlertCls().onResultFocus(mainStage);
-//        getAlertCls().setMessage("TestTwo");
-//        getAlertCls().setYesNo(1, 0);
-
+        // Setting up an alert
         AlertController alertClss = new AlertController();
         AlertController currAlertClss = alertClss.loadAlert();
-        currAlertClss.setMessage("WORK PLEASE!");
+        currAlertClss.setMessage("Would you like to set a delay?");
         // Setting left button for yes and right for no
         currAlertClss.setYesNo(1, 0);
         currAlertClss.onResultFocus(mainStage);
-        System.out.println(currAlertClss.getResult());
-//        newOne.getResult();
-
-//        if(test != null) {
-//            System.out.println("not null!!!!!!");
-//        }
+        boolean result = currAlertClss.getResult();
         
-//        boolean result = test.loadAlert();
-//        if (test != null) {
-//            boolean result = test.loadAlert();
-//            System.out.println(result);
-//        } else {
-//            System.out.println("test is null");
-//        }
+        if(result == true) {
+            System.out.println("opening delay form");    
+        }
 
         if (tempAction != null && !txtComment.getText().isEmpty()) {
             tempAction.setComment(txtComment.getText());
