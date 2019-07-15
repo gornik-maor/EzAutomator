@@ -196,6 +196,7 @@ public class AlertController implements Initializable {
             callerStage = focusedStage;
         } else {
             // throw exception!
+            callerStage = getCurrStage();
         }
     }
 

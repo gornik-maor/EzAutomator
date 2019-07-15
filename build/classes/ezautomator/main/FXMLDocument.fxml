@@ -62,6 +62,15 @@
                                         <TableColumn prefWidth="75.0" text="C1" />
                                         <TableColumn prefWidth="75.0" text="C2" />
                                       </columns>
+                                       <contextMenu>
+                                          <ContextMenu>
+                                            <items>
+                                                <MenuItem fx:id="mnuEdit" mnemonicParsing="false" style="-fx-text-fill: FFFF8D;" text="Edit" />
+                                                <MenuItem fx:id="mnuRemove" mnemonicParsing="false" style="-fx-text-fill: FFFF8D;" text="Remove" />
+                                              <MenuItem fx:id="mnuRefresh" mnemonicParsing="false" style="-fx-text-fill: FFFF8D;" text="Refresh" />
+                                            </items>
+                                          </ContextMenu>
+                                       </contextMenu>
                                     </TableView>
                                     <Pane layoutX="14.0" layoutY="326.0" prefHeight="174.0" prefWidth="453.0" styleClass="custom-alert">
                                        <children>

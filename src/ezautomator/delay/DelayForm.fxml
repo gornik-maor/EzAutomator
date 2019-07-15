@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.*?>
 
 
-<StackPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="301.0" prefWidth="469.0" stylesheets="@../../resources/dark-theme.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane xmlns:fx="http://javafx.com/fxml/1" fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="301.0" prefWidth="469.0" stylesheets="@../../resources/dark-theme.css" xmlns="http://javafx.com/javafx/8" fx:controller="ezautomator.delay.DelayFormController" >
    <children>
       <Pane prefHeight="218.0" prefWidth="469.0" styleClass="custom-alert">
          <children>

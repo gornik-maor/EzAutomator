@@ -23,6 +23,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
@@ -76,6 +77,15 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private Button btnRun;
+
+    @FXML
+    private MenuItem mnuEdit;
+
+    @FXML
+    private MenuItem mnuRemove;
+
+    @FXML
+    private MenuItem mnuRefresh;
 
     private static int ID;
 
@@ -148,11 +158,15 @@ public class FXMLDocumentController implements Initializable {
         currAlertClss.setMessage("Would you like to set a delay?");
         // Setting left button for yes and right for no
         currAlertClss.setYesNo(1, 0);
-        currAlertClss.onResultFocus(mainStage);
+        //currAlertClss.onResultFocus(mainStage);
         boolean result = currAlertClss.getResult();
-        
-        if(result == true) {
-            System.out.println("opening delay form");    
+
+        if (result == true) {
+            System.out.println("opening delay form");
+            DelayFormController delayClss = new DelayFormController();
+            DelayFormController currDelayClss = delayClss.loadAlert();
+            currDelayClss.onResultFocus(mainStage);
+            System.out.println(currDelayClss.getDelay());
         }
 
         if (tempAction != null && !txtComment.getText().isEmpty()) {
@@ -238,18 +252,7 @@ public class FXMLDocumentController implements Initializable {
         // throw custom exception
         tempAction = null;
     }
-
-    /**
-     * Setting an action delay based on the user's preference
-     *
-     * @param delay
-     */
-    public static void recieveDelay(int delay) {
-        if (delay != 0) {
-            actionDelay = delay;
-        }
-    }
-
+    
     /**
      * Initializing the actions table
      *

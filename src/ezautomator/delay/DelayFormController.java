@@ -69,10 +69,14 @@ public class DelayFormController implements Initializable {
 
     @FXML
     void onBtnConfirmPress(MouseEvent event) {
-        if (delay != 0) {
-            FXMLDocumentController.recieveDelay(delay);
+        if (!delayTxt.getText().isEmpty()) {
+//            FXMLDocumentController.recieveDelay(delay);
+            delay = Integer.parseInt(delayTxt.getText());
+            closeForm();
         } else {
-            AlertController alert = new AlertController();
+            System.out.println("No delay was set!");
+//            AlertController alert = new AlertController();
+//            Are you sure you don't need a delay?
 //            alert.loadAlert();
 //            alert.getAlertCls().onResultFocus(getCurrStage());
 //            alert.getAlertCls().setMessage("Delay must be greater than 0!");
@@ -82,8 +86,10 @@ public class DelayFormController implements Initializable {
     private double diffX, diffY;
 
     private int delay;
-    
+
     private DelayFormController delayCls;
+    
+    private Stage callerStage;
 
     /**
      * Initializes the controller class.
@@ -91,7 +97,7 @@ public class DelayFormController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         loadDelayBox();
-        
+
         /**
          * Events for main window Click first, then drag.
          */
@@ -120,33 +126,92 @@ public class DelayFormController implements Initializable {
         Stage currStage = (Stage) delayTxt.getScene().getWindow();
         return currStage;
     }
-    
+
     private void loadDelayBox() {
         delayBox.getItems().addAll("Seconds", "Minutes");
     }
     
-    public void loadDelay() {
-        try {
-         FXMLLoader fxmlLoader
-                    = new FXMLLoader(getClass().getResource("/ezautomator/delay/DelayForm.fxml"));
-            StackPane alertPane = fxmlLoader.load();
-            setDelayCls(fxmlLoader.getController());
-            Stage alertStage = new Stage();
-            alertStage.initStyle(StageStyle.UNDECORATED);
-            alertStage.initModality(Modality.APPLICATION_MODAL);
-            alertStage.getIcons().add(new Image("/ezautomator/icons/icon.png"));
-            alertStage.setTitle("EzAutomator");
-            alertStage.setScene(new Scene(alertPane));
-            alertStage.show();
-        } catch (IOException ex) {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+    /**
+     * Setting the form that will recieve the focus once the
+     * program has closed
+     * @param focusedStage 
+     */
+    public void onResultFocus(Stage focusedStage) {
+        if (focusedStage != null) {
+            callerStage = focusedStage;
+        } else {
+            // throw exception!
+            callerStage = getCurrStage();
         }
     }
     
-    public void setDelayCls(DelayFormController delayCls) {
-        if(delayCls != null) this.delayCls = delayCls;
+    /**
+     * Bringing the focus to the desired form
+     */
+    private void closeForm() {
+        //FXMLDocumentController.getPrimaryStage().setIconified(false);
+        if (callerStage != null) {
+            callerStage.setIconified(false);
+        }
+        getCurrStage().close();
     }
-    
+
+    /**
+     * Loading the alert and returning a reference to the current class
+     *
+     * @return
+     */
+    public DelayFormController loadAlert() {
+        try {
+            FXMLLoader fxmlLoader
+                    = new FXMLLoader(getClass().getResource("/ezautomator/delay/DelayForm.fxml"));
+            StackPane alertPane = fxmlLoader.load();
+            setDelayCls(fxmlLoader.getController());
+            Stage delayStage = new Stage();
+            delayStage.initStyle(StageStyle.UNDECORATED);
+            delayStage.initModality(Modality.APPLICATION_MODAL);
+            delayStage.getIcons().add(new Image("/ezautomator/icons/icon.png"));
+            delayStage.setTitle("EzAutomator");
+            delayStage.setScene(new Scene(alertPane));
+            return fxmlLoader.getController();
+
+        } catch (IOException ex) {
+            Logger.getLogger(AlertController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    /**
+     * Returning the amount of delay the user has chosen
+     *
+     * @return
+     */
+    public int getDelay() {
+        Stage delayStage = (Stage) root.getScene().getWindow();
+        delayStage.showAndWait();
+        return delay;
+    }
+
+    /**
+     *
+     * @param delayCls
+     */
+    public void setDelayCls(DelayFormController delayCls) {
+        /**
+         * INCOMPLETE: VALIDATE DELAY WHEN CONTINUE BUTTON IS CLICKED OTHERWISE
+         * DELAY WILL ALWAYS REMAIN 0
+         */
+
+        if (delayCls != null) {
+            this.delayCls = delayCls;
+        }
+    }
+
+    /**
+     * Getting an instance of the alert class
+     *
+     * @return
+     */
     public DelayFormController getDelayCls() {
         return delayCls;
     }
