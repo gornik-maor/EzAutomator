@@ -5,9 +5,12 @@ import ezautomator.alert.AlertController;
 import ezautomator.delay.DelayFormController;
 import java.io.IOException;
 import java.net.URL;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
@@ -27,6 +30,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -37,6 +41,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Callback;
 import javafx.util.Duration;
 
 /**
@@ -151,27 +156,31 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     void onActionAddition(MouseEvent event) {
-        getPrimaryStage().setIconified(true);
-        // Setting up an alert
-        AlertController alertClss = new AlertController();
-        AlertController currAlertClss = alertClss.loadAlert();
-        currAlertClss.setMessage("Would you like to set a delay?");
-        // Setting left button for yes and right for no
-        currAlertClss.setYesNo(1, 0);
-        //currAlertClss.onResultFocus(mainStage);
-        boolean result = currAlertClss.getResult();
-
-        if (result == true) {
-            System.out.println("opening delay form");
-            DelayFormController delayClss = new DelayFormController();
-            DelayFormController currDelayClss = delayClss.loadAlert();
-            currDelayClss.onResultFocus(mainStage);
-            System.out.println(currDelayClss.getDelay());
-        }
-
         if (tempAction != null && !txtComment.getText().isEmpty()) {
             tempAction.setComment(txtComment.getText());
+
+            getPrimaryStage().setIconified(true);
+            // Setting up an alert
+            AlertController alertClss = new AlertController();
+            AlertController currAlertClss = alertClss.loadAlert();
+            currAlertClss.setMessage("Would you like to set a delay?");
+            // Setting left button for yes and right for no
+            currAlertClss.setYesNo(1, 0);
+            currAlertClss.onResultFocus(mainStage);
+            boolean resultAlert = currAlertClss.getResult();
+
+            if (resultAlert == true) {
+                // Opening the delay form
+                DelayFormController delayClss = new DelayFormController();
+                DelayFormController currDelayClss = delayClss.loadAlert();
+                currDelayClss.onResultFocus(mainStage);
+                tempAction.setDelay(String.valueOf(currDelayClss.getDelay()));
+            }
+
             addAction(tempAction);
+            // Clearing previous action
+            tempAction = null;
+            txtComment.setText("");
             actionsBox.getItems().clear();
         } else {
             // Create my own custom expection
@@ -236,6 +245,34 @@ public class FXMLDocumentController implements Initializable {
                     }
                 }
             });
+
+            // Table tooltip
+            actionTable.setRowFactory(new Callback<TableView<Action>, TableRow<Action>>() {
+                @Override
+                public TableRow<Action> call(TableView<Action> param) {
+                    return new TooltipTableRow<Action>((Action tempAction) -> {
+                        // Converting to minutes
+                        double aDelay = (Double.parseDouble(tempAction.getDelay().replace(" m/s", "")) / 60000);
+                        String dataT = "minutes";
+
+                        // Checking if the number is better be shown in seconds rather than minutes
+                        if (aDelay < 0.9) {
+                            dataT = "seconds";
+                            aDelay = aDelay * 60;
+                        }
+
+                        // Checking whether the number of seconds or minutes is only 1
+                        dataT = (aDelay == 1.0) ? dataT.substring(0, dataT.length() - 1) : dataT;
+
+                        // Returning the text to display in the tooltip
+                        String actionT = tempAction.getAction();
+                        if (actionT.equals("Keys")) {
+                            actionT = "Send Keys";
+                        }
+                        return "Action (" + actionT + ") | Delay (" + aDelay + ") " + dataT + ".";
+                    });
+                }
+            });
         }
     }
 
@@ -252,7 +289,7 @@ public class FXMLDocumentController implements Initializable {
         // throw custom exception
         tempAction = null;
     }
-    
+
     /**
      * Initializing the actions table
      *
@@ -291,7 +328,7 @@ public class FXMLDocumentController implements Initializable {
         // Setting up the delay column
         TableColumn<Action, String> delayColumn = new TableColumn<>("Delay");
         delayColumn.setCellValueFactory(new PropertyValueFactory<>("delay"));
-        delayColumn.setMinWidth(50);
+        delayColumn.setMinWidth(100);
         delayColumn.setSortable(false);
         actionTable.getColumns().addAll(actionColumn, commentColumn, coordinatesColumn, sendKeysColumn, delayColumn);
     }
@@ -400,35 +437,6 @@ public class FXMLDocumentController implements Initializable {
         } catch (IOException ex) {
             Logger.getLogger(FXMLDocumentController.class
                     .getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    private void loadAlert() {
-        try {
-//            StackPane alertPane = FXMLLoader.load(getClass().getResource("/ezautomator/alert/Alert.fxml"));
-            FXMLLoader fxmlLoader
-                    = new FXMLLoader(getClass().getResource("/ezautomator/alert/Alert.fxml"));
-            StackPane alertPane = fxmlLoader.load();
-            setAlertCls(fxmlLoader.getController());
-            Stage alertStage = new Stage();
-            alertStage.initStyle(StageStyle.UNDECORATED);
-            alertStage.initModality(Modality.APPLICATION_MODAL);
-            alertStage.getIcons().add(new Image("/ezautomator/icons/icon.png"));
-            alertStage.setTitle("EzAutomator");
-            alertStage.setScene(new Scene(alertPane));
-            alertStage.show();
-        } catch (IOException ex) {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    private AlertController getAlertCls() {
-        return alertClass;
-    }
-
-    private void setAlertCls(AlertController alertCls) {
-        if (alertCls != null) {
-            this.alertClass = alertCls;
         }
     }
 }

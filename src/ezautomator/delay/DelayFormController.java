@@ -69,16 +69,31 @@ public class DelayFormController implements Initializable {
 
     @FXML
     void onBtnConfirmPress(MouseEvent event) {
-        if (!delayTxt.getText().isEmpty()) {
-//            FXMLDocumentController.recieveDelay(delay);
-            delay = Integer.parseInt(delayTxt.getText());
+        if (!delayTxt.getText().isEmpty() && !delayBox.getItems().isEmpty()) {
+            switch(delayBox.getSelectionModel().getSelectedIndex()) {
+                case 0:
+                    // Seconds (Convering to miliseconds)
+                    delay = (Integer.parseInt(delayTxt.getText())) * 1000;
+                    System.out.println(delay);
+                    break;
+                case 1:
+                    // Minutes (Convering to miliseconds)
+                    delay = (Integer.parseInt(delayTxt.getText())) * 1000 * 60;
+                    System.out.println(delay);
+                    break;
+                    
+                default:
+                    System.out.println("Please select mins/secs");
+            }
+            
+//            delay = Integer.parseInt(delayTxt.getText());
             closeForm();
         } else {
             System.out.println("No delay was set!");
 //            AlertController alert = new AlertController();
 //            Are you sure you don't need a delay?
 //            alert.loadAlert();
-//            alert.getAlertCls().onResultFocus(getCurrStage());
+//            alert.getAlertCls().onResulgtFocus(getCurrStage());
 //            alert.getAlertCls().setMessage("Delay must be greater than 0!");
         }
     }
@@ -88,7 +103,7 @@ public class DelayFormController implements Initializable {
     private int delay;
 
     private DelayFormController delayCls;
-    
+
     private Stage callerStage;
 
     /**
@@ -130,11 +145,11 @@ public class DelayFormController implements Initializable {
     private void loadDelayBox() {
         delayBox.getItems().addAll("Seconds", "Minutes");
     }
-    
+
     /**
-     * Setting the form that will recieve the focus once the
-     * program has closed
-     * @param focusedStage 
+     * Setting the form that will recieve the focus once the program has closed
+     *
+     * @param focusedStage
      */
     public void onResultFocus(Stage focusedStage) {
         if (focusedStage != null) {
@@ -144,7 +159,7 @@ public class DelayFormController implements Initializable {
             callerStage = getCurrStage();
         }
     }
-    
+
     /**
      * Bringing the focus to the desired form
      */

@@ -81,6 +81,6 @@ public class Action {
     }
 
     public void setDelay(String delay) {
-        this.delay = delay;
+        this.delay = delay + " m/s";
     }
 }
