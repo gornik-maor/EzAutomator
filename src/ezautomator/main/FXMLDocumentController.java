@@ -3,6 +3,7 @@ package ezautomator.main;
 import com.jfoenix.controls.JFXTextField;
 import ezautomator.alert.AlertController;
 import ezautomator.delay.DelayFormController;
+import ezautomator.subForms.SetupWindowController;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -43,6 +44,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import javafx.util.Duration;
+import org.jnativehook.GlobalScreen;
+import org.jnativehook.NativeHookException;
 
 /**
  *
@@ -186,8 +189,10 @@ public class FXMLDocumentController implements Initializable {
             txtComment.setText("");
             actionsBox.getItems().clear();
         } else {
+            // Clearing the comment field
+            txtComment.setText("");
             // Create my own custom expection
-            System.out.println("null!");
+            System.out.println("tempAction is: " + tempAction);
         }
 
     }
@@ -311,7 +316,7 @@ public class FXMLDocumentController implements Initializable {
 
         // Setting up the action column
         TableColumn<Action, String> actionColumn = new TableColumn<>("Action");
-        actionColumn.setMinWidth(80);
+        actionColumn.setMinWidth(60);
         actionColumn.setSortable(false);
         actionColumn.setCellValueFactory(new PropertyValueFactory<>("action"));
 

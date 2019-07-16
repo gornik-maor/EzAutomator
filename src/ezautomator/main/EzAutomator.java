@@ -15,13 +15,13 @@ import javafx.stage.StageStyle;
  * @author Abwatts
  */
 public class EzAutomator extends Application {
-
+    
     public static Boolean isSplashLoaded = false;
     public static Boolean isMaximized = false;
-
+    
     double diffX;
     double diffY;
-
+    
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/ezautomator/main/FXMLDocument.fxml"));
@@ -66,7 +66,7 @@ public class EzAutomator extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-
+    
     private static void showError(Thread t, Throwable e) {
         if (e instanceof ArrayIndexOutOfBoundsException) {
             System.err.println("***Ignorable exception was thrown*** (" + e.toString() + ")");
@@ -74,5 +74,5 @@ public class EzAutomator extends Application {
             e.printStackTrace();
         }
     }
-
+    
 }

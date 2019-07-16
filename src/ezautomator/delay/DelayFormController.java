@@ -146,6 +146,7 @@ public class DelayFormController implements Initializable {
 
     private void loadDelayBox() {
         delayBox.getItems().addAll("Seconds", "Minutes");
+        delayBox.getSelectionModel().selectFirst();
     }
 
     /**

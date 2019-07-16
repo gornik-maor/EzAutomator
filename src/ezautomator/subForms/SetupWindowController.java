@@ -77,7 +77,7 @@ public class SetupWindowController implements Initializable {
     @FXML
     private Pane paneKeys;
 
-    private boolean isCapturing;
+    private boolean isCapPoint;
 
     private boolean isCapKeys;
 
@@ -92,7 +92,6 @@ public class SetupWindowController implements Initializable {
 
     @FXML
     void closeApp(MouseEvent event) {
-        Stage stage = (Stage) root.getScene().getWindow();
         FXMLDocumentController.getPrimaryStage().setIconified(false);
         CancelTimers();
         try {
@@ -106,7 +105,7 @@ public class SetupWindowController implements Initializable {
             FXMLDocumentController.getActionsBox().getItems().clear();
         }
 
-        stage.close();
+        getSubStage().close();
     }
 
     @FXML
@@ -121,7 +120,7 @@ public class SetupWindowController implements Initializable {
 
     @FXML
     void captureCoordinates(MouseEvent event) {
-        if (!isCapturing) {
+        if (!isCapPoint) {
             // [ADD] Create a getter for the current stage for this class
             Stage currStage = (Stage) btnProceed.getScene().getWindow();
             currStage.setIconified(true);
@@ -132,7 +131,7 @@ public class SetupWindowController implements Initializable {
             yValueTxt.setText("");
             CancelTimers();
         }
-        isCapturing = !isCapturing;
+        isCapPoint = !isCapPoint;
     }
 
     @FXML
@@ -141,7 +140,7 @@ public class SetupWindowController implements Initializable {
             fKeyTxt.requestFocus();
         }
         isCapKeys = !isCapKeys;
-        
+
         if (!isCapKeys) {
             capKeysBtn.setText("Capture Keys");
             root.requestFocus();
@@ -167,28 +166,37 @@ public class SetupWindowController implements Initializable {
                     Action tempAction = new Action("Click", "", new ArrayList<>(Arrays.asList(tempX, tempY)), new ArrayList<>(Arrays.asList()), "");
                     FXMLDocumentController.recieveActionType(tempAction);
 
-                    try {
-                        GlobalScreen.unregisterNativeHook();
-                    } catch (NativeHookException ex) {
-                        Logger.getLogger(SetupWindowController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-
                     // Close this stage
-                    Stage currStage = (Stage) btnProceed.getScene().getWindow();
                     FXMLDocumentController.getPrimaryStage().setIconified(false);
-                    currStage.close();
+                    closeForm();
                 }
                 break;
             case 2:
                 System.out.println("PANE 2 is SELECTED");
                 // Working with the second pane
+                if (!fKeyTxt.getText().isEmpty() || !sKeyTxt.getText().isEmpty()) {
+                    ArrayList<String> keyList = new ArrayList<>(Arrays.asList());
 
-                // add more
+                    if(!fKeyTxt.getText().isEmpty()) {
+                        keyList.add(fKeyTxt.getText());
+                    } 
+                    
+                    if(!sKeyTxt.getText().isEmpty()) {
+                        keyList.add(sKeyTxt.getText());
+                    }
+                    
+                    Action tempAction = new Action("Keys", "", new ArrayList<>(Arrays.asList("")), keyList, "");
+                    FXMLDocumentController.recieveActionType(tempAction);
+
+                    // Close this stage
+                    FXMLDocumentController.getPrimaryStage().setIconified(false);
+                    closeForm();
+                }
                 break;
             case 3:
                 System.out.println("PANE 3 is SELECTED");
                 // Working with the third pane
-                // add more
+                closeForm();
                 break;
         }
     }
@@ -276,6 +284,18 @@ public class SetupWindowController implements Initializable {
         timers.clear();
     }
 
+    /**
+     *
+     */
+    private void closeForm() {
+        try {
+            GlobalScreen.unregisterNativeHook();
+        } catch (NativeHookException ex) {
+            Logger.getLogger(SetupWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        getSubStage().close();
+    }
+
     public static ArrayList<Integer> getClickPoint() {
         if (coordinates.size() > 0) {
             return coordinates;
@@ -332,13 +352,12 @@ public class SetupWindowController implements Initializable {
                     }
                 } else if (FXMLDocumentController.getPaneID() == 2 && isCapKeys) {
                     String keyPressed = KeyEvent.getKeyText(nke.getRawCode());
-                    keyPressed = (keyPressed.startsWith("Right B")) ? "Ctrl" : keyPressed;
+                    keyPressed = (keyPressed.startsWith("Right B")) ? "CTRL" : keyPressed;
                     if (fKeyTxt.isFocused()) {
                         fKeyTxt.setText(keyPressed);
                     } else {
                         sKeyTxt.setText(keyPressed);
                     }
-                    System.out.println(KeyEvent.getKeyModifiersText(nke.getRawCode()));
                 }
 
             }
@@ -363,7 +382,7 @@ public class SetupWindowController implements Initializable {
     }
 
     public Stage getSubStage() {
-        Stage currStage = (Stage) btnProceed.getScene().getWindow();
-        return currStage;
+        Stage subStage = (Stage) btnProceed.getScene().getWindow();
+        return subStage;
     }
 }
