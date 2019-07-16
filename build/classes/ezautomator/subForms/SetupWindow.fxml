@@ -58,8 +58,8 @@
                      </font>
                   </Label>
                   <Separator layoutX="13.0" layoutY="23.0" opacity="0.49" prefHeight="3.0" prefWidth="212.0" style="-fx-background-color: FFFF8D;" />
-                  <Button fx:id="capKeysBtn" layoutX="26.0" layoutY="137.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="182.0" text="Capture Keys" />
-                  <JFXTextField fx:id="sKeyTxt" layoutX="79.0" layoutY="76.0" prefHeight="37.0" prefWidth="147.0" promptText="Enter" />
+                  <Button fx:id="capKeysBtn" layoutX="26.0" layoutY="137.0" mnemonicParsing="false" onMousePressed="#captureKeys" prefHeight="39.0" prefWidth="182.0" text="Capture Keys" />
+                  <JFXTextField fx:id="sKeyTxt" editable="false" layoutX="79.0" layoutY="76.0" prefHeight="37.0" prefWidth="147.0" promptText="Enter" />
                   <Label layoutX="28.0" layoutY="87.0" text="Key 2:" textFill="WHITE">
                      <font>
                         <Font size="14.0" />
@@ -70,7 +70,7 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <JFXTextField fx:id="fKeyTxt" layoutX="81.0" layoutY="26.0" prefHeight="37.0" prefWidth="147.0" promptText="Enter" />
+                  <JFXTextField fx:id="fKeyTxt" editable="false" layoutX="81.0" layoutY="26.0" prefHeight="37.0" prefWidth="147.0" promptText="Enter" />
                </children>
             </Pane>
             <Button fx:id="btnProceed" layoutX="12.0" layoutY="242.0" mnemonicParsing="false" onMousePressed="#proceedOnClick" prefHeight="39.0" prefWidth="462.0" styleClass="common-label" text="Proceed" />

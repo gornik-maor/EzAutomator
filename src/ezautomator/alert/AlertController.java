@@ -99,6 +99,8 @@ public class AlertController implements Initializable {
     private double diffX, diffY;
 
     private Stage callerStage;
+    
+    private Stage stageToHide;
 
     private AlertController alertCls;
 
@@ -135,7 +137,8 @@ public class AlertController implements Initializable {
 
     /**
      * Setting the alert message
-     * @param message 
+     *
+     * @param message
      */
     public void setMessage(String message) {
         if (!message.isEmpty()) {
@@ -143,10 +146,11 @@ public class AlertController implements Initializable {
             regainFocus();
         }
     }
-    
+
     /**
      * Setting the first button text
-     * @param text 
+     *
+     * @param text
      */
     public void setBtnOneTxt(String text) {
         if (!text.isEmpty()) {
@@ -157,7 +161,8 @@ public class AlertController implements Initializable {
 
     /**
      * Setting the second button text
-     * @param text 
+     *
+     * @param text
      */
     public void setBtnTwoTxt(String text) {
         if (!text.isEmpty()) {
@@ -168,7 +173,8 @@ public class AlertController implements Initializable {
 
     /**
      * Retrieving a stage instance
-     * @return 
+     *
+     * @return
      */
     private Stage getCurrStage() {
         Stage currStage = (Stage) root.getScene().getWindow();
@@ -177,19 +183,20 @@ public class AlertController implements Initializable {
 
     /**
      * Setting the representation of each button
+     *
      * @param btnOne can either represent true or false
      * @param btnTwo can either represent true or false
      */
     public void setYesNo(int btnOne, int btnTwo) {
-            btnOneID = btnOne;
-            btnTwoID = btnTwo;
-            regainFocus();
+        btnOneID = btnOne;
+        btnTwoID = btnTwo;
+        regainFocus();
     }
 
     /**
-     * Setting the form that will recieve the focus once the
-     * program has closed
-     * @param focusedStage 
+     * Setting the form that will recieve the focus once the program has closed
+     *
+     * @param focusedStage
      */
     public void onResultFocus(Stage focusedStage) {
         if (focusedStage != null) {
@@ -222,7 +229,8 @@ public class AlertController implements Initializable {
 
     /**
      * Loading the alert and returning a reference to the current class
-     * @return 
+     *
+     * @return
      */
     public AlertController loadAlert() {
         try {
@@ -246,17 +254,35 @@ public class AlertController implements Initializable {
 
     /**
      * Displaying the alert and waiting for the user to select a result
-     * @return 
+     *
+     * @return
      */
     public boolean getResult() {
-        Stage stage = (Stage) root.getScene().getWindow();
-        stage.showAndWait();
+        hideUponLoad();
+        getCurrStage().showAndWait();
         return result;
+    }
+    
+    /**
+     * Setting the form we want to minimize before showing the current form
+     * @param stageToHide 
+     * @return 
+     */
+    public void setHideUponLoad(Stage stageToHide) {
+        if(stageToHide != null) this.stageToHide = stageToHide;
+    }
+    
+    /**
+     * Hiding the selected stage on the current form load
+     */
+    private void hideUponLoad() {
+        if(stageToHide != null) stageToHide.setIconified(true);
     }
 
     /**
      * Setting the instance of the alert class
-     * @param alertCls 
+     *
+     * @param alertCls
      */
     public void setAlertCls(AlertController alertCls) {
         if (alertCls != null) {
@@ -266,7 +292,8 @@ public class AlertController implements Initializable {
 
     /**
      * Getting an instance of the alert class
-     * @return 
+     *
+     * @return
      */
     public AlertController getAlertCls() {
         return alertCls;

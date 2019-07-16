@@ -105,6 +105,8 @@ public class DelayFormController implements Initializable {
     private DelayFormController delayCls;
 
     private Stage callerStage;
+    
+    private Stage stageToHide;
 
     /**
      * Initializes the controller class.
@@ -202,9 +204,25 @@ public class DelayFormController implements Initializable {
      * @return
      */
     public int getDelay() {
-        Stage delayStage = (Stage) root.getScene().getWindow();
-        delayStage.showAndWait();
+        hideUponLoad();
+        getCurrStage().showAndWait();
         return delay;
+    }
+    
+    /**
+     * Setting the form we want to minimize before showing the current form
+     * @param stageToHide 
+     * @return 
+     */
+    public void setHideUponLoad(Stage stageToHide) {
+        if(stageToHide != null) this.stageToHide = stageToHide;
+    }
+    
+    /**
+     * Hiding the selected stage on the current form load
+     */
+    private void hideUponLoad() {
+        if(stageToHide != null) stageToHide.setIconified(true);
     }
 
     /**

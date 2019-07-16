@@ -159,11 +159,13 @@ public class FXMLDocumentController implements Initializable {
         if (tempAction != null && !txtComment.getText().isEmpty()) {
             tempAction.setComment(txtComment.getText());
 
-            getPrimaryStage().setIconified(true);
+//            getPrimaryStage().setIconified(true);
             // Setting up an alert
             AlertController alertClss = new AlertController();
+            // Setting up the alert form before displaying it
             AlertController currAlertClss = alertClss.loadAlert();
             currAlertClss.setMessage("Would you like to set a delay?");
+            currAlertClss.setHideUponLoad(mainStage);
             // Setting left button for yes and right for no
             currAlertClss.setYesNo(1, 0);
             currAlertClss.onResultFocus(mainStage);
@@ -173,6 +175,7 @@ public class FXMLDocumentController implements Initializable {
                 // Opening the delay form
                 DelayFormController delayClss = new DelayFormController();
                 DelayFormController currDelayClss = delayClss.loadAlert();
+                currDelayClss.setHideUponLoad(mainStage);
                 currDelayClss.onResultFocus(mainStage);
                 tempAction.setDelay(String.valueOf(currDelayClss.getDelay()));
             }
@@ -258,7 +261,12 @@ public class FXMLDocumentController implements Initializable {
                         // Checking if the number is better be shown in seconds rather than minutes
                         if (aDelay < 0.9) {
                             dataT = "seconds";
+                            // Converting to seconds
                             aDelay = aDelay * 60;
+                        } else if(aDelay >= 60) {
+                            dataT = "hours";
+                            // Converting to hours
+                            aDelay = aDelay / 60;
                         }
 
                         // Checking whether the number of seconds or minutes is only 1

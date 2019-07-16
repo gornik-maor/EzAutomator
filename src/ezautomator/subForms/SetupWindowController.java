@@ -79,6 +79,8 @@ public class SetupWindowController implements Initializable {
 
     private boolean isCapturing;
 
+    private boolean isCapKeys;
+
     private double diffX;
 
     private double diffY;
@@ -134,6 +136,21 @@ public class SetupWindowController implements Initializable {
     }
 
     @FXML
+    void captureKeys(MouseEvent event) {
+        if (fKeyTxt.getText().isEmpty()) {
+            fKeyTxt.requestFocus();
+        }
+        isCapKeys = !isCapKeys;
+        
+        if (!isCapKeys) {
+            capKeysBtn.setText("Capture Keys");
+            root.requestFocus();
+        } else {
+            capKeysBtn.setText("Capturing...");
+        }
+    }
+
+    @FXML
     void proceedOnClick(MouseEvent event) {
         // Checking which pane is enabled
         switch (FXMLDocumentController.getPaneID()) {
@@ -142,14 +159,12 @@ public class SetupWindowController implements Initializable {
                 // Working with the first pane
                 if (!xValueTxt.getText().isEmpty() && !yValueTxt.getText().isEmpty()) {
 
-//                    double tempX = Double.parseDouble(xValueTxt.getText());
-//                    double tempY = Double.parseDouble(yValueTxt.getText());
                     int tempX = (int) Integer.parseInt(xValueTxt.getText());
                     int tempY = (int) Integer.parseInt(yValueTxt.getText());
 
-                    ArrayList<Integer> tempCoordinates = new ArrayList(Arrays.asList(tempX, tempY));
-                    ArrayList<String> tempKeys = new ArrayList(Arrays.asList());
-                    Action tempAction = new Action("Click", "", tempCoordinates, tempKeys, "");
+//                    ArrayList<Integer> tempCoordinates = new ArrayList(Arrays.asList(tempX, tempY));
+//                    ArrayList<String> tempKeys = new ArrayList(Arrays.asList());
+                    Action tempAction = new Action("Click", "", new ArrayList<>(Arrays.asList(tempX, tempY)), new ArrayList<>(Arrays.asList()), "");
                     FXMLDocumentController.recieveActionType(tempAction);
 
                     try {
@@ -167,10 +182,11 @@ public class SetupWindowController implements Initializable {
             case 2:
                 System.out.println("PANE 2 is SELECTED");
                 // Working with the second pane
+
                 // add more
                 break;
             case 3:
-                System.out.println("PANE 2 is SELECTED");
+                System.out.println("PANE 3 is SELECTED");
                 // Working with the third pane
                 // add more
                 break;
@@ -227,8 +243,8 @@ public class SetupWindowController implements Initializable {
             }
         });
 
+        // Enabling key listening upon form load
         enableListener();
-
     }
 
     public void startCapCoordinates() {
@@ -278,42 +294,53 @@ public class SetupWindowController implements Initializable {
 
     public void enableListener() {
         NativeKeyListener keyListener = new NativeKeyListener() {
-
             @Override
             public void nativeKeyPressed(NativeKeyEvent nke) {
 
-                switch (nke.getRawCode()) {
-                    case KeyEvent.VK_F1: {
-                        // Allowing the user to continue capturing coordinates
-                        // on screen
-                        try {
+                if (FXMLDocumentController.getPaneID() == 1) {
+                    switch (nke.getRawCode()) {
+                        case KeyEvent.VK_F1: {
+                            // Allowing the user to continue capturing coordinates
+                            // on screen
+                            try {
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        // Minimizing this form
+                                        getSubStage().setIconified(true);
+                                        startCapCoordinates();
+                                    }
+                                });
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        break;
+
+                        case KeyEvent.VK_F2:
+                            // Disabling coordinates screen capture when F2 is pressed
+                            CancelTimers();
+
+                            // Bringing back-up the form (Running on a seperated thread)
                             Platform.runLater(new Runnable() {
                                 @Override
                                 public void run() {
-                                    // Minimizing this form
-                                    getSubStage().setIconified(true);
-                                    startCapCoordinates();
+                                    getSubStage().setIconified(false);
                                 }
                             });
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                            break;
                     }
-                    break;
-
-                    case KeyEvent.VK_F2:
-                        // Disabling coordinates screen capture when F2 is pressed
-                        CancelTimers();
-
-                        // Bringing back-up the form (Running on a seperated thread)
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                getSubStage().setIconified(false);
-                            }
-                        });
-                        break;
+                } else if (FXMLDocumentController.getPaneID() == 2 && isCapKeys) {
+                    String keyPressed = KeyEvent.getKeyText(nke.getRawCode());
+                    keyPressed = (keyPressed.startsWith("Right B")) ? "Ctrl" : keyPressed;
+                    if (fKeyTxt.isFocused()) {
+                        fKeyTxt.setText(keyPressed);
+                    } else {
+                        sKeyTxt.setText(keyPressed);
+                    }
+                    System.out.println(KeyEvent.getKeyModifiersText(nke.getRawCode()));
                 }
+
             }
 
             @Override
