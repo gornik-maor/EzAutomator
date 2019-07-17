@@ -19,6 +19,7 @@ public class Action {
     private ArrayList<Integer> coordinates;
     private ArrayList<String> sendKeys;
     private String delay;
+    private char type;
 
     /**
      * Default constructor
@@ -29,9 +30,10 @@ public class Action {
         this.coordinates = new ArrayList(Arrays.asList());
         this.sendKeys = new ArrayList(Arrays.asList());
         this.delay = "0";
+        this.type = 'E';
     }
 
-    public Action(String action, String comment, ArrayList coordinates, ArrayList sendKeys, String delay) {
+    public Action(String action, String comment, ArrayList coordinates, ArrayList sendKeys, String delay, char type) {
         this.action = action;
         this.comment = comment;
         this.coordinates = coordinates;
@@ -42,6 +44,8 @@ public class Action {
         } else {
             this.delay = delay + " m/s";
         }
+        
+        this.type = type;
     }
 
     public String getAction() {
@@ -82,5 +86,13 @@ public class Action {
 
     public void setDelay(String delay) {
         this.delay = delay + " m/s";
+    }
+    
+    public char getType() {
+        return type;
+    }
+    
+    public void setType(char type) {
+        this.type = type;
     }
 }

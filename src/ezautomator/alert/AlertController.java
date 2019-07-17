@@ -5,6 +5,8 @@
  */
 package ezautomator.alert;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -99,7 +101,7 @@ public class AlertController implements Initializable {
     private double diffX, diffY;
 
     private Stage callerStage;
-    
+
     private Stage stageToHide;
 
     private AlertController alertCls;
@@ -143,6 +145,9 @@ public class AlertController implements Initializable {
     public void setMessage(String message) {
         if (!message.isEmpty()) {
             displayLbl.setText(message);
+            Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+//            displayLbl.setLayoutX(dim);
+// https://stackoverflow.com/questions/26169445/how-do-i-center-javafx-controls
             regainFocus();
         }
     }
@@ -194,7 +199,7 @@ public class AlertController implements Initializable {
     }
 
     /**
-     * Setting the form that will recieve the focus once the program has closed
+     * Setting the form that will receive the focus once the program has closed
      *
      * @param focusedStage
      */
@@ -262,21 +267,26 @@ public class AlertController implements Initializable {
         getCurrStage().showAndWait();
         return result;
     }
-    
+
     /**
      * Setting the form we want to minimize before showing the current form
-     * @param stageToHide 
-     * @return 
+     *
+     * @param stageToHide
+     * @return
      */
     public void setHideUponLoad(Stage stageToHide) {
-        if(stageToHide != null) this.stageToHide = stageToHide;
+        if (stageToHide != null) {
+            this.stageToHide = stageToHide;
+        }
     }
-    
+
     /**
      * Hiding the selected stage on the current form load
      */
     private void hideUponLoad() {
-        if(stageToHide != null) stageToHide.setIconified(true);
+        if (stageToHide != null) {
+            stageToHide.setIconified(true);
+        }
     }
 
     /**

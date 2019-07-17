@@ -2,6 +2,7 @@ package ezautomator.main;
 
 import com.jfoenix.controls.JFXTextField;
 import ezautomator.alert.AlertController;
+import ezautomator.confirmation.ConfirmationControllerSetup;
 import ezautomator.delay.DelayFormController;
 import ezautomator.subForms.SetupWindowController;
 import java.io.IOException;
@@ -212,10 +213,10 @@ public class FXMLDocumentController implements Initializable {
 
             ArrayList test1 = new ArrayList(Arrays.asList(1234, 3));
             ArrayList test2 = new ArrayList(Arrays.asList());
-            addAction(new Action("Click", "iSYS", test1, test2, "50"));
+            addAction(new Action("Click", "iSYS", test1, test2, "50", 'e'));
 
             ArrayList test3 = new ArrayList(Arrays.asList("CTRL", "C"));
-            addAction(new Action("Keys", "Notepad", test2, test3, "100"));
+            addAction(new Action("Keys", "Notepad", test2, test3, "100", 'e'));
         }
 
         // Change Listener for choicebox
@@ -230,26 +231,38 @@ public class FXMLDocumentController implements Initializable {
                     } else if (selectedAction.startsWith("Send")) {
                         setPaneID(2);
                     } else {
-                        // Confirmation window goes here
+                        setPaneID(3);
                     }
 
-                    try {
-                        Stage currStage = (Stage) root.getScene().getWindow();
-                        mainStage = currStage;
-                        StackPane subRoot = FXMLLoader.load(getClass().getResource("/ezautomator/subForms/SetupWindow.FXML"));
-                        Stage subStage = new Stage();
-                        subStage.initStyle(StageStyle.UNDECORATED);
-                        subStage.initModality(Modality.APPLICATION_MODAL);
-                        subStage.getIcons().add(new Image("/ezautomator/icons/icon.png"));
-                        subStage.setTitle("EzAutomator");
-                        subStage.setScene(new Scene(subRoot));
-                        currStage.setIconified(true);
-                        subStage.show();
+                    // Opening the subStage form for
+                    if (getPaneID() == 1 || getPaneID() == 2) {
+                        try {
+                            Stage currStage = (Stage) root.getScene().getWindow();
+                            mainStage = currStage;
+                            StackPane subRoot = FXMLLoader.load(getClass().getResource("/ezautomator/subForms/SetupWindow.FXML"));
+                            Stage subStage = new Stage();
+                            subStage.initStyle(StageStyle.UNDECORATED);
+                            subStage.initModality(Modality.APPLICATION_MODAL);
+                            subStage.getIcons().add(new Image("/ezautomator/icons/icon.png"));
+                            subStage.setTitle("EzAutomator");
+                            subStage.setScene(new Scene(subRoot));
+                            currStage.setIconified(true);
+                            subStage.show();
 //                        if (!actionsBox.getItems().isEmpty()) {
 //                            actionsBox.getItems().clear();
 //                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        
+                        // Adding confirmation to the script
+                    } else {
+                        ConfirmationControllerSetup confirmationClss = new ConfirmationControllerSetup();
+                        // Setting up the alert form before displaying it
+                        ConfirmationControllerSetup currConfirmationClss = confirmationClss.loadAlert();
+                        currConfirmationClss.setHideUponLoad(mainStage);
+                        currConfirmationClss.onResultFocus(mainStage);
+//                        boolean resultAlert = currAlertClss.getResult();
                     }
                 }
             });
@@ -268,7 +281,7 @@ public class FXMLDocumentController implements Initializable {
                             dataT = "seconds";
                             // Converting to seconds
                             aDelay = aDelay * 60;
-                        } else if(aDelay >= 60) {
+                        } else if (aDelay >= 60) {
                             dataT = "hours";
                             // Converting to hours
                             aDelay = aDelay / 60;

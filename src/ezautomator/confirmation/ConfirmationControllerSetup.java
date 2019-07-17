@@ -3,13 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ezautomator.delay;
+package ezautomator.confirmation;
 
 import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.JFXToggleButton;
 import ezautomator.alert.AlertController;
 import ezautomator.main.FXMLDocumentController;
+import ezautomator.subForms.SetupWindowController;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,7 +24,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -28,13 +31,20 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.jnativehook.GlobalScreen;
+import org.jnativehook.NativeHookException;
+import org.jnativehook.keyboard.NativeKeyEvent;
+import org.jnativehook.keyboard.NativeKeyListener;
 
 /**
  * FXML Controller class
  *
- * @author Abwatts
+ * @author gornicma
  */
-public class DelayFormController implements Initializable {
+public class ConfirmationControllerSetup implements Initializable {
+
+    @FXML
+    private JFXTextField confirmationTxt;
 
     @FXML
     private ImageView closeBtn;
@@ -43,13 +53,22 @@ public class DelayFormController implements Initializable {
     private StackPane root;
 
     @FXML
-    private JFXTextField delayTxt;
-
-    @FXML
-    private ChoiceBox<String> delayBox;
-
-    @FXML
     private Button btnConfirm;
+
+    @FXML
+    private JFXToggleButton toggleInfo;
+
+    @FXML
+    private Button btnKContinue;
+
+    @FXML
+    private Button btnKTerminate;
+
+    @FXML
+    private JFXTextField continueTxt;
+
+    @FXML
+    private JFXTextField terminateTxt;
 
     @FXML
     void closeApp(MouseEvent event) {
@@ -69,52 +88,31 @@ public class DelayFormController implements Initializable {
 
     @FXML
     void onBtnConfirmPress(MouseEvent event) {
-        if (!delayTxt.getText().isEmpty() && !delayBox.getItems().isEmpty()) {
-            switch(delayBox.getSelectionModel().getSelectedIndex()) {
-                case 0:
-                    // Seconds (Convering to miliseconds)
-                    delay = (Integer.parseInt(delayTxt.getText())) * 1000;
-                    System.out.println(delay);
-                    break;
-                case 1:
-                    // Minutes (Convering to miliseconds)
-                    delay = (Integer.parseInt(delayTxt.getText())) * 1000 * 60;
-                    System.out.println(delay);
-                    break;
-                    
-                default:
-                    System.out.println("Please select mins/secs");
-            }
-            
-//            delay = Integer.parseInt(delayTxt.getText());
-            closeForm();
-        } else {
-            System.out.println("No delay was set!");
-//            AlertController alert = new AlertController();
-//            Are you sure you don't need a delay?
-//            alert.loadAlert();
-//            alert.getAlertCls().onResulgtFocus(getCurrStage());
-//            alert.getAlertCls().setMessage("Delay must be greater than 0!");
+        if (!keyContinue.isEmpty() && !keyTerminate.isEmpty()) {
+            actionKeys.add(keyContinue);
+            actionKeys.add(keyTerminate);
         }
     }
 
     private double diffX, diffY;
 
-    private int delay;
+    private ConfirmationControllerSetup confirmationCls;
 
-    private DelayFormController delayCls;
+    private Stage callerStage, stageToHide;
 
-    private Stage callerStage;
+    private String cMessage;
+
+    private ArrayList<String> actionKeys;
+
+    private String keyContinue, keyTerminate;
     
-    private Stage stageToHide;
+    private boolean isCapConfirm, isCapTerminate;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        loadDelayBox();
-
         /**
          * Events for main window Click first, then drag.
          */
@@ -137,16 +135,46 @@ public class DelayFormController implements Initializable {
                 getCurrStage().setY(event.getScreenY() + diffY);
             }
         });
+
+        enableListener();
+    }
+
+    public void enableListener() {
+        NativeKeyListener keyListener = new NativeKeyListener() {
+            @Override
+            public void nativeKeyPressed(NativeKeyEvent nke) {
+                if (confirmationTxt.isFocused() && isCapConfirm) {
+                    keyContinue = KeyEvent.getKeyText(nke.getRawCode());
+                    confirmationTxt.setText(KeyEvent.getKeyText(nke.getRawCode()));
+
+                } else if (terminateTxt.isFocused() && isCapTerminate) {
+                    keyTerminate = KeyEvent.getKeyText(nke.getRawCode());
+                    terminateTxt.setText(KeyEvent.getKeyText(nke.getRawCode()));
+                }
+            }
+
+            @Override
+            public void nativeKeyReleased(NativeKeyEvent nke) {
+//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void nativeKeyTyped(NativeKeyEvent nke) {
+
+            }
+        };
+
+        try {
+            GlobalScreen.registerNativeHook();
+            GlobalScreen.addNativeKeyListener(keyListener);
+        } catch (NativeHookException ex) {
+            Logger.getLogger(SetupWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private Stage getCurrStage() {
-        Stage currStage = (Stage) delayTxt.getScene().getWindow();
+        Stage currStage = (Stage) closeBtn.getScene().getWindow();
         return currStage;
-    }
-
-    private void loadDelayBox() {
-        delayBox.getItems().addAll("Seconds", "Minutes");
-        delayBox.getSelectionModel().selectFirst();
     }
 
     /**
@@ -179,12 +207,12 @@ public class DelayFormController implements Initializable {
      *
      * @return
      */
-    public DelayFormController loadAlert() {
+    public ConfirmationControllerSetup loadAlert() {
         try {
             FXMLLoader fxmlLoader
                     = new FXMLLoader(getClass().getResource("/ezautomator/delay/DelayForm.fxml"));
             StackPane alertPane = fxmlLoader.load();
-            setDelayCls(fxmlLoader.getController());
+            setConfirmationCls(fxmlLoader.getController());
             Stage delayStage = new Stage();
             delayStage.initStyle(StageStyle.UNDECORATED);
             delayStage.initModality(Modality.APPLICATION_MODAL);
@@ -204,40 +232,45 @@ public class DelayFormController implements Initializable {
      *
      * @return
      */
-    public int getDelay() {
+    public ArrayList getActionKeys() {
         hideUponLoad();
         getCurrStage().showAndWait();
-        return delay;
+        return actionKeys;
     }
-    
+
     /**
      * Setting the form we want to minimize before showing the current form
-     * @param stageToHide 
-     * @return 
+     *
+     * @param stageToHide
+     * @return
      */
     public void setHideUponLoad(Stage stageToHide) {
-        if(stageToHide != null) this.stageToHide = stageToHide;
+        if (stageToHide != null) {
+            this.stageToHide = stageToHide;
+        }
     }
-    
+
     /**
      * Hiding the selected stage on the current form load
      */
     private void hideUponLoad() {
-        if(stageToHide != null) stageToHide.setIconified(true);
+        if (stageToHide != null) {
+            stageToHide.setIconified(true);
+        }
     }
 
     /**
      *
-     * @param delayCls
+     * @param confirmationCls
      */
-    public void setDelayCls(DelayFormController delayCls) {
+    public void setConfirmationCls(ConfirmationControllerSetup confirmationCls) {
         /**
          * INCOMPLETE: VALIDATE DELAY WHEN CONTINUE BUTTON IS CLICKED OTHERWISE
          * DELAY WILL ALWAYS REMAIN 0
          */
 
-        if (delayCls != null) {
-            this.delayCls = delayCls;
+        if (confirmationCls != null) {
+            this.confirmationCls = confirmationCls;
         }
     }
 
@@ -246,8 +279,7 @@ public class DelayFormController implements Initializable {
      *
      * @return
      */
-    public DelayFormController getDelayCls() {
-        return delayCls;
+    public ConfirmationControllerSetup getConfirmationCls() {
+        return confirmationCls;
     }
-
 }

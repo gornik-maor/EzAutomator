@@ -6,6 +6,7 @@
 package ezautomator.subForms;
 
 import com.jfoenix.controls.JFXTextField;
+import ezautomator.alert.AlertController;
 import ezautomator.main.Action;
 import ezautomator.main.FXMLDocumentController;
 import java.awt.MouseInfo;
@@ -157,13 +158,30 @@ public class SetupWindowController implements Initializable {
                 System.out.println("PANE 1 is SELECTED");
                 // Working with the first pane
                 if (!xValueTxt.getText().isEmpty() && !yValueTxt.getText().isEmpty()) {
+                    char actionType = 'C';
+
+                    // Checking what type the action is
+                    AlertController alertBox = new AlertController();
+                    AlertController currAlert = alertBox.loadAlert();
+                    currAlert.setMessage("What click action would you like to add?");
+                    currAlert.setBtnOneTxt("Click");
+                    currAlert.setBtnTwoTxt("Hover");
+                    currAlert.setYesNo(1, 0);
+                    currAlert.setHideUponLoad(getSubStage());
+                    currAlert.onResultFocus(getSubStage());
+                    boolean result = currAlert.getResult();
+                    if (result) {
+                        actionType = 'C';
+                    } else {
+                        actionType = 'H';
+                    }
 
                     int tempX = (int) Integer.parseInt(xValueTxt.getText());
                     int tempY = (int) Integer.parseInt(yValueTxt.getText());
 
 //                    ArrayList<Integer> tempCoordinates = new ArrayList(Arrays.asList(tempX, tempY));
 //                    ArrayList<String> tempKeys = new ArrayList(Arrays.asList());
-                    Action tempAction = new Action("Click", "", new ArrayList<>(Arrays.asList(tempX, tempY)), new ArrayList<>(Arrays.asList()), "");
+                    Action tempAction = new Action("Click", "", new ArrayList<>(Arrays.asList(tempX, tempY)), new ArrayList<>(Arrays.asList()), "", actionType);
                     FXMLDocumentController.recieveActionType(tempAction);
 
                     // Close this stage
@@ -177,15 +195,15 @@ public class SetupWindowController implements Initializable {
                 if (!fKeyTxt.getText().isEmpty() || !sKeyTxt.getText().isEmpty()) {
                     ArrayList<String> keyList = new ArrayList<>(Arrays.asList());
 
-                    if(!fKeyTxt.getText().isEmpty()) {
+                    if (!fKeyTxt.getText().isEmpty()) {
                         keyList.add(fKeyTxt.getText());
-                    } 
-                    
-                    if(!sKeyTxt.getText().isEmpty()) {
+                    }
+
+                    if (!sKeyTxt.getText().isEmpty()) {
                         keyList.add(sKeyTxt.getText());
                     }
-                    
-                    Action tempAction = new Action("Keys", "", new ArrayList<>(Arrays.asList("")), keyList, "");
+
+                    Action tempAction = new Action("Keys", "", new ArrayList<>(Arrays.asList("")), keyList, "", 'E');
                     FXMLDocumentController.recieveActionType(tempAction);
 
                     // Close this stage

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="560.0" prefWidth="469.0" stylesheets="@../../resources/dark-theme.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ezautomator.confirmation.ConfirmationControllerSetup">
+   <children>
+      <Pane prefHeight="218.0" prefWidth="469.0" styleClass="custom-alert">
+         <children>
+            <Pane layoutX="6.0" layoutY="55.0" prefHeight="138.0" prefWidth="455.0" style="-fx-border-color: FFFF8D; -fx-border-radius: 20;" styleClass="main-text">
+               <children>
+                  <Text fill="WHITE" layoutX="32.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" text="A confirmation will allow you to pause the script at any given point in time and make it wait for a confirmation to continue." wrappingWidth="390.28912353515625" />
+                  <Text fill="WHITE" layoutX="191.0" layoutY="38.0" stroke="#ffff8d" strokeType="OUTSIDE" text="NOTE" wrappingWidth="72.28912353515625">
+                     <font>
+                        <Font size="27.0" />
+                     </font>
+                  </Text>
+                  <ImageView fitHeight="26.0" fitWidth="27.0" layoutX="151.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../icons/bulb.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Pane>
+            <ImageView fx:id="closeBtn" fitHeight="21.0" fitWidth="21.0" layoutX="437.0" layoutY="10.0" onMouseClicked="#closeApp" onMouseEntered="#closeBtnChangeHover" onMouseExited="#closeBtnChangeLeave" pickOnBounds="true" preserveRatio="true" styleClass="image-view">
+               <image>
+                  <Image url="@../icons/close.png" />
+               </image>
+            </ImageView>
+            <Text fill="WHITE" layoutX="44.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="EzAutomator">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+            <ImageView fitHeight="21.0" fitWidth="21.0" layoutX="14.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icons/icon.png" />
+               </image>
+            </ImageView>
+            <Button fx:id="btnConfirm" layoutX="16.0" layoutY="500.0" mnemonicParsing="false" onMousePressed="#onBtnConfirmPress" prefHeight="39.0" prefWidth="435.0" styleClass="checkbox-main" text="Continue" />
+            <Separator layoutX="-1.0" layoutY="37.0" prefHeight="4.0" prefWidth="469.0" />
+            <JFXTextField fx:id="confirmationTxt" layoutX="11.0" layoutY="248.0" prefHeight="37.0" prefWidth="447.0" promptText="                                         Enter Here " />
+            <Label layoutX="144.0" layoutY="222.0" text="Confirmation Message" textFill="WHITE">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Label>
+            <Label layoutX="187.0" layoutY="317.0" text="Setup keys" textFill="WHITE">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Label>
+            <Label layoutX="24.0" layoutY="356.0" prefHeight="26.0" prefWidth="122.0" text="Continue Key" textFill="WHITE">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Label>
+            <JFXTextField fx:id="delayTxt1" editable="false" layoutX="160.0" layoutY="351.0" prefHeight="37.0" prefWidth="136.0" promptText="Click Capture" />
+            <JFXTextField fx:id="delayTxt11" editable="false" layoutX="159.0" layoutY="422.0" prefHeight="37.0" prefWidth="136.0" promptText="Click Capture" />
+            <Label layoutX="21.0" layoutY="433.0" text="Termination Key" textFill="WHITE">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Label>
+            <Button fx:id="btnKContinue" layoutX="308.0" layoutY="363.0" mnemonicParsing="false" onMousePressed="#onBtnConfirmPress" prefHeight="39.0" prefWidth="154.0" styleClass="jfx-layout-body" text="Capture" />
+            <Button fx:id="btnKTerminate" layoutX="308.0" layoutY="421.0" mnemonicParsing="false" onMousePressed="#onBtnConfirmPress" prefHeight="39.0" prefWidth="154.0" styleClass="jfx-layout-body" text="Capture" />
+            <Separator layoutY="304.0" prefHeight="4.0" prefWidth="469.0" />
+            <Separator layoutY="202.0" prefHeight="4.0" prefWidth="469.0" />
+            <Separator layoutX="-6.0" layoutY="483.0" prefHeight="4.0" prefWidth="469.0" />
+            <ImageView fitHeight="26.0" fitWidth="27.0" layoutX="111.0" layoutY="222.0" pickOnBounds="true" preserveRatio="true" style="-fx: white;">
+               <image>
+                  <Image url="@../icons/one.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="26.0" fitWidth="27.0" layoutX="157.0" layoutY="317.0" pickOnBounds="true" preserveRatio="true" style="-fx: white;">
+               <image>
+                  <Image url="@../icons/two.png" />
+               </image>
+            </ImageView>
+         </children>
+      </Pane>
+   </children>
+</StackPane>
