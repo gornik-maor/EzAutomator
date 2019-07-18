@@ -1,5 +1,7 @@
 package ezautomator.main;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -9,19 +11,23 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
+import org.jnativehook.GlobalScreen;
+import org.jnativehook.NativeHookException;
 
 /**
  *
  * @author Abwatts
  */
 public class EzAutomator extends Application {
-    
+
     public static Boolean isSplashLoaded = false;
     public static Boolean isMaximized = false;
-    
+    private static Stage mainStage;
+
     double diffX;
     double diffY;
-    
+
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/ezautomator/main/FXMLDocument.fxml"));
@@ -32,6 +38,21 @@ public class EzAutomator extends Application {
         stage.setResizable(false);
         stage.setTitle("EzAutomator");
         stage.show();
+
+        mainStage = stage;
+
+        // Ensuring the program stops listening to key events even though the user has closed the program through a different way
+        // other than simply clickling the exit button
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                try {
+                    GlobalScreen.unregisterNativeHook();
+                } catch (NativeHookException ex) {
+                    Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
 
         // Catching all excpetions thrown in JavaFX's Application Thread and filtering
         Thread.setDefaultUncaughtExceptionHandler(EzAutomator::showError);
@@ -66,7 +87,7 @@ public class EzAutomator extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
+
     private static void showError(Thread t, Throwable e) {
         if (e instanceof ArrayIndexOutOfBoundsException) {
             System.err.println("***Ignorable exception was thrown*** (" + e.toString() + ")");
@@ -74,5 +95,13 @@ public class EzAutomator extends Application {
             e.printStackTrace();
         }
     }
-    
+
+    /**
+     * Returns the main stage instance
+     * @return main application stage
+     */
+    public static Stage getMainStage() {
+        return mainStage;
+    }
+
 }

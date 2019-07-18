@@ -8,6 +8,7 @@ package ezautomator.subForms;
 import com.jfoenix.controls.JFXTextField;
 import ezautomator.alert.AlertController;
 import ezautomator.main.Action;
+import ezautomator.main.EzAutomator;
 import ezautomator.main.FXMLDocumentController;
 import java.awt.MouseInfo;
 import java.awt.PointerInfo;
@@ -93,7 +94,7 @@ public class SetupWindowController implements Initializable {
 
     @FXML
     void closeApp(MouseEvent event) {
-        FXMLDocumentController.getPrimaryStage().setIconified(false);
+        EzAutomator.getMainStage().setIconified(false);
         CancelTimers();
         try {
             GlobalScreen.unregisterNativeHook();
@@ -159,6 +160,7 @@ public class SetupWindowController implements Initializable {
                 // Working with the first pane
                 if (!xValueTxt.getText().isEmpty() && !yValueTxt.getText().isEmpty()) {
                     char actionType = 'C';
+                    String action = "Click";
 
                     // Checking what type the action is
                     AlertController alertBox = new AlertController();
@@ -170,10 +172,9 @@ public class SetupWindowController implements Initializable {
                     currAlert.setHideUponLoad(getSubStage());
                     currAlert.onResultFocus(getSubStage());
                     boolean result = currAlert.getResult();
-                    if (result) {
-                        actionType = 'C';
-                    } else {
+                    if (!result) {
                         actionType = 'H';
+                        action = "Hover";
                     }
 
                     int tempX = (int) Integer.parseInt(xValueTxt.getText());
@@ -181,11 +182,13 @@ public class SetupWindowController implements Initializable {
 
 //                    ArrayList<Integer> tempCoordinates = new ArrayList(Arrays.asList(tempX, tempY));
 //                    ArrayList<String> tempKeys = new ArrayList(Arrays.asList());
-                    Action tempAction = new Action("Click", "", new ArrayList<>(Arrays.asList(tempX, tempY)), new ArrayList<>(Arrays.asList()), "", actionType);
+                    Action tempAction = new Action(action, "", new ArrayList<>(Arrays.asList(tempX, tempY)), new ArrayList<>(Arrays.asList()), "", actionType);
                     FXMLDocumentController.recieveActionType(tempAction);
 
                     // Close this stage
-                    FXMLDocumentController.getPrimaryStage().setIconified(false);
+                    EzAutomator.getMainStage().setIconified(false);
+
+                    System.out.println(tempAction.getType());
                     closeForm();
                 }
                 break;
@@ -207,7 +210,7 @@ public class SetupWindowController implements Initializable {
                     FXMLDocumentController.recieveActionType(tempAction);
 
                     // Close this stage
-                    FXMLDocumentController.getPrimaryStage().setIconified(false);
+                    EzAutomator.getMainStage().setIconified(false);
                     closeForm();
                 }
                 break;
@@ -255,27 +258,13 @@ public class SetupWindowController implements Initializable {
             }
         });
 
-        // Ensuring the timer has stopped even though the user has closed the program through a different way
-        // other than simply clickling the exit button
-        FXMLDocumentController.getPrimaryStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                try {
-                    CancelTimers();
-                    GlobalScreen.unregisterNativeHook();
-                } catch (NativeHookException ex) {
-                    Logger.getLogger(SetupWindowController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
-
         // Enabling key listening upon form load
         enableListener();
     }
 
     public void startCapCoordinates() {
         // Would you like to capture specific coordinates? (Y/N)
-        FXMLDocumentController.getPrimaryStage().setIconified(true);
+        EzAutomator.getMainStage().setIconified(true);
 
         Timer ptTimer = new Timer();
         timers.add(ptTimer);

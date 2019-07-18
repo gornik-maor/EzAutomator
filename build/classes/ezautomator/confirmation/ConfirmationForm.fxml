@@ -9,7 +9,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<StackPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="590.0" prefWidth="469.0" stylesheets="@../../resources/dark-theme.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ezautomator.delay.DelayFormController">
+<StackPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="590.0" prefWidth="469.0" stylesheets="@../../resources/dark-theme.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ezautomator.confirmation.ConfirmationControllerSetup">
    <children>
       <Pane prefHeight="218.0" prefWidth="469.0" styleClass="custom-alert">
          <children>
@@ -83,7 +83,7 @@
                   <Image url="@../icons/two.png" />
                </image>
             </ImageView>
-            <JFXToggleButton layoutX="103.0" layoutY="476.0" text="Use Previous Entered Information" textFill="WHITE" />
+            <JFXToggleButton fx:id="toggleInfo" layoutX="103.0" layoutY="476.0" text="Use Previous Entered Information" textFill="WHITE" />
             <Separator layoutX="-1.0" layoutY="523.0" prefHeight="4.0" prefWidth="469.0" />
          </children>
       </Pane>

@@ -4,15 +4,11 @@ import com.jfoenix.controls.JFXTextField;
 import ezautomator.alert.AlertController;
 import ezautomator.confirmation.ConfirmationControllerSetup;
 import ezautomator.delay.DelayFormController;
-import ezautomator.subForms.SetupWindowController;
 import java.io.IOException;
 import java.net.URL;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
-import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
@@ -45,8 +41,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import javafx.util.Duration;
-import org.jnativehook.GlobalScreen;
-import org.jnativehook.NativeHookException;
 
 /**
  *
@@ -217,6 +211,8 @@ public class FXMLDocumentController implements Initializable {
 
             ArrayList test3 = new ArrayList(Arrays.asList("CTRL", "C"));
             addAction(new Action("Keys", "Notepad", test2, test3, "100", 'e'));
+
+            
         }
 
         // Change Listener for choicebox
@@ -254,15 +250,15 @@ public class FXMLDocumentController implements Initializable {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        
+
                         // Adding confirmation to the script
                     } else {
                         ConfirmationControllerSetup confirmationClss = new ConfirmationControllerSetup();
                         // Setting up the alert form before displaying it
-                        ConfirmationControllerSetup currConfirmationClss = confirmationClss.loadAlert();
-                        currConfirmationClss.setHideUponLoad(mainStage);
-                        currConfirmationClss.onResultFocus(mainStage);
-//                        boolean resultAlert = currAlertClss.getResult();
+                        ConfirmationControllerSetup currConfirmationClss = confirmationClss.loadForm();
+                        currConfirmationClss.setHideUponLoad(EzAutomator.getMainStage());
+                        currConfirmationClss.onResultFocus(EzAutomator.getMainStage());
+                        currConfirmationClss.getConfirmationInfo();
                     }
                 }
             });
@@ -280,11 +276,11 @@ public class FXMLDocumentController implements Initializable {
                         if (aDelay < 0.9) {
                             dataT = "seconds";
                             // Converting to seconds
-                            aDelay = aDelay * 60;
+                            aDelay *= 60;
                         } else if (aDelay >= 60) {
                             dataT = "hours";
                             // Converting to hours
-                            aDelay = aDelay / 60;
+                            aDelay /= 60;
                         }
 
                         // Checking whether the number of seconds or minutes is only 1
@@ -294,6 +290,8 @@ public class FXMLDocumentController implements Initializable {
                         String actionT = tempAction.getAction();
                         if (actionT.equals("Keys")) {
                             actionT = "Send Keys";
+                        } else {
+                            actionT = "Mouse " + actionT;
                         }
                         return "Action (" + actionT + ") | Delay (" + aDelay + ") " + dataT + ".";
                     });
@@ -390,15 +388,6 @@ public class FXMLDocumentController implements Initializable {
      */
     public static void setPaneID(int ID) {
         FXMLDocumentController.ID = ID;
-    }
-
-    /**
-     * Returning main stage
-     *
-     * @return
-     */
-    public static Stage getPrimaryStage() {
-        return mainStage;
     }
 
     /**

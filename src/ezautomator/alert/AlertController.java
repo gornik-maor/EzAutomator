@@ -5,8 +5,6 @@
  */
 package ezautomator.alert;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -16,6 +14,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -33,39 +32,42 @@ import javafx.stage.StageStyle;
  * @author Abwatts
  */
 public class AlertController implements Initializable {
-
+    
     @FXML
     private Button btnTwo;
-
+    
     @FXML
     private ImageView closeBtn;
-
+    
     @FXML
     private Text displayLbl;
-
+    
     @FXML
     private Button btnOne;
-
+    
     @FXML
     private StackPane root;
-
+    
+    @FXML
+    private StackPane msgPane;
+    
     @FXML
     void closeApp(MouseEvent event) {
         // Close and return false
         result = false;
         closeForm();
     }
-
+    
     @FXML
     void closeBtnChangeHover(MouseEvent event) {
         closeBtn.setImage(new Image("/ezautomator/icons/close-hover.png"));
     }
-
+    
     @FXML
     void closeBtnChangeLeave(MouseEvent event) {
         closeBtn.setImage(new Image("/ezautomator/icons/close.png"));
     }
-
+    
     @FXML
     void onBtnOneMousePressed(MouseEvent event) {
         switch (btnOneID) {
@@ -76,10 +78,10 @@ public class AlertController implements Initializable {
                 result = true;
                 break;
         }
-
+        
         closeForm();
     }
-
+    
     @FXML
     void onBtnTwoMousePressed(MouseEvent event) {
         switch (btnTwoID) {
@@ -90,20 +92,20 @@ public class AlertController implements Initializable {
                 result = true;
                 break;
         }
-
+        
         closeForm();
     }
-
+    
     private boolean result;
-
+    
     private int btnOneID, btnTwoID;
-
+    
     private double diffX, diffY;
-
+    
     private Stage callerStage;
-
+    
     private Stage stageToHide;
-
+    
     private AlertController alertCls;
 
     /**
@@ -112,6 +114,7 @@ public class AlertController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        
 
         /**
          * Allowing the user to drag the form
@@ -145,9 +148,6 @@ public class AlertController implements Initializable {
     public void setMessage(String message) {
         if (!message.isEmpty()) {
             displayLbl.setText(message);
-            Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-//            displayLbl.setLayoutX(dim);
-// https://stackoverflow.com/questions/26169445/how-do-i-center-javafx-controls
             regainFocus();
         }
     }
@@ -216,7 +216,7 @@ public class AlertController implements Initializable {
      * Bringing the focus to the desired form
      */
     private void closeForm() {
-        //FXMLDocumentController.getPrimaryStage().setIconified(false);
+        //EzAutomator.getMainStage().setIconified(false);
         if (callerStage != null) {
             callerStage.setIconified(false);
         }
@@ -250,7 +250,7 @@ public class AlertController implements Initializable {
             alertStage.setTitle("EzAutomator");
             alertStage.setScene(new Scene(alertPane));
             return fxmlLoader.getController();
-
+            
         } catch (IOException ex) {
             Logger.getLogger(AlertController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -264,6 +264,7 @@ public class AlertController implements Initializable {
      */
     public boolean getResult() {
         hideUponLoad();
+        displayLbl.requestFocus();
         getCurrStage().showAndWait();
         return result;
     }

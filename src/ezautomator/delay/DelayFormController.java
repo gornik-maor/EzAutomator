@@ -7,6 +7,7 @@ package ezautomator.delay;
 
 import com.jfoenix.controls.JFXTextField;
 import ezautomator.alert.AlertController;
+import ezautomator.main.EzAutomator;
 import ezautomator.main.FXMLDocumentController;
 import java.io.IOException;
 import java.net.URL;
@@ -53,7 +54,7 @@ public class DelayFormController implements Initializable {
 
     @FXML
     void closeApp(MouseEvent event) {
-        FXMLDocumentController.getPrimaryStage().setIconified(false);
+        EzAutomator.getMainStage().setIconified(false);
         getCurrStage().close();
     }
 
@@ -167,7 +168,7 @@ public class DelayFormController implements Initializable {
      * Bringing the focus to the desired form
      */
     private void closeForm() {
-        //FXMLDocumentController.getPrimaryStage().setIconified(false);
+        //EzAutomator.getMainStage().setIconified(false);
         if (callerStage != null) {
             callerStage.setIconified(false);
         }

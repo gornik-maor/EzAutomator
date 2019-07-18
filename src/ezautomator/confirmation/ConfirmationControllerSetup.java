@@ -7,13 +7,13 @@ package ezautomator.confirmation;
 
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXToggleButton;
-import ezautomator.alert.AlertController;
 import ezautomator.main.FXMLDocumentController;
 import ezautomator.subForms.SetupWindowController;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -72,8 +72,13 @@ public class ConfirmationControllerSetup implements Initializable {
 
     @FXML
     void closeApp(MouseEvent event) {
-        FXMLDocumentController.getPrimaryStage().setIconified(false);
-        getCurrStage().close();
+        try {
+            GlobalScreen.unregisterNativeHook();
+            closeForm();
+            getCurrStage().close();
+        } catch (NativeHookException ex) {
+            Logger.getLogger(ConfirmationControllerSetup.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @FXML
@@ -88,9 +93,34 @@ public class ConfirmationControllerSetup implements Initializable {
 
     @FXML
     void onBtnConfirmPress(MouseEvent event) {
-        if (!keyContinue.isEmpty() && !keyTerminate.isEmpty()) {
-            actionKeys.add(keyContinue);
-            actionKeys.add(keyTerminate);
+        if (!keyContinue.isEmpty() && !keyTerminate.isEmpty() && !confirmationTxt.getText().isEmpty() && !keyContinue.equals(keyTerminate)) {
+            confirmationInfo = new ArrayList(Arrays.asList(keyContinue, keyTerminate, confirmationTxt.getText()));
+            closeForm();
+        }
+    }
+
+    @FXML
+    void onBtnCapOne(MouseEvent event) {
+        isCapConfirm = !isCapConfirm;
+
+        if (isCapConfirm) {
+            btnKContinue.setText("Capturing...");
+            btnKTerminate.setText("Capture");
+            isCapTerminate = false;
+        } else {
+            btnKContinue.setText("Capture");
+        }
+    }
+
+    @FXML
+    void onBtnCapTwo(MouseEvent event) {
+        isCapTerminate = !isCapTerminate;
+        if (isCapTerminate) {
+            btnKTerminate.setText("Capturing...");
+            btnKContinue.setText("Capture");
+            isCapConfirm = false;
+        } else {
+            btnKTerminate.setText("Capture");
         }
     }
 
@@ -102,10 +132,10 @@ public class ConfirmationControllerSetup implements Initializable {
 
     private String cMessage;
 
-    private ArrayList<String> actionKeys;
+    private ArrayList<String> confirmationInfo;
 
     private String keyContinue, keyTerminate;
-    
+
     private boolean isCapConfirm, isCapTerminate;
 
     /**
@@ -143,13 +173,13 @@ public class ConfirmationControllerSetup implements Initializable {
         NativeKeyListener keyListener = new NativeKeyListener() {
             @Override
             public void nativeKeyPressed(NativeKeyEvent nke) {
-                if (confirmationTxt.isFocused() && isCapConfirm) {
+                if (isCapConfirm) {
                     keyContinue = KeyEvent.getKeyText(nke.getRawCode());
-                    confirmationTxt.setText(KeyEvent.getKeyText(nke.getRawCode()));
+                    continueTxt.setText(keyContinue);
 
-                } else if (terminateTxt.isFocused() && isCapTerminate) {
+                } else if (isCapTerminate) {
                     keyTerminate = KeyEvent.getKeyText(nke.getRawCode());
-                    terminateTxt.setText(KeyEvent.getKeyText(nke.getRawCode()));
+                    terminateTxt.setText(keyTerminate);
                 }
             }
 
@@ -195,11 +225,15 @@ public class ConfirmationControllerSetup implements Initializable {
      * Bringing the focus to the desired form
      */
     private void closeForm() {
-        //FXMLDocumentController.getPrimaryStage().setIconified(false);
-        if (callerStage != null) {
-            callerStage.setIconified(false);
+        try {
+            if (callerStage != null) {
+                callerStage.setIconified(false);
+            }
+            GlobalScreen.unregisterNativeHook();
+            getCurrStage().close();
+        } catch (NativeHookException ex) {
+            Logger.getLogger(ConfirmationControllerSetup.class.getName()).log(Level.SEVERE, null, ex);
         }
-        getCurrStage().close();
     }
 
     /**
@@ -207,22 +241,22 @@ public class ConfirmationControllerSetup implements Initializable {
      *
      * @return
      */
-    public ConfirmationControllerSetup loadAlert() {
+    public ConfirmationControllerSetup loadForm() {
         try {
             FXMLLoader fxmlLoader
-                    = new FXMLLoader(getClass().getResource("/ezautomator/delay/DelayForm.fxml"));
-            StackPane alertPane = fxmlLoader.load();
+                    = new FXMLLoader(getClass().getResource("/ezautomator/confirmation/ConfirmationSetup.FXML"));
+            StackPane confirmPane = fxmlLoader.load();
             setConfirmationCls(fxmlLoader.getController());
-            Stage delayStage = new Stage();
-            delayStage.initStyle(StageStyle.UNDECORATED);
-            delayStage.initModality(Modality.APPLICATION_MODAL);
-            delayStage.getIcons().add(new Image("/ezautomator/icons/icon.png"));
-            delayStage.setTitle("EzAutomator");
-            delayStage.setScene(new Scene(alertPane));
+            Stage confirmStage = new Stage();
+            confirmStage.initStyle(StageStyle.UNDECORATED);
+            confirmStage.initModality(Modality.APPLICATION_MODAL);
+            confirmStage.getIcons().add(new Image("/ezautomator/icons/icon.png"));
+            confirmStage.setTitle("EzAutomator");
+            confirmStage.setScene(new Scene(confirmPane));
             return fxmlLoader.getController();
 
         } catch (IOException ex) {
-            Logger.getLogger(AlertController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ConfirmationControllerSetup.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -232,10 +266,11 @@ public class ConfirmationControllerSetup implements Initializable {
      *
      * @return
      */
-    public ArrayList getActionKeys() {
+    public ArrayList getConfirmationInfo() {
         hideUponLoad();
         getCurrStage().showAndWait();
-        return actionKeys;
+        System.out.println(confirmationInfo);
+        return confirmationInfo;
     }
 
     /**
