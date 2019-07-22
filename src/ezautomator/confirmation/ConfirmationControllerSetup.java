@@ -7,6 +7,7 @@ package ezautomator.confirmation;
 
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXToggleButton;
+import ezautomator.alert.AlertController;
 import ezautomator.main.FXMLDocumentController;
 import ezautomator.subForms.SetupWindowController;
 import java.awt.event.KeyEvent;
@@ -42,34 +43,34 @@ import org.jnativehook.keyboard.NativeKeyListener;
  * @author gornicma
  */
 public class ConfirmationControllerSetup implements Initializable {
-
+    
     @FXML
     private JFXTextField confirmationTxt;
-
+    
     @FXML
     private ImageView closeBtn;
-
+    
     @FXML
     private StackPane root;
-
+    
     @FXML
     private Button btnConfirm;
-
+    
     @FXML
     private JFXToggleButton toggleInfo;
-
+    
     @FXML
     private Button btnKContinue;
-
+    
     @FXML
     private Button btnKTerminate;
-
+    
     @FXML
     private JFXTextField continueTxt;
-
+    
     @FXML
     private JFXTextField terminateTxt;
-
+    
     @FXML
     void closeApp(MouseEvent event) {
         if (confirmationTxt.getText().isEmpty() || continueTxt.getText().isEmpty() || terminateTxt.getText().isEmpty()) {
@@ -78,29 +79,48 @@ public class ConfirmationControllerSetup implements Initializable {
         
         closeForm();
     }
-
+    
     @FXML
     void closeBtnChangeHover(MouseEvent event) {
         closeBtn.setImage(new Image("/ezautomator/icons/close-hover.png"));
     }
-
+    
     @FXML
     void closeBtnChangeLeave(MouseEvent event) {
         closeBtn.setImage(new Image("/ezautomator/icons/close.png"));
     }
-
+    
     @FXML
     void onBtnConfirmPress(MouseEvent event) {
         if (!keyContinue.isEmpty() && !keyTerminate.isEmpty() && !confirmationTxt.getText().isEmpty() && !keyContinue.equals(keyTerminate)) {
             confirmationInfo = new ArrayList(Arrays.asList(keyContinue, keyTerminate, confirmationTxt.getText()));
             closeForm();
+        } else {
+            String alertMessage = (keyContinue.equals(keyTerminate) && !confirmationTxt.getText().isEmpty()) ? "Continuation and termination keys must be different!"
+                    : "Please be sure to fill out all the fields and try again.";
+            AlertController alertForm = new AlertController();
+            AlertController currAlert = alertForm.loadAlert();
+//            currAlert.setIcon("error");
+//            currAlert.setBtnOneTxt("Ok");
+//            currAlert.setBtnTwoTxt("Cancel");
+//            currAlert.setMessage(alertMessage);
+////            currAlert.setTitle("");
+//            currAlert.setHideUponLoad(getCurrStage());
+//            currAlert.onResultFocus(getCurrStage());
+//            currAlert.getResult();
+            currAlert.showDialog("Ok", "Cancel", alertMessage, "error", getCurrStage(), getCurrStage());
+            
+            btnKContinue.setText("Capture");
+            btnKTerminate.setText("Capture");
+            isCapConfirm = false;
+            isCapTerminate = false;
         }
     }
-
+    
     @FXML
     void onBtnCapOne(MouseEvent event) {
         isCapConfirm = !isCapConfirm;
-
+        
         if (isCapConfirm) {
             btnKContinue.setText("Capturing...");
             btnKTerminate.setText("Capture");
@@ -109,7 +129,7 @@ public class ConfirmationControllerSetup implements Initializable {
             btnKContinue.setText("Capture");
         }
     }
-
+    
     @FXML
     void onBtnCapTwo(MouseEvent event) {
         isCapTerminate = !isCapTerminate;
@@ -121,19 +141,20 @@ public class ConfirmationControllerSetup implements Initializable {
             btnKTerminate.setText("Capture");
         }
     }
-
+    
     private double diffX, diffY;
-
+    
     private ConfirmationControllerSetup confirmationCls;
-
+    
     private Stage callerStage, stageToHide;
-
+    
     private String cMessage;
-
-    private ArrayList<String> confirmationInfo;
-
-    private String keyContinue, keyTerminate;
-
+    
+    private ArrayList<String> confirmationInfo; // = new ArrayList<>(Arrays.asList("EMPTY", "EMPTY", "EMPTY", "EMPTY"));
+    
+    private String keyContinue = "";
+    private String keyTerminate = "";
+    
     private boolean isCapConfirm, isCapTerminate;
 
     /**
@@ -163,10 +184,10 @@ public class ConfirmationControllerSetup implements Initializable {
                 getCurrStage().setY(event.getScreenY() + diffY);
             }
         });
-
+        
         enableListener();
     }
-
+    
     public void enableListener() {
         NativeKeyListener keyListener = new NativeKeyListener() {
             @Override
@@ -174,24 +195,24 @@ public class ConfirmationControllerSetup implements Initializable {
                 if (isCapConfirm) {
                     keyContinue = KeyEvent.getKeyText(nke.getRawCode());
                     continueTxt.setText(keyContinue);
-
+                    
                 } else if (isCapTerminate) {
                     keyTerminate = KeyEvent.getKeyText(nke.getRawCode());
                     terminateTxt.setText(keyTerminate);
                 }
             }
-
+            
             @Override
             public void nativeKeyReleased(NativeKeyEvent nke) {
 //                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
-
+            
             @Override
             public void nativeKeyTyped(NativeKeyEvent nke) {
-
+                
             }
         };
-
+        
         try {
             GlobalScreen.registerNativeHook();
             GlobalScreen.addNativeKeyListener(keyListener);
@@ -199,7 +220,7 @@ public class ConfirmationControllerSetup implements Initializable {
             Logger.getLogger(SetupWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     private Stage getCurrStage() {
         Stage currStage = (Stage) closeBtn.getScene().getWindow();
         return currStage;
@@ -252,7 +273,7 @@ public class ConfirmationControllerSetup implements Initializable {
             confirmStage.setTitle("EzAutomator");
             confirmStage.setScene(new Scene(confirmPane));
             return fxmlLoader.getController();
-
+            
         } catch (IOException ex) {
             Logger.getLogger(ConfirmationControllerSetup.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -267,7 +288,7 @@ public class ConfirmationControllerSetup implements Initializable {
     public ArrayList getConfirmationInfo() {
         hideUponLoad();
         getCurrStage().showAndWait();
-        System.out.println(confirmationInfo);
+//        System.out.println(confirmationInfo);
         return confirmationInfo;
     }
 
@@ -301,7 +322,6 @@ public class ConfirmationControllerSetup implements Initializable {
          * INCOMPLETE: VALIDATE DELAY WHEN CONTINUE BUTTON IS CLICKED OTHERWISE
          * DELAY WILL ALWAYS REMAIN 0
          */
-
         if (confirmationCls != null) {
             this.confirmationCls = confirmationCls;
         }

@@ -21,6 +21,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -32,42 +33,45 @@ import javafx.stage.StageStyle;
  * @author Abwatts
  */
 public class AlertController implements Initializable {
-    
+
     @FXML
     private Button btnTwo;
-    
+
     @FXML
     private ImageView closeBtn;
-    
+
     @FXML
     private Text displayLbl;
-    
+
     @FXML
     private Button btnOne;
-    
+
     @FXML
     private StackPane root;
-    
+
     @FXML
     private StackPane msgPane;
-    
+
+    @FXML
+    private ImageView icon;
+
     @FXML
     void closeApp(MouseEvent event) {
         // Close and return false
         result = false;
         closeForm();
     }
-    
+
     @FXML
     void closeBtnChangeHover(MouseEvent event) {
         closeBtn.setImage(new Image("/ezautomator/icons/close-hover.png"));
     }
-    
+
     @FXML
     void closeBtnChangeLeave(MouseEvent event) {
         closeBtn.setImage(new Image("/ezautomator/icons/close.png"));
     }
-    
+
     @FXML
     void onBtnOneMousePressed(MouseEvent event) {
         switch (btnOneID) {
@@ -78,10 +82,10 @@ public class AlertController implements Initializable {
                 result = true;
                 break;
         }
-        
+
         closeForm();
     }
-    
+
     @FXML
     void onBtnTwoMousePressed(MouseEvent event) {
         switch (btnTwoID) {
@@ -92,20 +96,21 @@ public class AlertController implements Initializable {
                 result = true;
                 break;
         }
-        
+
         closeForm();
     }
-    
+
     private boolean result;
-    
-    private int btnOneID, btnTwoID;
-    
+
+    private int btnOneID = 1;
+    private int btnTwoID = 0;
+
     private double diffX, diffY;
-    
+
     private Stage callerStage;
-    
+
     private Stage stageToHide;
-    
+
     private AlertController alertCls;
 
     /**
@@ -114,7 +119,6 @@ public class AlertController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        
 
         /**
          * Allowing the user to drag the form
@@ -250,7 +254,7 @@ public class AlertController implements Initializable {
             alertStage.setTitle("EzAutomator");
             alertStage.setScene(new Scene(alertPane));
             return fxmlLoader.getController();
-            
+
         } catch (IOException ex) {
             Logger.getLogger(AlertController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -287,6 +291,60 @@ public class AlertController implements Initializable {
     private void hideUponLoad() {
         if (stageToHide != null) {
             stageToHide.setIconified(true);
+        }
+    }
+
+    /**
+     * Setting the alert icon image
+     *
+     * @param type
+     */
+    public void setIcon(String type) {
+        switch (type.toLowerCase()) {
+            case "exclamation":
+                icon.setImage(new Image("/ezautomator/icons/exclamation.png"));
+                break;
+            case "warning":
+                icon.setImage(new Image("/ezautomator/icons/warning.png"));
+                break;
+
+            case "error":
+                icon.setImage(new Image("/ezautomator/icons/error.png"));
+                break;
+        }
+    }
+
+    /**
+     *
+     * @param btnOneTxt Text for first button
+     * @param btnTwoTxt Text for second button
+     * @param message Text for the alert
+     * @param icon Icon for the alert
+     * @param hideFrom Stage to hide from before loading alert
+     * @param focusAfter Stage to focus on upon closing the alert
+     * @return User's response
+     */
+    public boolean showDialog(String btnOneTxt, String btnTwoTxt, String message, String icon, Stage hideFrom, Stage focusAfter) {
+        this.setBtnOneTxt(btnOneTxt);
+        this.setBtnTwoTxt(btnTwoTxt);
+        this.setMessage(message);
+        this.setIcon(icon);
+        stageToHide = hideFrom;
+        callerStage = focusAfter;
+        hideUponLoad();
+        displayLbl.requestFocus();
+        getCurrStage().showAndWait();
+        return result;
+    }
+
+    /**
+     * Setting the alert message font size
+     *
+     * @param size The font size
+     */
+    public void setFontSize(double size) {
+        if (size > 0) {
+            displayLbl.setFont(new Font(size));
         }
     }
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import com.jfoenix.controls.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.text.*?>
@@ -9,11 +10,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<StackPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="197.0" prefWidth="469.0" stylesheets="@../../resources/dark-theme.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ezautomator.alert.AlertController">
+<StackPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="198.0" prefWidth="499.0" stylesheets="@../../resources/dark-theme.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ezautomator.alert.AlertController">
    <children>
-      <Pane prefHeight="218.0" prefWidth="469.0" styleClass="custom-alert">
+      <Pane prefHeight="227.0" prefWidth="450.0" styleClass="custom-alert">
          <children>
-            <ImageView fx:id="closeBtn" fitHeight="21.0" fitWidth="21.0" layoutX="437.0" layoutY="10.0" onMouseClicked="#closeApp" onMouseEntered="#closeBtnChangeHover" onMouseExited="#closeBtnChangeLeave" pickOnBounds="true" preserveRatio="true" styleClass="image-view">
+            <ImageView fx:id="closeBtn" fitHeight="21.0" fitWidth="21.0" layoutX="464.0" layoutY="10.0" onMouseClicked="#closeApp" onMouseEntered="#closeBtnChangeHover" onMouseExited="#closeBtnChangeLeave" pickOnBounds="true" preserveRatio="true" styleClass="image-view">
                <image>
                   <Image url="@../icons/close.png" />
                </image>
@@ -28,18 +29,30 @@
                   <Image url="@../icons/icon.png" />
                </image>
             </ImageView>
-            <StackPane fx:id="msgPane" layoutX="5.0" layoutY="51.0" prefHeight="76.0" prefWidth="459.0" style="-fx-border-color: FFFF8D; -fx-border-radius: 20;">
+            <StackPane fx:id="msgPane" layoutX="5.0" layoutY="51.0" prefHeight="88.0" prefWidth="489.0" style="-fx-border-color: FFFF8D; -fx-border-radius: 20;">
                <children>
                   <Text fx:id="displayLbl" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Would you like to set a delay?">
                      <font>
                         <Font size="20.0" />
                      </font>
+                     <StackPane.margin>
+                        <Insets top="40.0" />
+                     </StackPane.margin>
                   </Text>
+                  <Pane prefHeight="114.0" prefWidth="3.0">
+                     <children>
+                        <ImageView fx:id="icon" fitHeight="53.0" fitWidth="43.0" layoutX="222.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../icons/exclamation.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </Pane>
                </children>
             </StackPane>
-            <Button fx:id="btnOne" layoutX="18.0" layoutY="144.0" mnemonicParsing="false" onMousePressed="#onBtnOneMousePressed" prefHeight="39.0" prefWidth="202.0" styleClass="checkbox-main" text="Yes" />
-            <Button fx:id="btnTwo" layoutX="256.0" layoutY="144.0" mnemonicParsing="false" onMousePressed="#onBtnTwoMousePressed" prefHeight="39.0" prefWidth="202.0" styleClass="checkbox-main" text="No" />
-            <Separator layoutX="-1.0" layoutY="37.0" prefHeight="4.0" prefWidth="469.0" />
+            <Button fx:id="btnOne" layoutX="15.0" layoutY="152.0" mnemonicParsing="false" onMousePressed="#onBtnOneMousePressed" prefHeight="39.0" prefWidth="218.0" styleClass="checkbox-main" text="Yes" />
+            <Button fx:id="btnTwo" layoutX="263.0" layoutY="152.0" mnemonicParsing="false" onMousePressed="#onBtnTwoMousePressed" prefHeight="39.0" prefWidth="218.0" styleClass="checkbox-main" text="No" />
+            <Separator layoutX="-1.0" layoutY="38.0" prefHeight="3.0" prefWidth="489.0" />
          </children>
       </Pane>
    </children>

@@ -136,12 +136,29 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     void removeAction(MouseEvent event) {
         // Are you sure?
-        ObservableList<Action> selectedActions = actionTable.getSelectionModel().getSelectedItems();
-        ObservableList<Action> allActions = actionTable.getItems();
+        if (!actionTable.getItems().isEmpty()) {
+            if (actionTable.getSelectionModel().getSelectedIndex() != -1) {
+                AlertController alert = new AlertController();
+                AlertController currAlert = alert.loadAlert();
+                boolean result = currAlert.showDialog("Yes", "No", "Are you sure you wish to continue?", "exclamation", null, EzAutomator.getMainStage());
 
-        // For each action in selectedActions --> remove from the list
-        if (actionTable.getItems().size() > 0) {
-            selectedActions.forEach(allActions::remove);
+                // If the user confirms the removal
+                if (result) {
+                    ObservableList<Action> selectedActions = actionTable.getSelectionModel().getSelectedItems();
+                    ObservableList<Action> allActions = actionTable.getItems();
+
+                    // For each action in selectedActions --> remove from the list
+                    if (actionTable.getItems().size() > 0) {
+                        selectedActions.forEach(allActions::remove);
+                    }
+                }
+            } else {
+                // Displaying an alert
+                new AlertController().loadAlert().showDialog("Ok", "Cancel", "Please select one of the items!", "error", null, EzAutomator.getMainStage());
+            }
+        } else {
+            // Displaying an alert
+            new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no items to remove!", "error", null, EzAutomator.getMainStage());
         }
     }
 
@@ -187,10 +204,12 @@ public class FXMLDocumentController implements Initializable {
             // Clearing the comment field
             txtComment.setText("");
             // Create my own custom expection
+            AlertController alertForm = new AlertController();
+            AlertController currAlert = alertForm.loadAlert();
+            currAlert.setFontSize(17.5);
+            currAlert.showDialog("Ok", "Cancel", "Please pick an action and fill all fields before trying again.",
+                    "warning", EzAutomator.getMainStage(), EzAutomator.getMainStage());
             System.out.println("tempAction is: " + tempAction);
-            System.out.println(tempAction.getAction());
-            System.out.println(tempAction.getCoordinates());
-            System.out.println(tempAction.getSendKeys());
         }
 
     }
@@ -294,15 +313,15 @@ public class FXMLDocumentController implements Initializable {
                         String actionT = tempAction.getAction();
                         if (actionT.equals("Keys")) {
                             actionT = "Send Keys";
-                        } else if (Character.toUpperCase(tempAction.getType()) == 'C' || 
-                                Character.toUpperCase(tempAction.getType()) == 'H') {
+                        } else if (Character.toUpperCase(tempAction.getType()) == 'C'
+                                || Character.toUpperCase(tempAction.getType()) == 'H') {
                             actionT = "Mouse " + actionT;
                         }
 
                         // Confirmation info displayed
                         if (tempAction.getAction().equals("Confirmation")) {
-                            return "Action (" + actionT + ") | Continue (" + tempAction.getSendKeys().get(0) + ") | Terminate (" +
-                                    tempAction.getSendKeys().get(1) + ") | Delay (" + aDelay + ") " + dataT + ".";
+                            return "Action (" + actionT + ") | Continue (" + tempAction.getSendKeys().get(0) + ") | Terminate ("
+                                    + tempAction.getSendKeys().get(1) + ") | Delay (" + aDelay + ") " + dataT + ".";
                         }
 
                         return "Action (" + actionT + ") | Delay (" + aDelay + ") " + dataT + ".";
@@ -334,9 +353,8 @@ public class FXMLDocumentController implements Initializable {
         // Clearing all default columns first
         actionTable.getColumns().clear();
 
-        // Enabling multi-seleciton
-        actionTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-
+//        // Enabling multi-seleciton
+//        actionTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         // Setting up the action column
         TableColumn<Action, String> actionColumn = new TableColumn<>("Action");
         actionColumn.setMinWidth(60);
