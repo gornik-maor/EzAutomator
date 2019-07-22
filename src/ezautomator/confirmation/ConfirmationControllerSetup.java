@@ -72,13 +72,11 @@ public class ConfirmationControllerSetup implements Initializable {
 
     @FXML
     void closeApp(MouseEvent event) {
-        try {
-            GlobalScreen.unregisterNativeHook();
-            closeForm();
-            getCurrStage().close();
-        } catch (NativeHookException ex) {
-            Logger.getLogger(ConfirmationControllerSetup.class.getName()).log(Level.SEVERE, null, ex);
+        if (confirmationTxt.getText().isEmpty() || continueTxt.getText().isEmpty() || terminateTxt.getText().isEmpty()) {
+            FXMLDocumentController.getActionsBox().getItems().clear();
         }
+        
+        closeForm();
     }
 
     @FXML
@@ -87,7 +85,7 @@ public class ConfirmationControllerSetup implements Initializable {
     }
 
     @FXML
-    void closeBtnChangeLeave(ActionEvent event) {
+    void closeBtnChangeLeave(MouseEvent event) {
         closeBtn.setImage(new Image("/ezautomator/icons/close.png"));
     }
 

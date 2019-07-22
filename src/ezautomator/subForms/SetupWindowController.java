@@ -102,10 +102,8 @@ public class SetupWindowController implements Initializable {
             Logger.getLogger(SetupWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        // Ensuring the user has captured the desired point on the screen
-        if (xValueTxt.getText().isEmpty() && yValueTxt.getText().isEmpty()) {
+        // Ensuring the user truly wants to add a confirmation window to the script
             FXMLDocumentController.getActionsBox().getItems().clear();
-        }
 
         getSubStage().close();
     }

@@ -188,6 +188,9 @@ public class FXMLDocumentController implements Initializable {
             txtComment.setText("");
             // Create my own custom expection
             System.out.println("tempAction is: " + tempAction);
+            System.out.println(tempAction.getAction());
+            System.out.println(tempAction.getCoordinates());
+            System.out.println(tempAction.getSendKeys());
         }
 
     }
@@ -207,12 +210,11 @@ public class FXMLDocumentController implements Initializable {
 
             ArrayList test1 = new ArrayList(Arrays.asList(1234, 3));
             ArrayList test2 = new ArrayList(Arrays.asList());
-            addAction(new Action("Click", "iSYS", test1, test2, "50", 'e'));
+            addAction(new Action("Click", "iSYS", test1, test2, "50", 'c'));
 
             ArrayList test3 = new ArrayList(Arrays.asList("CTRL", "C"));
             addAction(new Action("Keys", "Notepad", test2, test3, "100", 'e'));
 
-            
         }
 
         // Change Listener for choicebox
@@ -258,7 +260,9 @@ public class FXMLDocumentController implements Initializable {
                         ConfirmationControllerSetup currConfirmationClss = confirmationClss.loadForm();
                         currConfirmationClss.setHideUponLoad(EzAutomator.getMainStage());
                         currConfirmationClss.onResultFocus(EzAutomator.getMainStage());
-                        currConfirmationClss.getConfirmationInfo();
+                        ArrayList<String> confirmationInfo = currConfirmationClss.getConfirmationInfo();
+                        tempAction = new Confirmation("", confirmationInfo.get(0), confirmationInfo.get(1), confirmationInfo.get(2));
+
                     }
                 }
             });
@@ -290,9 +294,17 @@ public class FXMLDocumentController implements Initializable {
                         String actionT = tempAction.getAction();
                         if (actionT.equals("Keys")) {
                             actionT = "Send Keys";
-                        } else {
+                        } else if (Character.toUpperCase(tempAction.getType()) == 'C' || 
+                                Character.toUpperCase(tempAction.getType()) == 'H') {
                             actionT = "Mouse " + actionT;
                         }
+
+                        // Confirmation info displayed
+                        if (tempAction.getAction().equals("Confirmation")) {
+                            return "Action (" + actionT + ") | Continue (" + tempAction.getSendKeys().get(0) + ") | Terminate (" +
+                                    tempAction.getSendKeys().get(1) + ") | Delay (" + aDelay + ") " + dataT + ".";
+                        }
+
                         return "Action (" + actionT + ") | Delay (" + aDelay + ") " + dataT + ".";
                     });
                 }
