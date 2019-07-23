@@ -26,7 +26,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -99,7 +98,7 @@ public class FXMLDocumentController implements Initializable {
     private static int actionDelay;
 
     private static ChoiceBox<String> tempCBox;
-    
+
     private static TableView<Action> tempTable;
 
     private AlertController alertClass;
@@ -223,8 +222,7 @@ public class FXMLDocumentController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        if (!EzAutomator.isSplashLoaded) {
-            //loadSpalshScreen();
+        if (EzAutomator.isSplashLoaded) {
             populateActionsBox();
             populateColumns();
             tempTable = actionTable;
@@ -237,100 +235,101 @@ public class FXMLDocumentController implements Initializable {
             ArrayList test3 = new ArrayList(Arrays.asList("CTRL", "C"));
             addAction(new Action("Keys", "Notepad", test2, test3, "100", 'E'));
 
-        }
+            // Change Listener for choicebox
+            if (!actionsBox.getItems().isEmpty()) {
+                actionsBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Number> observableValue, Number prevIndex, Number newIndex) {
+                        String selectedAction = actionsBox.getItems().get((int) newIndex);
 
-        // Change Listener for choicebox
-        if (!actionsBox.getItems().isEmpty()) {
-            actionsBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-                @Override
-                public void changed(ObservableValue<? extends Number> observableValue, Number prevIndex, Number newIndex) {
-                    String selectedAction = actionsBox.getItems().get((int) newIndex);
+                        if (selectedAction.startsWith("Click")) {
+                            setPaneID(1);
+                        } else if (selectedAction.startsWith("Send")) {
+                            setPaneID(2);
+                        } else {
+                            setPaneID(3);
+                        }
 
-                    if (selectedAction.startsWith("Click")) {
-                        setPaneID(1);
-                    } else if (selectedAction.startsWith("Send")) {
-                        setPaneID(2);
-                    } else {
-                        setPaneID(3);
-                    }
-
-                    // Opening the subStage form for
-                    if (getPaneID() == 1 || getPaneID() == 2) {
-                        try {
-                            Stage currStage = (Stage) root.getScene().getWindow();
-                            mainStage = currStage;
-                            StackPane subRoot = FXMLLoader.load(getClass().getResource("/ezautomator/subForms/SetupWindow.FXML"));
-                            Stage subStage = new Stage();
-                            subStage.initStyle(StageStyle.UNDECORATED);
-                            subStage.initModality(Modality.APPLICATION_MODAL);
-                            subStage.getIcons().add(new Image("/ezautomator/icons/icon.png"));
-                            subStage.setTitle("EzAutomator");
-                            subStage.setScene(new Scene(subRoot));
-                            currStage.setIconified(true);
-                            subStage.show();
+                        // Opening the subStage form for
+                        if (getPaneID() == 1 || getPaneID() == 2) {
+                            try {
+                                Stage currStage = (Stage) root.getScene().getWindow();
+                                mainStage = currStage;
+                                StackPane subRoot = FXMLLoader.load(getClass().getResource("/ezautomator/subForms/SetupWindow.FXML"));
+                                Stage subStage = new Stage();
+                                subStage.initStyle(StageStyle.UNDECORATED);
+                                subStage.initModality(Modality.APPLICATION_MODAL);
+                                subStage.getIcons().add(new Image("/ezautomator/icons/icon.png"));
+                                subStage.setTitle("EzAutomator");
+                                subStage.setScene(new Scene(subRoot));
+                                currStage.setIconified(true);
+                                subStage.show();
 //                        if (!actionsBox.getItems().isEmpty()) {
 //                            actionsBox.getItems().clear();
 //                        }
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            // Adding confirmation to the script
+                        } else {
+                            ConfirmationControllerSetup confirmationClss = new ConfirmationControllerSetup();
+                            // Setting up the alert form before displaying it
+                            ConfirmationControllerSetup currConfirmationClss = confirmationClss.loadForm();
+                            currConfirmationClss.setHideUponLoad(EzAutomator.getMainStage());
+                            currConfirmationClss.onResultFocus(EzAutomator.getMainStage());
+                            ArrayList<String> confirmationInfo = currConfirmationClss.getConfirmationInfo();
+                            tempAction = new Confirmation("", confirmationInfo.get(0), confirmationInfo.get(1), confirmationInfo.get(2));
+
                         }
-
-                        // Adding confirmation to the script
-                    } else {
-                        ConfirmationControllerSetup confirmationClss = new ConfirmationControllerSetup();
-                        // Setting up the alert form before displaying it
-                        ConfirmationControllerSetup currConfirmationClss = confirmationClss.loadForm();
-                        currConfirmationClss.setHideUponLoad(EzAutomator.getMainStage());
-                        currConfirmationClss.onResultFocus(EzAutomator.getMainStage());
-                        ArrayList<String> confirmationInfo = currConfirmationClss.getConfirmationInfo();
-                        tempAction = new Confirmation("", confirmationInfo.get(0), confirmationInfo.get(1), confirmationInfo.get(2));
-
                     }
-                }
-            });
+                });
 
-            // Table tooltip
-            actionTable.setRowFactory(new Callback<TableView<Action>, TableRow<Action>>() {
-                @Override
-                public TableRow<Action> call(TableView<Action> param) {
-                    return new TooltipTableRow<Action>((Action tempAction) -> {
-                        // Converting to minutes
-                        double aDelay = (Double.parseDouble(tempAction.getDelay().replace(" m/s", "")) / 60000);
-                        String dataT = "minutes";
+                // Table tooltip
+                actionTable.setRowFactory(new Callback<TableView<Action>, TableRow<Action>>() {
+                    @Override
+                    public TableRow<Action> call(TableView<Action> param) {
+                        return new TooltipTableRow<Action>((Action tempAction) -> {
+                            // Converting to minutes
+                            double aDelay = (Double.parseDouble(tempAction.getDelay().replace(" m/s", "")) / 60000);
+                            String dataT = "minutes";
 
-                        // Checking if the number is better be shown in seconds rather than minutes
-                        if (aDelay < 0.9) {
-                            dataT = "seconds";
-                            // Converting to seconds
-                            aDelay *= 60;
-                        } else if (aDelay >= 60) {
-                            dataT = "hours";
-                            // Converting to hours
-                            aDelay /= 60;
-                        }
+                            // Checking if the number is better be shown in seconds rather than minutes
+                            if (aDelay < 0.9) {
+                                dataT = "seconds";
+                                // Converting to seconds
+                                aDelay *= 60;
+                            } else if (aDelay >= 60) {
+                                dataT = "hours";
+                                // Converting to hours
+                                aDelay /= 60;
+                            }
 
-                        // Checking whether the number of seconds or minutes is only 1
-                        dataT = (aDelay == 1.0) ? dataT.substring(0, dataT.length() - 1) : dataT;
+                            // Checking whether the number of seconds or minutes is only 1
+                            dataT = (aDelay == 1.0) ? dataT.substring(0, dataT.length() - 1) : dataT;
 
-                        // Returning the text to display in the tooltip
-                        String actionT = tempAction.getAction();
-                        if (actionT.equals("Keys")) {
-                            actionT = "Send Keys";
-                        } else if (Character.toUpperCase(tempAction.getType()) == 'C'
-                                || Character.toUpperCase(tempAction.getType()) == 'H') {
-                            actionT = "Mouse " + actionT;
-                        }
+                            // Returning the text to display in the tooltip
+                            String actionT = tempAction.getAction();
+                            if (actionT.equals("Keys")) {
+                                actionT = "Send Keys";
+                            } else if (Character.toUpperCase(tempAction.getType()) == 'C'
+                                    || Character.toUpperCase(tempAction.getType()) == 'H') {
+                                actionT = "Mouse " + actionT;
+                            }
 
-                        // Confirmation info displayed
-                        if (tempAction.getAction().equals("Confirmation")) {
-                            return "Action (" + actionT + ") | Continue (" + tempAction.getSendKeys().get(0) + ") | Terminate ("
-                                    + tempAction.getSendKeys().get(1) + ") | Delay (" + aDelay + ") " + dataT + ".";
-                        }
+                            // Confirmation info displayed
+                            if (tempAction.getAction().equals("Confirmation")) {
+                                return "Action (" + actionT + ") | Continue (" + tempAction.getSendKeys().get(0) + ") | Terminate ("
+                                        + tempAction.getSendKeys().get(1) + ") | Delay (" + aDelay + ") " + dataT + ".";
+                            }
 
-                        return "Action (" + actionT + ") | Delay (" + aDelay + ") " + dataT + ".";
-                    });
-                }
-            });
+                            return "Action (" + actionT + ") | Delay (" + aDelay + ") " + dataT + ".";
+                        });
+                    }
+                });
+            }
+        } else {
+            loadSpalshScreen();
         }
     }
 
@@ -461,14 +460,14 @@ public class FXMLDocumentController implements Initializable {
             root.getChildren().setAll(loginPane);
 
             // Creating fade in transition 
-            FadeTransition fadeIn = new FadeTransition(Duration.seconds(3), loginPane);
+            FadeTransition fadeIn = new FadeTransition(Duration.seconds(2), loginPane);
             fadeIn.setFromValue(0);
             fadeIn.setToValue(1);
             fadeIn.setCycleCount(1);
             fadeIn.play();
 
             // Creating fade out transition 
-            FadeTransition fadeOut = new FadeTransition(Duration.seconds(3), loginPane);
+            FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), loginPane);
             fadeOut.setFromValue(1);
             fadeOut.setToValue(0);
             fadeOut.setCycleCount(1);
@@ -488,6 +487,7 @@ public class FXMLDocumentController implements Initializable {
                     EzAutomator.isSplashLoaded = true;
 
                     try {
+                        // Loading the main pane instead of the one used for the animation
                         StackPane mainPane = FXMLLoader.load(getClass().getResource("/ezautomator/main/FXMLDocument.fxml"));
                         root.getChildren().setAll(mainPane);
 

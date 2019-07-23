@@ -211,7 +211,8 @@ public class ConfirmationControllerSetup implements Initializable {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 //if (aFillCBox.getSelectionModel().getSelectedIndex() == -1) {
                 if (!aFillCBox.getItems().isEmpty()) {
-                    boolean result = new AlertController().loadAlert().showDialog("Confirm", "Cancel", "Fill up using the selected information?", "exclamation", null, getCurrStage());
+                    boolean result = new AlertController().loadAlert().showDialog("Confirm", "Cancel", "Use selected information for current confirmation?",
+                            "exclamation", null, getCurrStage());
 
                     if (result) {
                         selConfirm = (Confirmation) aFillCBox.getItems().get((int) newValue);
