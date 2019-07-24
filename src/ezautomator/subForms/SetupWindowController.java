@@ -103,7 +103,7 @@ public class SetupWindowController implements Initializable {
         }
 
         // Ensuring the user truly wants to add a confirmation window to the script
-            FXMLDocumentController.getActionsBox().getItems().clear();
+        FXMLDocumentController.getActionsBox().getItems().clear();
 
         getSubStage().close();
     }
@@ -161,18 +161,18 @@ public class SetupWindowController implements Initializable {
                     String action = "Click";
 
                     // Checking what type the action is
-                    AlertController alertBox = new AlertController();
-                    AlertController currAlert = alertBox.loadAlert();
-                    currAlert.setMessage("What click action would you like to add?");
-                    currAlert.setBtnOneTxt("Click");
-                    currAlert.setBtnTwoTxt("Hover");
-                    currAlert.setYesNo(1, 0);
-                    currAlert.setHideUponLoad(getSubStage());
-                    currAlert.onResultFocus(getSubStage());
-                    boolean result = currAlert.getResult();
+                    boolean result = new AlertController().loadAlert().showDialog("Click", "Hover", "What click action would you like to add?",
+                            "exclamation", getSubStage(), getSubStage(), 0.5);
                     if (!result) {
                         actionType = 'H';
                         action = "Hover";
+                    } else {
+                        // Checking how many times to click
+                        boolean tChoice = new AlertController().loadAlert().showDialog("Once", "Twice", "How many times would you like to click?",
+                                "exclamation", getSubStage(), getSubStage(), 0.5);
+                        if (!tChoice) {
+                            action += " x2";
+                        }
                     }
 
                     int tempX = (int) Integer.parseInt(xValueTxt.getText());

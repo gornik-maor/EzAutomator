@@ -217,7 +217,8 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     void onClickRunScript(MouseEvent event) {
-
+        ScriptExecutor script = new ScriptExecutor(tempTable);
+        script.run();
     }
 
     @Override
@@ -227,13 +228,6 @@ public class FXMLDocumentController implements Initializable {
             populateColumns();
             tempTable = actionTable;
             tempCBox = actionsBox;
-
-            ArrayList test1 = new ArrayList(Arrays.asList(1234, 3));
-            ArrayList test2 = new ArrayList(Arrays.asList());
-            addAction(new Action("Click", "iSYS", test1, test2, "50", 'C'));
-
-            ArrayList test3 = new ArrayList(Arrays.asList("CTRL", "C"));
-            addAction(new Action("Keys", "Notepad", test2, test3, "100", 'E'));
 
             // Change Listener for choicebox
             if (!actionsBox.getItems().isEmpty()) {

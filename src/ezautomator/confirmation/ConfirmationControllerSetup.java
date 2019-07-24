@@ -105,7 +105,7 @@ public class ConfirmationControllerSetup implements Initializable {
     void onBtnConfirmPress(MouseEvent event) {
         keyContinue = continueTxt.getText();
         keyTerminate = terminateTxt.getText();
-        
+
         if (!keyContinue.isEmpty() && !keyTerminate.isEmpty() && !confirmationTxt.getText().isEmpty() && !keyContinue.equals(keyTerminate)) {
             confirmationInfo = new ArrayList(Arrays.asList(keyContinue, keyTerminate, confirmationTxt.getText()));
             closeForm();
@@ -217,10 +217,10 @@ public class ConfirmationControllerSetup implements Initializable {
                     if (result) {
                         selConfirm = (Confirmation) aFillCBox.getItems().get((int) newValue);
                         autoFill(selConfirm);
-                        aFillCBox.getItems().clear();
-                        fillConfirmBox();
                     }
                 }
+                aFillCBox.getItems().clear();
+                fillConfirmBox();
             }
         });
 
@@ -299,7 +299,7 @@ public class ConfirmationControllerSetup implements Initializable {
             Logger.getLogger(ConfirmationControllerSetup.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private void fillConfirmBox() {
         aFillCBox.getItems().clear();
         ArrayList<Action> confirmations = FXMLDocumentController.getConfirmations();

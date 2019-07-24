@@ -107,9 +107,7 @@ public class AlertController implements Initializable {
 
     private double diffX, diffY;
 
-    private Stage callerStage;
-
-    private Stage stageToHide;
+    private Stage callerStage, stageToHide, tStage;
 
     private AlertController alertCls;
 
@@ -223,6 +221,10 @@ public class AlertController implements Initializable {
         //EzAutomator.getMainStage().setIconified(false);
         if (callerStage != null) {
             callerStage.setIconified(false);
+        }
+        
+        if (tStage != null) {
+            tStage.setOpacity(1);
         }
         getCurrStage().close();
     }
@@ -338,6 +340,32 @@ public class AlertController implements Initializable {
     }
 
     /**
+     *
+     * @param btnOneTxt Text for first button
+     * @param btnTwoTxt Text for second button
+     * @param message Text for the alert
+     * @param icon Icon for the alert
+     * @param focusAfter Stage to focus on upon closing the alert
+     * @return User's response
+     * @param tStage Target stage to change the opacity of
+     * @param opValue Opacity value to set
+     * @return
+     */
+    public boolean showDialog(String btnOneTxt, String btnTwoTxt, String message, String icon, Stage focusAfter, Stage tStage, double opValue) {
+        this.setBtnOneTxt(btnOneTxt);
+        this.setBtnTwoTxt(btnTwoTxt);
+        this.setMessage(message);
+        this.setIcon(icon);
+        this.tStage = tStage;
+        setTargetOpacity(opValue);
+        callerStage = focusAfter;
+        hideUponLoad();
+        displayLbl.requestFocus();
+        getCurrStage().showAndWait();
+        return result;
+    }
+
+    /**
      * Setting the alert message font size
      *
      * @param size The font size
@@ -345,6 +373,12 @@ public class AlertController implements Initializable {
     public void setFontSize(double size) {
         if (size > 0) {
             displayLbl.setFont(new Font(size));
+        }
+    }
+
+    public void setTargetOpacity(double opacity) {
+        if (tStage != null) {
+            tStage.setOpacity(opacity);
         }
     }
 
