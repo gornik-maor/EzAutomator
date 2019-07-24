@@ -17,7 +17,7 @@ public class Action {
     private String action;
     private String comment;
     private ArrayList<Integer> coordinates;
-    private ArrayList<String> sendKeys;
+    private ArrayList<Integer> sendKeys;
     private String delay;
     private char type;
 
@@ -72,11 +72,11 @@ public class Action {
         this.coordinates = coordinates;
     }
 
-    public ArrayList<String> getSendKeys() {
+    public ArrayList<Integer> getSendKeys() {
         return sendKeys;
     }
 
-    public void setSendKeys(ArrayList<String> sendKeys) {
+    public void setSendKeys(ArrayList<Integer> sendKeys) {
         this.sendKeys = sendKeys;
     }
 

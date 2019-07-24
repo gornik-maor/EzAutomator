@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXTextField;
 import ezautomator.alert.AlertController;
 import ezautomator.confirmation.ConfirmationControllerSetup;
 import ezautomator.delay.DelayFormController;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -139,9 +141,8 @@ public class FXMLDocumentController implements Initializable {
         // Are you sure?
         if (!actionTable.getItems().isEmpty()) {
             if (actionTable.getSelectionModel().getSelectedIndex() != -1) {
-                AlertController alert = new AlertController();
-                AlertController currAlert = alert.loadAlert();
-                boolean result = currAlert.showDialog("Yes", "No", "Are you sure you wish to continue?", "exclamation", null, EzAutomator.getMainStage());
+                boolean result = new AlertController().loadAlert().showDialog("Yes", "No", "Are you sure you wish to continue?", "exclamation",
+                        EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
 
                 // If the user confirms the removal
                 if (result) {
@@ -155,11 +156,13 @@ public class FXMLDocumentController implements Initializable {
                 }
             } else {
                 // Displaying an alert
-                new AlertController().loadAlert().showDialog("Ok", "Cancel", "Please select one of the items!", "error", null, EzAutomator.getMainStage());
+                new AlertController().loadAlert().showDialog("Ok", "Cancel", "Please select one of the items!",
+                        "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
             }
         } else {
             // Displaying an alert
-            new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no items to remove!", "error", null, EzAutomator.getMainStage());
+            new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no items to remove!",
+                    "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
         }
     }
 
@@ -175,17 +178,8 @@ public class FXMLDocumentController implements Initializable {
         if (tempAction != null && !txtComment.getText().isEmpty()) {
             tempAction.setComment(txtComment.getText());
 
-//            getPrimaryStage().setIconified(true);
-            // Setting up an alert
-            AlertController alertClss = new AlertController();
-            // Setting up the alert form before displaying it
-            AlertController currAlertClss = alertClss.loadAlert();
-            currAlertClss.setMessage("Would you like to set a delay?");
-            currAlertClss.setHideUponLoad(mainStage);
-            // Setting left button for yes and right for no
-            currAlertClss.setYesNo(1, 0);
-            currAlertClss.onResultFocus(mainStage);
-            boolean resultAlert = currAlertClss.getResult();
+            boolean resultAlert = new AlertController().loadAlert().showDialog("Ok", "Cancel", "Would you like to set a delay?",
+                    "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
 
             if (resultAlert == true) {
                 // Opening the delay form
@@ -209,7 +203,7 @@ public class FXMLDocumentController implements Initializable {
             AlertController currAlert = alertForm.loadAlert();
             currAlert.setFontSize(17.5);
             currAlert.showDialog("Ok", "Cancel", "Please pick an action and fill all fields before trying again.",
-                    "warning", EzAutomator.getMainStage(), EzAutomator.getMainStage());
+                    "warning", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
             System.out.println("tempAction is: " + tempAction);
         }
 
@@ -373,7 +367,33 @@ public class FXMLDocumentController implements Initializable {
         TableColumn<Action, ArrayList> sendKeysColumn = new TableColumn<>("Keys");
         sendKeysColumn.setMinWidth(50);
         sendKeysColumn.setSortable(false);
-        sendKeysColumn.setCellValueFactory(new PropertyValueFactory<>("sendKeys"));
+
+        // Sotring selected keys as string instead of their raw code representation
+        sendKeysColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Action, ArrayList>, ObservableValue<ArrayList>>() {
+            @Override
+            public ObservableValue<ArrayList> call(TableColumn.CellDataFeatures<Action, ArrayList> param) {
+
+                ArrayList<Integer> keyCodes = param.getValue().getSendKeys();
+                ArrayList<String> keyList = new ArrayList(Arrays.asList());
+
+                // Populating the key list with the actual string representation of each key code
+                keyCodes.forEach((Integer keyCode) -> {
+                    String keyRep = KeyEvent.getKeyText(keyCode);
+                    if (keyRep.startsWith("Unknown keyCode:")) {
+                        keyRep = keyRep.replace("Unknown keyCode: ", "");
+                    }
+
+                    keyRep = (keyRep.startsWith("Right B")) ? "CTRL" : keyRep;
+                    keyRep = (keyRep.equals("0xa4")) ? "ALT" : keyRep;
+                    keyRep = (keyRep.equals("0xd")) ? "ENTER" : keyRep;
+
+                    keyList.add(keyRep);
+                });
+
+                return new ReadOnlyObjectWrapper<>(keyList);
+            }
+        });
+//        coordinatesColumn.setCellValueFactory(new PropertyValueFactory<>("sendKeys"));
 
         // Setting up the delay column
         TableColumn<Action, String> delayColumn = new TableColumn<>("Delay");

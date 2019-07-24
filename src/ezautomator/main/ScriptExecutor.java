@@ -26,7 +26,6 @@ public class ScriptExecutor implements Runnable {
 
     TableView<Action> actionTable;
     Thread scriptThread;
-    Timer sTimer;
     Runnable runnable;
     Robot sRobot;
 
@@ -68,29 +67,61 @@ public class ScriptExecutor implements Runnable {
 
     }
 
-    public void delay() {
-
-    }
-
     public void waitForResponse() {
 
     }
 
     private void mousePress(ArrayList<Integer> coordinates, int numOfClicks, int delay) {
         sRobot.mouseMove(coordinates.get(0), coordinates.get(1));
-        for (int i = 1; i <= numOfClicks; i++) {
+
+        for (int i = 0; i < numOfClicks; i++) {
             sRobot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+
+            synchronized (scriptThread) {
+                try {
+                    scriptThread.wait(500);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(ScriptExecutor.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+            sRobot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+
         }
 
-        sTimer = new Timer();
-        sTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                System.out.println("timer is running...");
-                sRobot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
-            }
-        }, 100);
+        setDelay(delay);
+    }
 
+    private void sendKeys(int keyOne, int keyTwo, int delay) {
+        keyOne = (keyOne == 162) ? 17 : keyOne;
+        keyTwo = (keyTwo == 162) ? 17 : keyTwo;
+
+        // Holding the selected keys
+        sRobot.keyPress(keyOne);
+        sRobot.keyPress(keyTwo);
+
+        // Releasing the selected keys
+        sRobot.keyRelease(keyOne);
+        sRobot.keyRelease(keyTwo);
+
+        setDelay(delay);
+    }
+
+    private void sendKeys(int keyOne, int delay) {
+        // Performing small adjustions to match the keycode given by
+        // the native keyboard listener and the KeyEvent class
+        // to satisfy the robot class requirements
+        keyOne = (keyOne == 162) ? 17 : keyOne;
+        keyOne = (keyOne == 13) ? 10 : keyOne;
+
+        // Holding and then releasing the selected key 
+        sRobot.keyPress(keyOne);
+        sRobot.keyRelease(keyOne);
+
+        setDelay(delay);
+    }
+
+    public void setDelay(int delay) {
         // Adding a delay if the user chooses to do so
         if (delay > 0) {
             synchronized (scriptThread) {
@@ -103,32 +134,33 @@ public class ScriptExecutor implements Runnable {
         }
     }
 
-    private void sendKeys(String keyOne, String keyTwo) {
-       //sRobot.keyPress(KeyEvent.);
-    }
-    
-    private void sendKeys(String keyOne) {
-
-    }
-
     @Override
     public void run() {
         System.out.println("running...");
         actionTable.getItems().forEach((Action tempAction) -> {
+            // Parsing the assigned action delay and storing in a variable
+            int delay = Integer.parseInt(tempAction.getDelay().replace(" m/s", ""));
+
             switch (tempAction.getAction()) {
+
                 case "Click":
-                    mousePress(tempAction.getCoordinates(), 1, Integer.parseInt(tempAction.getDelay().replace(" m/s", "")));
+                    mousePress(tempAction.getCoordinates(), 1, delay);
                     break;
 
                 case "Click x2":
-                    mousePress(tempAction.getCoordinates(), 2, Integer.parseInt(tempAction.getDelay().replace(" m/s", "")));
+                    mousePress(tempAction.getCoordinates(), 2, delay);
                     break;
 
                 case "Hover":
-                    mousePress(tempAction.getCoordinates(), 0, Integer.parseInt(tempAction.getDelay().replace(" m/s", "")));
+                    mousePress(tempAction.getCoordinates(), 0, delay);
                     break;
 
                 case "Keys":
+                    if (tempAction.getSendKeys().size() == 2) {
+                        sendKeys(tempAction.getSendKeys().get(0), tempAction.getSendKeys().get(1), delay);
+                    } else {
+                        sendKeys(tempAction.getSendKeys().get(0), delay);
+                    }
 
                     break;
 
@@ -137,13 +169,14 @@ public class ScriptExecutor implements Runnable {
                     break;
             }
         });
+        
+        // Display message in the top right corner of the screen informing the user the script has been successfully fnished.
 
         // Handling all processes and closing them
         EzAutomator.getMainStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
-                sTimer.cancel();
-                scriptThread.stop();
+                scriptThread.interrupt();
             }
         });
     }

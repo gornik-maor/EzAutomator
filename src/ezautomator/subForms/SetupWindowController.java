@@ -87,10 +87,12 @@ public class SetupWindowController implements Initializable {
 
     private double diffY;
 
+    private int keyOne, keyTwo;
+
     private final ArrayList<Timer> timers = new ArrayList<>();
 
     private static final ArrayList<Integer> coordinates = new ArrayList<>();
-    private static final ArrayList<String> keys = new ArrayList<>();
+    private static final ArrayList<Integer> keys = new ArrayList<>();
 
     @FXML
     void closeApp(MouseEvent event) {
@@ -194,14 +196,14 @@ public class SetupWindowController implements Initializable {
                 System.out.println("PANE 2 is SELECTED");
                 // Working with the second pane
                 if (!fKeyTxt.getText().isEmpty() || !sKeyTxt.getText().isEmpty()) {
-                    ArrayList<String> keyList = new ArrayList<>(Arrays.asList());
+                    ArrayList<Integer> keyList = new ArrayList<>(Arrays.asList());
 
-                    if (!fKeyTxt.getText().isEmpty()) {
-                        keyList.add(fKeyTxt.getText());
+                    if (keyOne > 0) {
+                        keyList.add(keyOne);
                     }
 
-                    if (!sKeyTxt.getText().isEmpty()) {
-                        keyList.add(sKeyTxt.getText());
+                    if (keyTwo > 0) {
+                        keyList.add(keyTwo);
                     }
 
                     Action tempAction = new Action("Keys", "", new ArrayList<>(Arrays.asList("")), keyList, "", 'E');
@@ -309,7 +311,7 @@ public class SetupWindowController implements Initializable {
         }
     }
 
-    public static ArrayList<String> getKeys() {
+    public static ArrayList<Integer> getKeys() {
         if (keys.size() > 0) {
             return keys;
         } else {
@@ -357,11 +359,20 @@ public class SetupWindowController implements Initializable {
                     }
                 } else if (FXMLDocumentController.getPaneID() == 2 && isCapKeys) {
                     String keyPressed = KeyEvent.getKeyText(nke.getRawCode());
+                    if (keyPressed.startsWith("Unknown keyCode:")) {
+                        keyPressed = keyPressed.replace("Unknown keyCode: ", "");
+                    }
+
                     keyPressed = (keyPressed.startsWith("Right B")) ? "CTRL" : keyPressed;
+                    keyPressed = (keyPressed.equals("0xa4")) ? "ALT" : keyPressed;
+                    keyPressed = (keyPressed.equals("0xd")) ? "ENTER" : keyPressed;
+
                     if (fKeyTxt.isFocused()) {
                         fKeyTxt.setText(keyPressed);
+                        keyOne = nke.getRawCode();
                     } else {
                         sKeyTxt.setText(keyPressed);
+                        keyTwo = nke.getRawCode();
                     }
                 }
 
