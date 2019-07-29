@@ -358,14 +358,7 @@ public class SetupWindowController implements Initializable {
                             break;
                     }
                 } else if (FXMLDocumentController.getPaneID() == 2 && isCapKeys) {
-                    String keyPressed = KeyEvent.getKeyText(nke.getRawCode());
-                    if (keyPressed.startsWith("Unknown keyCode:")) {
-                        keyPressed = keyPressed.replace("Unknown keyCode: ", "");
-                    }
-
-                    keyPressed = (keyPressed.startsWith("Right B")) ? "CTRL" : keyPressed;
-                    keyPressed = (keyPressed.equals("0xa4")) ? "ALT" : keyPressed;
-                    keyPressed = (keyPressed.equals("0xd")) ? "ENTER" : keyPressed;
+                    String keyPressed = EzAutomator.getKeyTextRep(nke.getRawCode());
 
                     if (fKeyTxt.isFocused()) {
                         fKeyTxt.setText(keyPressed);

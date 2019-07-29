@@ -18,11 +18,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -40,7 +37,6 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 import org.jnativehook.keyboard.NativeKeyEvent;
@@ -103,14 +99,12 @@ public class ConfirmationControllerSetup implements Initializable {
 
     @FXML
     void onBtnConfirmPress(MouseEvent event) {
-        keyContinue = continueTxt.getText();
-        keyTerminate = terminateTxt.getText();
-
-        if (!keyContinue.isEmpty() && !keyTerminate.isEmpty() && !confirmationTxt.getText().isEmpty() && !keyContinue.equals(keyTerminate)) {
-            confirmationInfo = new ArrayList(Arrays.asList(keyContinue, keyTerminate, confirmationTxt.getText()));
+        if (keyContinue > 0 && keyTerminate > 0 && !confirmationTxt.getText().isEmpty() && keyContinue != keyTerminate) {
+            // First key, second key, and message (integers must be converted to string, otherwise an exception is thrown!)
+            confirmationInfo = new ArrayList(Arrays.asList(String.valueOf(keyContinue), String.valueOf(keyTerminate), confirmationTxt.getText()));
             closeForm();
         } else {
-            String alertMessage = (keyContinue.equals(keyTerminate) && !confirmationTxt.getText().isEmpty()) ? "Continuation and termination keys must be different!"
+            String alertMessage = (keyContinue == keyTerminate && !confirmationTxt.getText().isEmpty()) ? "Continuation and termination keys must be different!"
                     : "Please be sure to fill out all the fields and try again.";
             AlertController alertForm = new AlertController();
             AlertController currAlert = alertForm.loadAlert();
@@ -171,8 +165,8 @@ public class ConfirmationControllerSetup implements Initializable {
 
     private ArrayList<String> confirmationInfo; // = new ArrayList<>(Arrays.asList("EMPTY", "EMPTY", "EMPTY", "EMPTY"));
 
-    private String keyContinue = "";
-    private String keyTerminate = "";
+    private int keyContinue;
+    private int keyTerminate;
 
     private Confirmation selConfirm;
 
@@ -231,13 +225,15 @@ public class ConfirmationControllerSetup implements Initializable {
         NativeKeyListener keyListener = new NativeKeyListener() {
             @Override
             public void nativeKeyPressed(NativeKeyEvent nke) {
+                String keyPressed = EzAutomator.getKeyTextRep(nke.getRawCode());
+                
                 if (isCapConfirm) {
-                    keyContinue = KeyEvent.getKeyText(nke.getRawCode());
-                    continueTxt.setText(keyContinue);
+                    keyContinue = nke.getRawCode();
+                    continueTxt.setText(keyPressed);
 
                 } else if (isCapTerminate) {
-                    keyTerminate = KeyEvent.getKeyText(nke.getRawCode());
-                    terminateTxt.setText(keyTerminate);
+                    keyTerminate = nke.getRawCode();
+                    terminateTxt.setText(keyPressed);
                 }
             }
 
@@ -267,8 +263,10 @@ public class ConfirmationControllerSetup implements Initializable {
 
     private void autoFill(Confirmation confirmation) {
         confirmationTxt.setText(confirmation.getComment());
-        continueTxt.setText(confirmation.getKeyContinue());
-        terminateTxt.setText(confirmation.getKeyTerminate());
+        keyContinue = confirmation.getKeyContinue();
+        keyTerminate = confirmation.getKeyTerminate();
+        continueTxt.setText(EzAutomator.getKeyTextRep(keyContinue));
+        terminateTxt.setText(EzAutomator.getKeyTextRep(keyTerminate));
     }
 
     /**

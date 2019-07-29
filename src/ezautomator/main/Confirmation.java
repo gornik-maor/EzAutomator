@@ -14,15 +14,17 @@ import java.util.Arrays;
  */
 public class Confirmation extends Action {
 
-    private String action, comment, keyContinue, keyTerminate, message;
+    private String action, comment, message;
+    private int keyContinue, keyTerminate;
 
     public Confirmation() {
         super("Confirmation", "", new ArrayList<>(Arrays.asList("")),  new ArrayList<>(Arrays.asList("")), "", 'E');
         this.action = "Confirmation";
-        this.comment = this.keyContinue = this.keyTerminate = this.message = "";
+        this.comment = this.message = "";
+        this.keyContinue = this.keyTerminate = 0;
     }
 
-    public Confirmation(String comment, String keyContinue, String keyTerminate, String message) {
+    public Confirmation(String comment, int keyContinue, int keyTerminate, String message) {
         super("Confirmation", "", new ArrayList<>(Arrays.asList("")),  new ArrayList<>(Arrays.asList(keyContinue, keyTerminate)), "", 'E');
         this.action = "Confirmation";
         this.comment = comment;
@@ -31,19 +33,19 @@ public class Confirmation extends Action {
         this.message = message;
     }
 
-    public String getKeyContinue() {
+    public int getKeyContinue() {
         return keyContinue;
     }
 
-    public void setKeyContinue(String keyContinue) {
+    public void setKeyContinue(int keyContinue) {
         this.keyContinue = keyContinue;
     }
 
-    public String getKeyTerminate() {
+    public int getKeyTerminate() {
         return keyTerminate;
     }
 
-    public void setKeyTerminate(String keyTerminate) {
+    public void setKeyTerminate(int keyTerminate) {
         this.keyTerminate = keyTerminate;
     }
 

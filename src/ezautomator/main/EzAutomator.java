@@ -1,5 +1,6 @@
 package ezautomator.main;
 
+import java.awt.event.KeyEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -103,6 +104,24 @@ public class EzAutomator extends Application {
      */
     public static Stage getMainStage() {
         return mainStage;
+    }
+    
+    /**
+     * Converting key code to its string representation
+     * @param keyCode
+     * @return 
+     */
+    public static String getKeyTextRep(int keyCode) {
+        String keyPressed = KeyEvent.getKeyText(keyCode);
+        if (keyPressed.startsWith("Unknown keyCode:")) {
+            keyPressed = keyPressed.replace("Unknown keyCode: ", "");
+        }
+
+        keyPressed = (keyPressed.startsWith("Right B")) ? "CTRL" : keyPressed;
+        keyPressed = (keyPressed.equals("0xa4")) ? "ALT" : keyPressed;
+        keyPressed = (keyPressed.equals("0xd")) ? "ENTER" : keyPressed;
+        
+        return keyPressed;
     }
 
 }

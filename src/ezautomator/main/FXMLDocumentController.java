@@ -178,7 +178,7 @@ public class FXMLDocumentController implements Initializable {
         if (tempAction != null && !txtComment.getText().isEmpty()) {
             tempAction.setComment(txtComment.getText());
 
-            boolean resultAlert = new AlertController().loadAlert().showDialog("Ok", "Cancel", "Would you like to set a delay?",
+            boolean resultAlert = new AlertController().loadAlert().showDialog("Yes", "No", "Would you like to set a delay?",
                     "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
 
             if (resultAlert == true) {
@@ -267,7 +267,8 @@ public class FXMLDocumentController implements Initializable {
                             currConfirmationClss.setHideUponLoad(EzAutomator.getMainStage());
                             currConfirmationClss.onResultFocus(EzAutomator.getMainStage());
                             ArrayList<String> confirmationInfo = currConfirmationClss.getConfirmationInfo();
-                            tempAction = new Confirmation("", confirmationInfo.get(0), confirmationInfo.get(1), confirmationInfo.get(2));
+                            tempAction = new Confirmation("", Integer.parseInt(confirmationInfo.get(0)),
+                                    Integer.parseInt(confirmationInfo.get(1)), confirmationInfo.get(2));
 
                         }
                     }
@@ -307,8 +308,8 @@ public class FXMLDocumentController implements Initializable {
 
                             // Confirmation info displayed
                             if (tempAction.getAction().equals("Confirmation")) {
-                                return "Action (" + actionT + ") | Continue (" + tempAction.getSendKeys().get(0) + ") | Terminate ("
-                                        + tempAction.getSendKeys().get(1) + ") | Delay (" + aDelay + ") " + dataT + ".";
+                                return "Action (" + actionT + ") | Continue (" + EzAutomator.getKeyTextRep(tempAction.getSendKeys().get(0)) + ") | Terminate ("
+                                        + EzAutomator.getKeyTextRep(tempAction.getSendKeys().get(1)) + ") | Delay (" + aDelay + ") " + dataT + ".";
                             }
 
                             return "Action (" + actionT + ") | Delay (" + aDelay + ") " + dataT + ".";

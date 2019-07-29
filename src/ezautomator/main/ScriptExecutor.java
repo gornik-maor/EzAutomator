@@ -5,18 +5,21 @@
  */
 package ezautomator.main;
 
+import ezautomator.confirmation.ConfirmationController;
 import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.control.TableView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.WindowEvent;
+import org.controlsfx.control.Notifications;
 
 /**
  *
@@ -24,7 +27,9 @@ import javafx.stage.WindowEvent;
  */
 public class ScriptExecutor implements Runnable {
 
+    private static volatile boolean canceled;
     TableView<Action> actionTable;
+    private boolean keyResult = true;
     Thread scriptThread;
     Runnable runnable;
     Robot sRobot;
@@ -63,7 +68,27 @@ public class ScriptExecutor implements Runnable {
         }
     }
 
-    public void stop() {
+    public static void stop() {
+        System.out.println("Stopping???");
+        canceled = true;
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                if (canceled) {
+                    Image nImg = new Image("/ezautomator/icons/canceled.png");
+
+                    Notifications messageBuilder = Notifications.create()
+                            .title("Execution Terminated")
+                            .text("All actions were stopped.")
+                            .graphic(new ImageView(nImg))
+                            .position(Pos.TOP_RIGHT);
+
+                    messageBuilder.darkStyle();
+                    messageBuilder.show();
+                }
+            }
+        });
 
     }
 
@@ -134,44 +159,64 @@ public class ScriptExecutor implements Runnable {
         }
     }
 
+    private void dispComplete() {
+        Image nImg = new Image("/ezautomator/icons/checkmark.png");
+
+        Notifications messageBuilder = Notifications.create()
+                .title("Execution Complete")
+                .text("(" + actionTable.getItems().size() + ") actions were executed successfully.")
+                .graphic(new ImageView(nImg))
+                .position(Pos.TOP_RIGHT);
+
+        messageBuilder.darkStyle();
+        messageBuilder.show();
+    }
+
     @Override
     public void run() {
+        canceled = false;
         System.out.println("running...");
         actionTable.getItems().forEach((Action tempAction) -> {
-            // Parsing the assigned action delay and storing in a variable
-            int delay = Integer.parseInt(tempAction.getDelay().replace(" m/s", ""));
+            if (!canceled) {
+                // Parsing the assigned action delay and storing in a variable
+                int delay = Integer.parseInt(tempAction.getDelay().replace(" m/s", ""));
 
-            switch (tempAction.getAction()) {
+                switch (tempAction.getAction()) {
 
-                case "Click":
-                    mousePress(tempAction.getCoordinates(), 1, delay);
-                    break;
+                    case "Click":
+                        mousePress(tempAction.getCoordinates(), 1, delay);
+                        break;
 
-                case "Click x2":
-                    mousePress(tempAction.getCoordinates(), 2, delay);
-                    break;
+                    case "Click x2":
+                        mousePress(tempAction.getCoordinates(), 2, delay);
+                        break;
 
-                case "Hover":
-                    mousePress(tempAction.getCoordinates(), 0, delay);
-                    break;
+                    case "Hover":
+                        mousePress(tempAction.getCoordinates(), 0, delay);
+                        break;
 
-                case "Keys":
-                    if (tempAction.getSendKeys().size() == 2) {
-                        sendKeys(tempAction.getSendKeys().get(0), tempAction.getSendKeys().get(1), delay);
-                    } else {
-                        sendKeys(tempAction.getSendKeys().get(0), delay);
-                    }
+                    case "Keys":
+                        if (tempAction.getSendKeys().size() == 2) {
+                            sendKeys(tempAction.getSendKeys().get(0), tempAction.getSendKeys().get(1), delay);
+                        } else {
+                            sendKeys(tempAction.getSendKeys().get(0), delay);
+                        }
 
-                    break;
+                        break;
 
-                case "Confirmation":
-
-                    break;
+                    case "Confirmation":
+                        Confirmation tempConfirm = (Confirmation) tempAction;
+                        new ConfirmationController().loadAlert().showConfirmation(tempConfirm.getSendKeys().get(0), tempConfirm.getSendKeys().get(1),
+                                tempConfirm.getMessage(), EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                        setDelay(delay);
+                        break;
+                }
             }
         });
-        
-        // Display message in the top right corner of the screen informing the user the script has been successfully fnished.
 
+        if(!canceled) dispComplete();
+
+        // Display message in the top right corner of the screen informing the user the script has been successfully fnished.
         // Handling all processes and closing them
         EzAutomator.getMainStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
