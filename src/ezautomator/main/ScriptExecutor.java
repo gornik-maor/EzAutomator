@@ -19,6 +19,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.WindowEvent;
+import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
 /**
@@ -71,25 +72,6 @@ public class ScriptExecutor implements Runnable {
     public static void stop() {
         System.out.println("Stopping???");
         canceled = true;
-
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                if (canceled) {
-                    Image nImg = new Image("/ezautomator/icons/canceled.png");
-
-                    Notifications messageBuilder = Notifications.create()
-                            .title("Execution Terminated")
-                            .text("All actions were stopped.")
-                            .graphic(new ImageView(nImg))
-                            .position(Pos.TOP_RIGHT);
-
-                    messageBuilder.darkStyle();
-                    messageBuilder.show();
-                }
-            }
-        });
-
     }
 
     public void waitForResponse() {
@@ -159,13 +141,28 @@ public class ScriptExecutor implements Runnable {
         }
     }
 
-    private void dispComplete() {
+    private void dispNotification(int choice) {
         Image nImg = new Image("/ezautomator/icons/checkmark.png");
-
+        String mTxt = "", title = "";
+        
+        switch(choice) {
+            case 0:
+                nImg = new Image("/ezautomator/icons/canceled.png");
+                mTxt = "All actions were stopped.";
+                title = "Execution Terminated";
+                break;
+                
+            case 1:
+                mTxt = "(" + actionTable.getItems().size() + ") actions were executed successfully.";
+                title = "Execution Complete";
+                break;
+        }
+        
         Notifications messageBuilder = Notifications.create()
-                .title("Execution Complete")
-                .text("(" + actionTable.getItems().size() + ") actions were executed successfully.")
+                .title(title)
+                .text(mTxt)
                 .graphic(new ImageView(nImg))
+                .hideAfter(Duration.seconds(5))
                 .position(Pos.TOP_RIGHT);
 
         messageBuilder.darkStyle();
@@ -214,7 +211,14 @@ public class ScriptExecutor implements Runnable {
             }
         });
 
-        if(!canceled) dispComplete();
+        // Displaying script status notification
+        if (!canceled) {
+            // All actions were successfully executed
+            dispNotification(1);
+        } else {
+            // The script was terminated by the user
+            dispNotification(0);
+        }
 
         // Display message in the top right corner of the screen informing the user the script has been successfully fnished.
         // Handling all processes and closing them

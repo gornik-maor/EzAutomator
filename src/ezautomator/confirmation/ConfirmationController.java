@@ -149,12 +149,12 @@ public class ConfirmationController implements Initializable {
                             closeForm();
                         }
                     });
-                    
+
                 } else if (nke.getRawCode() == keyStop) {
-                   keyResult = false;
-                   ScriptExecutor.stop();
+                    keyResult = false;
+                    ScriptExecutor.stop();
                     System.out.println("have exectued!");
-                   
+
                     // problem here --> this line gets executed more than once
                     Platform.runLater(new Runnable() {
                         @Override
@@ -174,8 +174,10 @@ public class ConfirmationController implements Initializable {
         try {
             GlobalScreen.registerNativeHook();
             GlobalScreen.addNativeKeyListener(keyListener);
+
         } catch (NativeHookException ex) {
-            Logger.getLogger(SetupWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SetupWindowController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -244,8 +246,10 @@ public class ConfirmationController implements Initializable {
     private void closeForm() {
         try {
             GlobalScreen.unregisterNativeHook();
+
         } catch (NativeHookException ex) {
-            Logger.getLogger(ConfirmationController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ConfirmationController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
 
         //EzAutomator.getMainStage().setIconified(false);
@@ -324,7 +328,8 @@ public class ConfirmationController implements Initializable {
             return fxmlLoader.getController();
 
         } catch (IOException ex) {
-            Logger.getLogger(ConfirmationController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ConfirmationController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }

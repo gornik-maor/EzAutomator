@@ -38,13 +38,13 @@ public class Action {
         this.comment = comment;
         this.coordinates = coordinates;
         this.sendKeys = sendKeys;
-        
+
         if (delay.equals("")) {
             this.delay = delay + "0 m/s";
         } else {
             this.delay = delay + " m/s";
         }
-        
+
         this.type = type;
     }
 
@@ -87,12 +87,31 @@ public class Action {
     public void setDelay(String delay) {
         this.delay = delay + " m/s";
     }
-    
+
     public char getType() {
         return type;
     }
-    
+
     public void setType(char type) {
         this.type = type;
+    }
+
+    public void turnInto(Action actionIn) {
+        if (!actionIn.getAction().equals("Confirmation")) {
+            this.setAction(actionIn.action);
+            
+            if (!actionIn.getComment().isEmpty()) {
+                this.setComment(actionIn.comment);
+            }
+            
+            this.setCoordinates(actionIn.getCoordinates());
+            
+            if (!actionIn.getDelay().startsWith("0")) {
+                this.setDelay(actionIn.getDelay());
+            }
+            
+            this.setSendKeys(actionIn.getSendKeys());
+            this.setType(actionIn.getType());
+        }
     }
 }

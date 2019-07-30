@@ -101,7 +101,7 @@ public class EzAutomator extends Application {
      * Returns the main stage instance
      *
      * @return main application stage
-     */
+     */ 
     public static Stage getMainStage() {
         return mainStage;
     }

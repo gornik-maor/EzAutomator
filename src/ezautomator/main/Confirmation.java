@@ -56,4 +56,17 @@ public class Confirmation extends Action {
     public void setMessage(String message) {
         this.message = message;
     }
+    
+    /**
+     * 
+     * @param confrimation 
+     */
+    public void turnInto(Confirmation confrimation) {
+        if(confrimation != null) {
+            if(!confrimation.getMessage().isEmpty()) this.setMessage(confrimation.getMessage());
+            if(!confrimation.getDelay().startsWith("0")) this.setDelay(confrimation.getDelay());
+            this.setKeyContinue(confrimation.getKeyContinue());
+            this.setKeyTerminate(confrimation.getKeyTerminate());
+        }
+    }
 }

@@ -7,6 +7,7 @@ package ezautomator.subForms;
 
 import com.jfoenix.controls.JFXTextField;
 import ezautomator.alert.AlertController;
+import ezautomator.confirmation.ConfirmationControllerSetup;
 import ezautomator.main.Action;
 import ezautomator.main.EzAutomator;
 import ezautomator.main.FXMLDocumentController;
@@ -14,6 +15,7 @@ import java.awt.MouseInfo;
 import java.awt.PointerInfo;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,15 +27,18 @@ import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
+import javafx.stage.StageStyle;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 import org.jnativehook.keyboard.NativeKeyEvent;
@@ -89,7 +94,13 @@ public class SetupWindowController implements Initializable {
 
     private int keyOne, keyTwo;
 
+    private Action tempAction;
+
+    private Stage tStage;
+
     private final ArrayList<Timer> timers = new ArrayList<>();
+
+    private SetupWindowController setupCls;
 
     private static final ArrayList<Integer> coordinates = new ArrayList<>();
     private static final ArrayList<Integer> keys = new ArrayList<>();
@@ -98,16 +109,11 @@ public class SetupWindowController implements Initializable {
     void closeApp(MouseEvent event) {
         EzAutomator.getMainStage().setIconified(false);
         CancelTimers();
-        try {
-            GlobalScreen.unregisterNativeHook();
-        } catch (NativeHookException ex) {
-            Logger.getLogger(SetupWindowController.class.getName()).log(Level.SEVERE, null, ex);
-        }
 
         // Ensuring the user truly wants to add a confirmation window to the script
         FXMLDocumentController.getActionsBox().getItems().clear();
 
-        getSubStage().close();
+        closeForm();
     }
 
     @FXML
@@ -182,13 +188,12 @@ public class SetupWindowController implements Initializable {
 
 //                    ArrayList<Integer> tempCoordinates = new ArrayList(Arrays.asList(tempX, tempY));
 //                    ArrayList<String> tempKeys = new ArrayList(Arrays.asList());
-                    Action tempAction = new Action(action, "", new ArrayList<>(Arrays.asList(tempX, tempY)), new ArrayList<>(Arrays.asList()), "", actionType);
+                    tempAction = new Action(action, "", new ArrayList<>(Arrays.asList(tempX, tempY)), new ArrayList<>(Arrays.asList()), "", actionType);
                     FXMLDocumentController.recieveActionType(tempAction);
 
                     // Close this stage
                     EzAutomator.getMainStage().setIconified(false);
 
-                    System.out.println(tempAction.getType());
                     closeForm();
                 }
                 break;
@@ -206,7 +211,7 @@ public class SetupWindowController implements Initializable {
                         keyList.add(keyTwo);
                     }
 
-                    Action tempAction = new Action("Keys", "", new ArrayList<>(Arrays.asList("")), keyList, "", 'E');
+                    tempAction = new Action("Keys", "", new ArrayList<>(Arrays.asList("")), keyList, "", 'E');
                     FXMLDocumentController.recieveActionType(tempAction);
 
                     // Close this stage
@@ -300,6 +305,11 @@ public class SetupWindowController implements Initializable {
         } catch (NativeHookException ex) {
             Logger.getLogger(SetupWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        if (tStage != null) {
+            tStage.setOpacity(1);
+        }
+
         getSubStage().close();
     }
 
@@ -393,5 +403,99 @@ public class SetupWindowController implements Initializable {
     public Stage getSubStage() {
         Stage subStage = (Stage) btnProceed.getScene().getWindow();
         return subStage;
+    }
+
+    /**
+     * Loading the alert and returning a reference to the current class
+     *
+     * @return
+     */
+    public SetupWindowController loadForm() {
+        try {
+            FXMLLoader fxmlLoader
+                    = new FXMLLoader(getClass().getResource("/ezautomator/subForms/SetupWindow.FXML"));
+            StackPane confirmPane = fxmlLoader.load();
+            setSetupWindowCls(fxmlLoader.getController());
+            Stage confirmStage = new Stage();
+            confirmStage.initStyle(StageStyle.UNDECORATED);
+            confirmStage.initModality(Modality.APPLICATION_MODAL);
+            confirmStage.getIcons().add(new Image("/ezautomator/icons/icon.png"));
+            confirmStage.setTitle("EzAutomator");
+            confirmStage.setScene(new Scene(confirmPane));
+            return fxmlLoader.getController();
+
+        } catch (IOException ex) {
+            Logger.getLogger(ConfirmationControllerSetup.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public Action showClickForm(ArrayList<Integer> coordinates, Stage tStage, double opValue) {
+        autoFill(coordinates);
+        this.tStage = tStage;
+        hideUponLoad(tStage, opValue);
+        closeBtn.requestFocus();
+        getSubStage().showAndWait();
+        return tempAction;
+    }
+
+    public Action showKeyForm(ArrayList<Integer> keyList, Stage tStage, double opValue) {
+        autoFill(keyList);
+        this.tStage = tStage;
+        hideUponLoad(tStage, opValue);
+        closeBtn.requestFocus();
+        getSubStage().showAndWait();
+        return tempAction;
+    }
+
+    /**
+     *
+     * @param setupCls
+     */
+    public void setSetupWindowCls(SetupWindowController setupCls) {
+        /**
+         * INCOMPLETE: VALIDATE DELAY WHEN CONTINUE BUTTON IS CLICKED OTHERWISE
+         * DELAY WILL ALWAYS REMAIN 0
+         */
+        if (setupCls != null) {
+            this.setupCls = setupCls;
+        }
+    }
+
+    private void autoFill(ArrayList givenList) {
+        switch (FXMLDocumentController.getPaneID()) {
+            // Click
+            case 1:
+                xValueTxt.setText(String.valueOf(givenList.get(0)));
+                yValueTxt.setText(String.valueOf(givenList.get(1)));
+
+                break;
+
+            // Send
+            case 2:
+                if (givenList.size() == 2) {
+                    fKeyTxt.setText(EzAutomator.getKeyTextRep((int)givenList.get(0)));
+                    sKeyTxt.setText(EzAutomator.getKeyTextRep((int)givenList.get(1)));
+                } else {
+                    fKeyTxt.setText(EzAutomator.getKeyTextRep((int)givenList.get(0)));
+                }
+
+                break;
+
+            case 3:
+
+                break;
+        }
+    }
+
+    /**
+     *
+     * @param tStage
+     * @param opValue
+     */
+    private void hideUponLoad(Stage tStage, double opValue) {
+        if (tStage != null) {
+            tStage.setOpacity(opValue);
+        }
     }
 }

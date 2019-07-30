@@ -12,7 +12,6 @@ import ezautomator.main.Confirmation;
 import ezautomator.main.EzAutomator;
 import ezautomator.main.FXMLDocumentController;
 import ezautomator.subForms.SetupWindowController;
-import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -48,37 +47,37 @@ import org.jnativehook.keyboard.NativeKeyListener;
  * @author gornicma
  */
 public class ConfirmationControllerSetup implements Initializable {
-
+    
     @FXML
     private JFXTextField confirmationTxt;
-
+    
     @FXML
     private ImageView closeBtn;
-
+    
     @FXML
     private StackPane root;
-
+    
     @FXML
     private Button btnConfirm;
-
+    
     @FXML
     private ChoiceBox<Action> aFillCBox;
-
+    
     @FXML
     private AnchorPane aFillPane;
-
+    
     @FXML
     private Button btnKContinue;
-
+    
     @FXML
     private Button btnKTerminate;
-
+    
     @FXML
     private JFXTextField continueTxt;
-
+    
     @FXML
     private JFXTextField terminateTxt;
-
+    
     @FXML
     void closeApp(MouseEvent event) {
         if (confirmationTxt.getText().isEmpty() || continueTxt.getText().isEmpty() || terminateTxt.getText().isEmpty()) {
@@ -86,17 +85,17 @@ public class ConfirmationControllerSetup implements Initializable {
         }
         closeForm();
     }
-
+    
     @FXML
     void closeBtnChangeHover(MouseEvent event) {
         closeBtn.setImage(new Image("/ezautomator/icons/close-hover.png"));
     }
-
+    
     @FXML
     void closeBtnChangeLeave(MouseEvent event) {
         closeBtn.setImage(new Image("/ezautomator/icons/close.png"));
     }
-
+    
     @FXML
     void onBtnConfirmPress(MouseEvent event) {
         if (keyContinue > 0 && keyTerminate > 0 && !confirmationTxt.getText().isEmpty() && keyContinue != keyTerminate) {
@@ -117,18 +116,18 @@ public class ConfirmationControllerSetup implements Initializable {
 //            currAlert.onResultFocus(getCurrStage());
 //            currAlert.getResult();
             currAlert.showDialog("Ok", "Cancel", alertMessage, "error", getCurrStage(), getCurrStage());
-
+            
             btnKContinue.setText("Capture");
             btnKTerminate.setText("Capture");
             isCapConfirm = false;
             isCapTerminate = false;
         }
     }
-
+    
     @FXML
     void onBtnCapOne(MouseEvent event) {
         isCapConfirm = !isCapConfirm;
-
+        
         if (isCapConfirm) {
             btnKContinue.setText("Capturing...");
             btnKTerminate.setText("Capture");
@@ -137,7 +136,7 @@ public class ConfirmationControllerSetup implements Initializable {
             btnKContinue.setText("Capture");
         }
     }
-
+    
     @FXML
     void onBtnCapTwo(MouseEvent event) {
         isCapTerminate = !isCapTerminate;
@@ -149,27 +148,27 @@ public class ConfirmationControllerSetup implements Initializable {
             btnKTerminate.setText("Capture");
         }
     }
-
+    
     @FXML
     void onAutoFillBoxPress(MouseEvent event) {
         fillConfirmBox();
     }
-
+    
     private double diffX, diffY;
-
+    
     private ConfirmationControllerSetup confirmationCls;
-
-    private Stage callerStage, stageToHide;
-
+    
+    private Stage callerStage, stageToHide, tStage;
+    
     private String cMessage;
-
+    
     private ArrayList<String> confirmationInfo; // = new ArrayList<>(Arrays.asList("EMPTY", "EMPTY", "EMPTY", "EMPTY"));
 
     private int keyContinue;
     private int keyTerminate;
-
+    
     private Confirmation selConfirm;
-
+    
     private boolean isCapConfirm, isCapTerminate;
 
     /**
@@ -199,7 +198,7 @@ public class ConfirmationControllerSetup implements Initializable {
                 getCurrStage().setY(event.getScreenY() + diffY);
             }
         });
-
+        
         aFillCBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -207,7 +206,7 @@ public class ConfirmationControllerSetup implements Initializable {
                 if (!aFillCBox.getItems().isEmpty()) {
                     boolean result = new AlertController().loadAlert().showDialog("Confirm", "Cancel", "Use selected information for current confirmation?",
                             "exclamation", null, getCurrStage());
-
+                    
                     if (result) {
                         selConfirm = (Confirmation) aFillCBox.getItems().get((int) newValue);
                         autoFill(selConfirm);
@@ -217,10 +216,10 @@ public class ConfirmationControllerSetup implements Initializable {
                 fillConfirmBox();
             }
         });
-
+        
         enableListener();
     }
-
+    
     public void enableListener() {
         NativeKeyListener keyListener = new NativeKeyListener() {
             @Override
@@ -230,24 +229,24 @@ public class ConfirmationControllerSetup implements Initializable {
                 if (isCapConfirm) {
                     keyContinue = nke.getRawCode();
                     continueTxt.setText(keyPressed);
-
+                    
                 } else if (isCapTerminate) {
                     keyTerminate = nke.getRawCode();
                     terminateTxt.setText(keyPressed);
                 }
             }
-
+            
             @Override
             public void nativeKeyReleased(NativeKeyEvent nke) {
 //                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
-
+            
             @Override
             public void nativeKeyTyped(NativeKeyEvent nke) {
-
+                
             }
         };
-
+        
         try {
             GlobalScreen.registerNativeHook();
             GlobalScreen.addNativeKeyListener(keyListener);
@@ -255,12 +254,12 @@ public class ConfirmationControllerSetup implements Initializable {
             Logger.getLogger(SetupWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     private Stage getCurrStage() {
         Stage currStage = (Stage) closeBtn.getScene().getWindow();
         return currStage;
     }
-
+    
     private void autoFill(Confirmation confirmation) {
         confirmationTxt.setText(confirmation.getComment());
         keyContinue = confirmation.getKeyContinue();
@@ -292,18 +291,45 @@ public class ConfirmationControllerSetup implements Initializable {
                 callerStage.setIconified(false);
             }
             GlobalScreen.unregisterNativeHook();
+            if (tStage != null) {
+                tStage.setOpacity(1);
+            }
             getCurrStage().close();
         } catch (NativeHookException ex) {
             Logger.getLogger(ConfirmationControllerSetup.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     private void fillConfirmBox() {
         aFillCBox.getItems().clear();
         ArrayList<Action> confirmations = FXMLDocumentController.getConfirmations();
         if (!confirmations.isEmpty()) {
             confirmations.forEach(aFillCBox.getItems()::add);
         }
+    }
+    
+    /**
+     * 
+     * @param toFill
+     * @param tStage
+     * @param opValue
+     * @return 
+     */
+    public ArrayList showSetup(Confirmation toFill, Stage tStage, double opValue) {
+        autoFill(toFill);
+        this.tStage = tStage;
+        setTargetOpacity(opValue);
+        hideUponLoad();
+        closeBtn.requestFocus();
+        return getConfirmationInfo();
+    }
+    
+    public ArrayList showSetup(Stage tStage, double opValue) {
+        this.tStage = tStage;
+        setTargetOpacity(opValue);
+        hideUponLoad();
+        closeBtn.requestFocus();
+        return getConfirmationInfo();
     }
 
     /**
@@ -324,7 +350,7 @@ public class ConfirmationControllerSetup implements Initializable {
             confirmStage.setTitle("EzAutomator");
             confirmStage.setScene(new Scene(confirmPane));
             return fxmlLoader.getController();
-
+            
         } catch (IOException ex) {
             Logger.getLogger(ConfirmationControllerSetup.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -386,4 +412,11 @@ public class ConfirmationControllerSetup implements Initializable {
     public ConfirmationControllerSetup getConfirmationCls() {
         return confirmationCls;
     }
+    
+    public void setTargetOpacity(double opacity) {
+        if (tStage != null) {
+            tStage.setOpacity(opacity);
+        }
+    }
+    
 }

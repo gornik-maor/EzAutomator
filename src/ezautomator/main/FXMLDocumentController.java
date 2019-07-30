@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXTextField;
 import ezautomator.alert.AlertController;
 import ezautomator.confirmation.ConfirmationControllerSetup;
 import ezautomator.delay.DelayFormController;
+import ezautomator.subForms.SetupWindowController;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.URL;
@@ -14,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -26,6 +28,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
@@ -35,6 +38,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
@@ -139,31 +143,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     void removeAction(MouseEvent event) {
         // Are you sure?
-        if (!actionTable.getItems().isEmpty()) {
-            if (actionTable.getSelectionModel().getSelectedIndex() != -1) {
-                boolean result = new AlertController().loadAlert().showDialog("Yes", "No", "Are you sure you wish to continue?", "exclamation",
-                        EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
-
-                // If the user confirms the removal
-                if (result) {
-                    ObservableList<Action> selectedActions = actionTable.getSelectionModel().getSelectedItems();
-                    ObservableList<Action> allActions = actionTable.getItems();
-
-                    // For each action in selectedActions --> remove from the list
-                    if (actionTable.getItems().size() > 0) {
-                        selectedActions.forEach(allActions::remove);
-                    }
-                }
-            } else {
-                // Displaying an alert
-                new AlertController().loadAlert().showDialog("Ok", "Cancel", "Please select one of the items!",
-                        "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
-            }
-        } else {
-            // Displaying an alert
-            new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no items to remove!",
-                    "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
-        }
+        removeItem();
     }
 
     @FXML
@@ -213,6 +193,86 @@ public class FXMLDocumentController implements Initializable {
     void onClickRunScript(MouseEvent event) {
         ScriptExecutor script = new ScriptExecutor(tempTable);
         script.run();
+    }
+
+    // Table Menu Items
+    @FXML
+    void onItemEditClick(ActionEvent event) {
+        Action selAction = actionTable.getSelectionModel().getSelectedItem();
+
+        if (actionTable.getSelectionModel().getSelectedIndex() != -1) {
+            switch (selAction.getAction()) {
+                case "Click":
+                    setPaneID(1);
+                    selAction.turnInto(new SetupWindowController().loadForm().showClickForm(selAction.getCoordinates(), EzAutomator.getMainStage(), 0.5));
+                    break;
+
+                case "Click x2":
+                    setPaneID(1);
+                    selAction.turnInto(new SetupWindowController().loadForm().showClickForm(selAction.getCoordinates(), EzAutomator.getMainStage(), 0.5));
+                    break;
+
+                case "Hover":
+                    setPaneID(1);
+                    selAction.turnInto(new SetupWindowController().loadForm().showClickForm(selAction.getCoordinates(), EzAutomator.getMainStage(), 0.5));
+                    break;
+
+                case "Keys":
+                    setPaneID(2);
+                    selAction.turnInto(new SetupWindowController().loadForm().showKeyForm(selAction.getSendKeys(), EzAutomator.getMainStage(), 0.5));
+                    break;
+
+                case "Confirmation":   
+                    // doesn't work properly --> action is not being updated correctly
+                    // bug - comment becomes the confirmation's main message (???) --> might not be involved to this
+                    // code right here. Double check tho!
+                    Confirmation selConfirmation = (Confirmation)selAction;
+                    ArrayList<String> confirmationInfo = new ConfirmationControllerSetup().loadForm().showSetup(selConfirmation, EzAutomator.getMainStage(), 0.5);
+                    selConfirmation.turnInto(new Confirmation("", Integer.parseInt(confirmationInfo.get(0)),
+                                    Integer.parseInt(confirmationInfo.get(1)), confirmationInfo.get(2)));
+                    selAction.turnInto(selConfirmation);
+                    break;
+            }
+        } else if (actionTable.getItems().isEmpty()) {
+             new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no items to edit!",
+                    "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+        } else {
+            // Displaying an alert
+            new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no selected items to edit!",
+                    "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+
+        }
+
+        actionTable.refresh();
+        System.out.println("clicked");
+    }
+
+    @FXML
+    void onItemRemoveClick(ActionEvent event) {
+        removeItem();
+    }
+
+    @FXML
+    void onItemDuplicateClick(ActionEvent event) {
+        if (actionTable.getItems().size() > 0) {
+            // Duplicate to where (INSERT ABOVE / BELOW)
+        } else {
+            new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no items in the table to refresh!",
+                    "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+        }
+    }
+
+    @FXML
+    void onTableRefreshClick(ActionEvent event) {
+        actionTable.refresh();
+        // Displaying an alert
+        if (actionTable.getItems().size() > 0) {
+            new AlertController().loadAlert().showDialog("Ok", "Cancel", "Table was refreshed successfully!",
+                    "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+        } else {
+            new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no items in the table to refresh!",
+                    "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+        }
     }
 
     @Override
@@ -316,6 +376,82 @@ public class FXMLDocumentController implements Initializable {
                         });
                     }
                 });
+
+                // Table Menu Items
+//                actionTable.setRowFactory(new Callback<TableView<Action>, TableRow<Action>>() {
+//                    @Override
+//                    public TableRow<Action> call(TableView<Action> param) {
+//
+//                        final TableRow<Action> tableRow = new TableRow<>();
+//
+//                        tableRow.setOnMouseClicked(new EventHandler<MouseEvent>() {
+//                            @Override
+//                            public void handle(MouseEvent event) {
+//                                MouseButton button = event.getButton();
+//                                if (button == MouseButton.SECONDARY) {
+//
+//                                }
+//                            }
+//                        });
+//
+//                        final ContextMenu tableMenu = new ContextMenu();
+//                        MenuItem editItem = new MenuItem("Edit");
+//                        editItem.setStyle("-fx-text-fill: #FFFF8D;");
+//                        editItem.setOnAction(new EventHandler<ActionEvent>() {
+//                            @Override
+//                            public void handle(ActionEvent event) {
+//                                // 
+//                                Action selAction = tableRow.getItem();
+//                                switch (selAction.getAction()) {
+//                                    case "Click":
+//                                        setPaneID(1);
+//                                        selAction.turnInto(new SetupWindowController().loadForm().showClickForm(selAction.getCoordinates(), EzAutomator.getMainStage(), 0.5));
+//                                        break;
+//
+//                                    case "Click x2":
+//                                        setPaneID(1);
+//                                        selAction.turnInto(new SetupWindowController().loadForm().showClickForm(selAction.getCoordinates(), EzAutomator.getMainStage(), 0.5));
+//                                        break;
+//
+//                                    case "Hover":
+//                                        setPaneID(1);
+//                                        selAction.turnInto(new SetupWindowController().loadForm().showClickForm(selAction.getCoordinates(), EzAutomator.getMainStage(), 0.5));
+//                                        break;
+//
+//                                    case "Keys":
+//                                        setPaneID(2);
+//                                        selAction.turnInto(new SetupWindowController().loadForm().showKeyForm(selAction.getSendKeys(), EzAutomator.getMainStage(), 0.5));
+//                                        System.out.println("BUSUDFHASCOASHC");
+//                                        break;
+//
+//                                    case "Confirmation":
+//
+//                                        break;
+//                                }
+//
+//                                actionTable.refresh();
+//                                System.out.println("clicked");
+//                            }
+//                        });
+//
+//                        MenuItem removeItem = new MenuItem("Delete");
+//                        removeItem.setStyle("-fx-text-fill: #FFFF8D;");
+//                        removeItem.setOnAction(new EventHandler<ActionEvent>() {
+//                            @Override
+//                            public void handle(ActionEvent event) {
+//                                removeItem();
+//                            }
+//                        });
+//
+//                        tableMenu.getItems().addAll(editItem, removeItem);
+//                        // Only display context menu for non-null items:
+//                        tableRow.contextMenuProperty().bind(
+//                                Bindings.when(Bindings.isNotNull(tableRow.itemProperty()))
+//                                        .then(tableMenu)
+//                                        .otherwise((ContextMenu) null));
+//                        return tableRow;
+//                    }
+//                });
             }
         } else {
             loadSpalshScreen();
@@ -516,6 +652,37 @@ public class FXMLDocumentController implements Initializable {
         } catch (IOException ex) {
             Logger.getLogger(FXMLDocumentController.class
                     .getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Remove selected item from the action table
+     */
+    private void removeItem() {
+        if (!actionTable.getItems().isEmpty()) {
+            if (actionTable.getSelectionModel().getSelectedIndex() != -1) {
+                boolean result = new AlertController().loadAlert().showDialog("Yes", "No", "Are you sure you wish to continue?", "exclamation",
+                        EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+
+                // If the user confirms the removal
+                if (result) {
+                    ObservableList<Action> selectedActions = actionTable.getSelectionModel().getSelectedItems();
+                    ObservableList<Action> allActions = actionTable.getItems();
+
+                    // For each action in selectedActions --> remove from the list
+                    if (actionTable.getItems().size() > 0) {
+                        selectedActions.forEach(allActions::remove);
+                    }
+                }
+            } else {
+                // Displaying an alert
+                new AlertController().loadAlert().showDialog("Ok", "Cancel", "Please select one of the items!",
+                        "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+            }
+        } else {
+            // Displaying an alert
+            new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no items to remove!",
+                    "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
         }
     }
 }
