@@ -103,7 +103,7 @@ public class ConfirmationController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-
+        System.out.println("running in the background :SSS");
         /**
          * Allowing the user to drag the form
          */
@@ -140,7 +140,7 @@ public class ConfirmationController implements Initializable {
             @Override
             public void nativeKeyReleased(NativeKeyEvent nke) {
 //                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                if (nke.getRawCode() == keyConfirmation) {
+                if (nke.getRawCode() == keyConfirmation && getCurrStage().isShowing()) {
                     keyResult = true;
 
                     Platform.runLater(new Runnable() {
@@ -150,7 +150,7 @@ public class ConfirmationController implements Initializable {
                         }
                     });
 
-                } else if (nke.getRawCode() == keyStop) {
+                } else if (nke.getRawCode() == keyStop && getCurrStage().isShowing()) {
                     keyResult = false;
                     ScriptExecutor.stop();
                     System.out.println("have exectued!");
@@ -171,14 +171,14 @@ public class ConfirmationController implements Initializable {
             }
         };
 
-        try {
-            GlobalScreen.registerNativeHook();
-            GlobalScreen.addNativeKeyListener(keyListener);
+            try {
+                GlobalScreen.registerNativeHook();
+                GlobalScreen.addNativeKeyListener(keyListener);
 
-        } catch (NativeHookException ex) {
-            Logger.getLogger(SetupWindowController.class
-                    .getName()).log(Level.SEVERE, null, ex);
-        }
+            } catch (NativeHookException ex) {
+                Logger.getLogger(SetupWindowController.class
+                        .getName()).log(Level.SEVERE, null, ex);
+            }
     }
 
     /**
@@ -244,14 +244,6 @@ public class ConfirmationController implements Initializable {
      * Bringing the focus to the desired form
      */
     private void closeForm() {
-        try {
-            GlobalScreen.unregisterNativeHook();
-
-        } catch (NativeHookException ex) {
-            Logger.getLogger(ConfirmationController.class
-                    .getName()).log(Level.SEVERE, null, ex);
-        }
-
         //EzAutomator.getMainStage().setIconified(false);
         if (callerStage != null) {
             callerStage.setIconified(false);
@@ -259,6 +251,13 @@ public class ConfirmationController implements Initializable {
 
         if (tStage != null) {
             tStage.setOpacity(1);
+        }
+
+        try {
+            GlobalScreen.unregisterNativeHook();
+        } catch (NativeHookException ex) {
+            Logger.getLogger(ConfirmationController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
 
         getCurrStage().close();

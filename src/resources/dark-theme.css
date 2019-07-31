@@ -238,6 +238,7 @@
 .table-view:focused{
     -fx-background-color: derive(-fx-primary, 20%);
 }
+
 .table-row-cell {
     -fx-cell-size: 40px;
 }
@@ -280,6 +281,7 @@
     -fx-text-fill: -fx-primary;
     -fx-background-insets: 0;
 }
+
 .table-row-cell:selected .table-cell{
     -fx-text-fill: -fx-primary;
 }

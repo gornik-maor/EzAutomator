@@ -15,7 +15,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -28,17 +27,17 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.TreeTableColumn.CellEditEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
@@ -161,7 +160,7 @@ public class FXMLDocumentController implements Initializable {
             boolean resultAlert = new AlertController().loadAlert().showDialog("Yes", "No", "Would you like to set a delay?",
                     "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
 
-            if (resultAlert == true) {
+            if (resultAlert) {
                 // Opening the delay form
                 DelayFormController delayClss = new DelayFormController();
                 DelayFormController currDelayClss = delayClss.loadAlert();
@@ -222,19 +221,22 @@ public class FXMLDocumentController implements Initializable {
                     selAction.turnInto(new SetupWindowController().loadForm().showKeyForm(selAction.getSendKeys(), EzAutomator.getMainStage(), 0.5));
                     break;
 
-                case "Confirmation":   
+                case "Confirmation":
                     // doesn't work properly --> action is not being updated correctly
-                    // bug - comment becomes the confirmation's main message (???) --> might not be involved to this
-                    // code right here. Double check tho!
-                    Confirmation selConfirmation = (Confirmation)selAction;
+
+//                    Confirmation selConfirmation = (Confirmation)selAction;
+//                    ArrayList<String> confirmationInfo = new ConfirmationControllerSetup().loadForm().showSetup(selConfirmation, EzAutomator.getMainStage(), 0.5);
+//                    selConfirmation.turnInto(new Confirmation("", Integer.parseInt(confirmationInfo.get(0)),
+//                                    Integer.parseInt(confirmationInfo.get(1)), confirmationInfo.get(2)));
+//                    selAction.turnInto(selConfirmation);
+                    Confirmation selConfirmation = (Confirmation) selAction;
                     ArrayList<String> confirmationInfo = new ConfirmationControllerSetup().loadForm().showSetup(selConfirmation, EzAutomator.getMainStage(), 0.5);
                     selConfirmation.turnInto(new Confirmation("", Integer.parseInt(confirmationInfo.get(0)),
-                                    Integer.parseInt(confirmationInfo.get(1)), confirmationInfo.get(2)));
-                    selAction.turnInto(selConfirmation);
+                            Integer.parseInt(confirmationInfo.get(1)), confirmationInfo.get(2)));
                     break;
             }
         } else if (actionTable.getItems().isEmpty()) {
-             new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no items to edit!",
+            new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no items to edit!",
                     "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
         } else {
             // Displaying an alert
@@ -280,6 +282,7 @@ public class FXMLDocumentController implements Initializable {
         if (EzAutomator.isSplashLoaded) {
             populateActionsBox();
             populateColumns();
+            actionTable.setEditable(true);
             tempTable = actionTable;
             tempCBox = actionsBox;
 
@@ -328,8 +331,7 @@ public class FXMLDocumentController implements Initializable {
                             currConfirmationClss.onResultFocus(EzAutomator.getMainStage());
                             ArrayList<String> confirmationInfo = currConfirmationClss.getConfirmationInfo();
                             tempAction = new Confirmation("", Integer.parseInt(confirmationInfo.get(0)),
-                                    Integer.parseInt(confirmationInfo.get(1)), confirmationInfo.get(2));
-
+                                    Integer.parseInt(confirmationInfo.get(1)), String.valueOf(confirmationInfo.get(2)));
                         }
                     }
                 });
@@ -494,6 +496,31 @@ public class FXMLDocumentController implements Initializable {
         commentColumn.setSortable(false);
         commentColumn.setCellValueFactory(new PropertyValueFactory<>("comment"));
 
+//        commentColumn.setStyle("-fx-text-fill: green;");
+        
+        commentColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+
+        commentColumn.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Action, String>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<Action, String> event) {
+                Action selAction = actionTable.getSelectionModel().getSelectedItem();
+                selAction.setComment(selAction.getComment());
+            }
+        });
+        
+//        commentColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Action, String>, ObservableValue<String>>() {
+//            @Override
+//            public ObservableValue<String> call(TableColumn.CellDataFeatures<Action, String> param) {
+//                TableCell<Action, String> cell = new TableCell<>();
+//                cell.setOnMouseClicked(new EventHandler<MouseEvent>() {
+//                    @Override
+//                    public void handle(MouseEvent event) {
+//                        System.out.println(cell);
+//                    }
+//                });
+//                return new ReadOnlyObjectWrapper<>(param.getValue().getComment());
+//            }
+//        });
         // Setting up the coordinates column
         TableColumn<Action, ArrayList> coordinatesColumn = new TableColumn<>("Coordinates");
         coordinatesColumn.setMinWidth(100);

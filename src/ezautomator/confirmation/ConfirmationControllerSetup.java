@@ -261,7 +261,7 @@ public class ConfirmationControllerSetup implements Initializable {
     }
     
     private void autoFill(Confirmation confirmation) {
-        confirmationTxt.setText(confirmation.getComment());
+        confirmationTxt.setText(confirmation.getMessage());
         keyContinue = confirmation.getKeyContinue();
         keyTerminate = confirmation.getKeyTerminate();
         continueTxt.setText(EzAutomator.getKeyTextRep(keyContinue));
