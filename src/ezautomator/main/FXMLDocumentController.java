@@ -29,6 +29,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -497,8 +498,23 @@ public class FXMLDocumentController implements Initializable {
         commentColumn.setCellValueFactory(new PropertyValueFactory<>("comment"));
 
 //        commentColumn.setStyle("-fx-text-fill: green;");
-        
-        commentColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+
+//      Callback<TableColumn, TableCell> cellFactory =
+//              new Callback<TableColumn, TableCell>() {
+//                  public TableCell call(TableColumn p) {
+//                      return new EditingCell();
+//                  }
+//              };
+
+      Callback<TableColumn<Action, String>, TableCell<Action, String>> cellFactor =
+              new Callback<TableColumn<Action, String>, TableCell<Action, String>>() {
+                  public TableCell call(TableColumn p) {
+                      return new EditingCell();
+                  }
+              };
+                
+//        commentColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+          commentColumn.setCellFactory(cellFactor);
 
         commentColumn.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Action, String>>() {
             @Override
@@ -507,7 +523,7 @@ public class FXMLDocumentController implements Initializable {
                 selAction.setComment(selAction.getComment());
             }
         });
-        
+
 //        commentColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Action, String>, ObservableValue<String>>() {
 //            @Override
 //            public ObservableValue<String> call(TableColumn.CellDataFeatures<Action, String> param) {
