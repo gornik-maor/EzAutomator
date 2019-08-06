@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<actions>
+    <action>
+        <action>Click</action>
+        <comment>lol</comment>
+        <coordinates>965</coordinates>
+        <coordinates>528</coordinates>
+        <delay>1000 m/s</delay>
+        <type>67</type>
+    </action>
+</actions>

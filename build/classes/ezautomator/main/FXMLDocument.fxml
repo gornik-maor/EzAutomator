@@ -51,7 +51,7 @@
             </MenuBar>
             <BorderPane layoutY="71.0" prefHeight="565.0" prefWidth="485.0" styleClass="custom-pane">
                <top>
-                  <JFXTabPane prefHeight="634.0" prefWidth="485.0" BorderPane.alignment="CENTER">
+                  <JFXTabPane fx:id="tabPane" prefHeight="634.0" prefWidth="485.0" BorderPane.alignment="CENTER">
                      <tabs>
                         <Tab text="Main">
                           <content>
@@ -141,9 +141,9 @@
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <Pane layoutY="11.0" prefHeight="490.0" prefWidth="485.0" styleClass="custom-alert">
+                                    <Pane layoutY="11.0" prefHeight="541.0" prefWidth="485.0" styleClass="custom-alert">
                                        <children>
-                                          <Button layoutX="14.0" layoutY="437.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="166.0" text="Save">
+                                          <Button layoutX="14.0" layoutY="488.0" mnemonicParsing="false" onMousePressed="#onSaveXML" prefHeight="39.0" prefWidth="166.0" text="Save">
                                              <graphic>
                                                 <ImageView fitHeight="25.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                                                    <image>
@@ -152,7 +152,7 @@
                                                 </ImageView>
                                              </graphic>
                                           </Button>
-                                          <Button layoutX="305.0" layoutY="437.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="166.0" text="Load">
+                                          <Button layoutX="305.0" layoutY="488.0" mnemonicParsing="false" onMousePressed="#onLoadXML" prefHeight="39.0" prefWidth="166.0" text="Load">
                                              <graphic>
                                                 <ImageView fitHeight="25.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                                                    <image>
@@ -161,8 +161,14 @@
                                                 </ImageView>
                                              </graphic>
                                           </Button>
+                                          <Text fill="WHITE" layoutX="48.0" layoutY="262.0" strokeType="OUTSIDE" strokeWidth="0.0" text="More options are coming soon!">
+                                             <font>
+                                                <Font size="28.0" />
+                                             </font>
+                                          </Text>
                                        </children>
                                     </Pane>
+                                    <Label layoutX="133.0" layoutY="556.0" text="© 2019 Maor Gornic.  All rights reserved." textFill="WHITE" />
                                  </children></AnchorPane>
                           </content>
                         </Tab>

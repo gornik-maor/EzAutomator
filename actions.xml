@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<actions>
+    <action>
+        <action>Keys</action>
+        <comment>test</comment>
+        <coordinates>0</coordinates>
+        <sendKeys>84</sendKeys>
+        <delay>0 m/s</delay>
+        <type>69</type>
+    </action>
+</actions>

@@ -7,11 +7,16 @@ package ezautomator.main;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Abwatts
  */
+@XmlRootElement(name = "action")
+@XmlAccessorType (XmlAccessType.FIELD)
 public class Action {
 
     private String action;

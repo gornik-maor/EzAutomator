@@ -1,11 +1,15 @@
 package ezautomator.main;
 
+import ezautomator.file.XMLController;
+import com.jfoenix.controls.JFXTabPane;
 import com.jfoenix.controls.JFXTextField;
 import ezautomator.alert.AlertController;
 import ezautomator.confirmation.ConfirmationControllerSetup;
 import ezautomator.delay.DelayFormController;
+import ezautomator.file.NameXMLController;
 import ezautomator.subForms.SetupWindowController;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -34,18 +38,19 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.control.TreeTableColumn.CellEditEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import javafx.util.Duration;
+import javax.xml.bind.JAXBException;
 
 /**
  *
@@ -85,6 +90,9 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private Button btnRun;
+
+    @FXML
+    private JFXTabPane tabPane;
 
     @FXML
     private MenuItem mnuEdit;
@@ -193,6 +201,72 @@ public class FXMLDocumentController implements Initializable {
     void onClickRunScript(MouseEvent event) {
         ScriptExecutor script = new ScriptExecutor(tempTable);
         script.run();
+
+        Actions actions = new Actions();
+//        actionTable.getItems().forEach(actions.getActions()::add);
+
+        for (int i = 0; i < actionTable.getItems().size(); i++) {
+            Action workpls = (Action) actionTable.getItems().get(i);
+            actions.getActions().add(workpls);
+        }
+
+//        actions.getActions().add(aLOL);
+//        System.out.println("Size: " + test.size() + " | Actions: " + test);
+        System.out.println("Size: " + actions.getActions().size() + " | Actions: " + actions);
+        if (!actions.getActions().isEmpty()) {
+            try {
+                XMLController.ActionsToXML("actions.xml", actions);
+            } catch (JAXBException ex) {
+                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+//        try {
+//            XMLController.ActionToXML("test.xml", actionTable.getItems().get(0));
+//        } catch (Exception ex) {
+//            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+    }
+
+    @FXML
+    void onLoadXML(MouseEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Load a Script");
+        fileChooser.getExtensionFilters().addAll(
+                new ExtensionFilter("eXtensible Markup Language", "*.xml"));
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+        File selectedFile = fileChooser.showOpenDialog(EzAutomator.getMainStage());
+
+        if (selectedFile != null) {
+            try {
+                if (!actionTable.getItems().isEmpty()) {
+                    actionTable.getItems().clear();
+                }
+
+                Actions actions = XMLController.XMLtoActions(selectedFile.toString());
+
+                if (!actions.getActions().isEmpty()) {
+                    actions.getActions().forEach(actionTable.getItems()::add);
+                }
+
+                new AlertController().loadAlert().showDialog("Ok", "Cancel", "Script was loaded successfully!", "exclamation",
+                        EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                tabPane.getSelectionModel().select(0);
+
+            } catch (Exception ex) {
+                new AlertController().loadAlert().showDialog("Ok", "Cancel", "The selected script is not valid!", "error",
+                        EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+            }
+        }
+    }
+
+    @FXML
+    void onSaveXML(MouseEvent event) {
+        if (!actionTable.getItems().isEmpty()) {
+            new NameXMLController().loadResources().loadForm(actionTable, EzAutomator.getMainStage(), 0.5);
+        } else {
+            new AlertController().loadAlert().showDialog("Ok", "Cancel", "There aren't any actions to save!", "error",
+                    EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+        }
     }
 
     // Table Menu Items
@@ -498,23 +572,21 @@ public class FXMLDocumentController implements Initializable {
         commentColumn.setCellValueFactory(new PropertyValueFactory<>("comment"));
 
 //        commentColumn.setStyle("-fx-text-fill: green;");
-
 //      Callback<TableColumn, TableCell> cellFactory =
 //              new Callback<TableColumn, TableCell>() {
 //                  public TableCell call(TableColumn p) {
 //                      return new EditingCell();
 //                  }
 //              };
+        Callback<TableColumn<Action, String>, TableCell<Action, String>> cellFactor
+                = new Callback<TableColumn<Action, String>, TableCell<Action, String>>() {
+            public TableCell call(TableColumn p) {
+                return new EditingCell();
+            }
+        };
 
-      Callback<TableColumn<Action, String>, TableCell<Action, String>> cellFactor =
-              new Callback<TableColumn<Action, String>, TableCell<Action, String>>() {
-                  public TableCell call(TableColumn p) {
-                      return new EditingCell();
-                  }
-              };
-                
 //        commentColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-          commentColumn.setCellFactory(cellFactor);
+        commentColumn.setCellFactory(cellFactor);
 
         commentColumn.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Action, String>>() {
             @Override
