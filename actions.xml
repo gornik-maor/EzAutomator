@@ -2,10 +2,36 @@
 <actions>
     <action>
         <action>Keys</action>
-        <comment>test</comment>
-        <coordinates>0</coordinates>
-        <sendKeys>84</sendKeys>
+        <comment>test1</comment>
+        <coordinates xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string"></coordinates>
+        <sendKeys>86</sendKeys>
         <delay>0 m/s</delay>
+        <type>69</type>
+    </action>
+    <action>
+        <action>Click</action>
+        <comment>test2</comment>
+        <coordinates>946</coordinates>
+        <coordinates>618</coordinates>
+        <delay>0 m/s</delay>
+        <type>67</type>
+    </action>
+    <action>
+        <action>Confirmation</action>
+        <comment>test3</comment>
+        <coordinates xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string"></coordinates>
+        <sendKeys>83</sendKeys>
+        <sendKeys>70</sendKeys>
+        <delay>0 m/s</delay>
+        <type>69</type>
+    </action>
+    <action>
+        <action>Keys</action>
+        <comment>test4</comment>
+        <coordinates xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string"></coordinates>
+        <sendKeys>162</sendKeys>
+        <sendKeys>86</sendKeys>
+        <delay>1000 m/s</delay>
         <type>69</type>
     </action>
 </actions>

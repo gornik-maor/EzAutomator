@@ -97,12 +97,12 @@ public class NameXMLController implements Initializable {
             
             if (!new File(path + "\\" + scriptTxt.getText() + ".xml").exists()) {
                 writeActionsToXML(actions);
-                getCurrStage().close();
+                closeForm();
             } else {
                 if (new AlertController().loadAlert().showDialog("Yes", "No", "A script with that name already exists! Replace it?", "warning",
                         getCurrStage(), getCurrStage(), 0.5)) {
                     writeActionsToXML(actions);
-                    getCurrStage().close();
+                    closeForm();
                 } else {
                     scriptTxt.setText("");
                 }
@@ -155,6 +155,10 @@ public class NameXMLController implements Initializable {
     private Stage getCurrStage() {
         Stage currStage = (Stage) root.getScene().getWindow();
         return currStage;
+    }
+    
+    private void closeForm() {
+        closeForm();
     }
 
     public NameXMLController loadResources() {

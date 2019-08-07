@@ -66,6 +66,7 @@
                                           <ContextMenu>
                                             <items>
                                                 <MenuItem fx:id="mnuEdit" mnemonicParsing="false" onAction="#onItemEditClick" style="-fx-text-fill: FFFF8D;" text="Edit" />
+                                                <MenuItem fx:id="mnuInsert" mnemonicParsing="false" onAction="#onItemInsertion" style="-fx-text-fill: FFFF8D;" text="Insert" />
                                                 <MenuItem fx:id="mnuRemove" mnemonicParsing="false" onAction="#onItemRemoveClick" style="-fx-text-fill: FFFF8D;" text="Remove" />
                                                 <MenuItem mnemonicParsing="false" onAction="#onItemDuplicateClick" style="-fx-text-fill: FFFF8D;" text="Duplicate" />
                                               <MenuItem fx:id="mnuRefresh" mnemonicParsing="false" onAction="#onTableRefreshClick" style="-fx-text-fill: FFFF8D;" text="Refresh" />

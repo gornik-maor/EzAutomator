@@ -447,6 +447,14 @@ public class SetupWindowController implements Initializable {
         getSubStage().showAndWait();
         return tempAction;
     }
+    
+    public Action showForm(Stage tStage, double opValue) {
+        this.tStage = tStage;
+        hideUponLoad(tStage, opValue);
+        closeBtn.requestFocus();
+        getSubStage().showAndWait();
+        return tempAction;
+    }
 
     /**
      *
