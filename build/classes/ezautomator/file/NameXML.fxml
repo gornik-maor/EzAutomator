@@ -10,7 +10,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<StackPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="220.0" prefWidth="499.0" stylesheets="@../../resources/dark-theme.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ezautomator.file.NameXMLController">
+<StackPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="124.0" prefWidth="499.0" stylesheets="@../../resources/dark-theme.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ezautomator.file.NameXMLController">
    <children>
       <Pane prefHeight="227.0" prefWidth="450.0" styleClass="custom-alert">
          <children>
@@ -29,28 +29,13 @@
                   <Image url="@../icons/icon.png" />
                </image>
             </ImageView>
-            <StackPane layoutX="5.0" layoutY="51.0" prefHeight="106.0" prefWidth="489.0" style="-fx-border-color: FFFF8D; -fx-border-radius: 20;">
-               <children>
-                  <Pane prefHeight="110.0" prefWidth="487.0">
-                     <children>
-                        <ImageView fx:id="icon" fitHeight="64.0" fitWidth="51.0" layoutX="14.0" layoutY="18.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../icons/exclamation.png" />
-                           </image>
-                        </ImageView>
-                        <Text fx:id="displayLbl" fill="WHITE" layoutX="79.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Script Name:">
-                           <font>
-                              <Font size="20.0" />
-                           </font>
-                        </Text>
-                        <JFXTextField fx:id="scriptTxt" layoutX="207.0" layoutY="9.0" prefHeight="37.0" prefWidth="251.0" promptText="Enter Here" />
-                        <Button fx:id="btnPath" layoutX="80.0" layoutY="60.0" mnemonicParsing="false" onMousePressed="#OnPathSelection" prefHeight="32.0" prefWidth="383.0" style="-fx-border-color: black; -fx-font-size: 14; -fx-text-fill: white;" styleClass="glyph-icon" text="Select Directory" />
-                     </children>
-                  </Pane>
-               </children>
-            </StackPane>
-            <Button fx:id="btnConfirm" disable="true" layoutX="141.0" layoutY="171.0" mnemonicParsing="false" onMousePressed="#onConfirmation" prefHeight="39.0" prefWidth="218.0" styleClass="checkbox-main" text="Confirm" />
             <Separator layoutX="-1.0" layoutY="38.0" prefHeight="3.0" prefWidth="489.0" />
+            <Button fx:id="btnPath" blendMode="SRC_ATOP" layoutX="67.0" layoutY="55.0" mnemonicParsing="false" onMousePressed="#OnPathSelection" prefHeight="51.0" prefWidth="422.0" styleClass="btn-1b" text="Select Directory" />
+            <ImageView fx:id="icon" fitHeight="51.0" fitWidth="55.0" layoutX="8.0" layoutY="55.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icons/exclamation.png" />
+               </image>
+            </ImageView>
          </children>
       </Pane>
    </children>

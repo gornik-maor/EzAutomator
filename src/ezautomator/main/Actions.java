@@ -16,15 +16,20 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Abwatts
  */
-
 @XmlRootElement(name = "actions")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Actions {
-    
+
     @XmlElement(name = "action")
     private List<Action> actions = new ArrayList<>();
 
     public List<Action> getActions() {
+//        actions.forEach((Action action) -> {
+//            if (action.getAction().equals("Confirmation")) {
+//                Confirmation confirmation = (Confirmation) action;
+//            }
+//        });
+
         return actions;
     }
 

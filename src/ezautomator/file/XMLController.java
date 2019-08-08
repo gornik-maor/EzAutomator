@@ -8,7 +8,6 @@ package ezautomator.file;
 import ezautomator.main.Action;
 import ezautomator.main.Actions;
 import java.io.File;
-import java.util.ArrayList;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -38,9 +37,8 @@ public class XMLController {
         jaxbMarshaller.marshal(action, file);
         jaxbMarshaller.marshal(action, System.out);
     }
-    
-    public static void ActionsToXML(String filename, Actions actions) throws JAXBException
-    {
+
+    public static void ActionsToXML(String filename, Actions actions) throws JAXBException {
         JAXBContext jaxbContext = JAXBContext.newInstance(Actions.class);
         Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 
@@ -52,15 +50,14 @@ public class XMLController {
         //Marshal the products list in file
         jaxbMarshaller.marshal(actions, new File(filename));
     }
-    
-     public static Actions XMLtoActions(String filename) throws Exception {
+
+    public static Actions XMLtoActions(String filename) throws Exception {
         File file = new File(filename);
         JAXBContext jaxbContext = JAXBContext.newInstance(Actions.class);
 
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
         return (Actions) jaxbUnmarshaller.unmarshal(file);
     }
-
 
     public static Action loadAction(String fileDir) throws Exception {
         Action tempAction = XMLtoAction(fileDir); //"person.xml"

@@ -29,7 +29,6 @@ public class ScriptExecutor implements Runnable {
 
     private static volatile boolean canceled;
     TableView<Action> actionTable;
-    private boolean keyResult = true;
     Thread scriptThread;
     Runnable runnable;
     Robot sRobot;
@@ -69,7 +68,7 @@ public class ScriptExecutor implements Runnable {
     }
 
     public static void stop() {
-        System.out.println("Stopping???");
+        System.out.println("Stopping..");
         canceled = true;
     }
 
@@ -143,20 +142,20 @@ public class ScriptExecutor implements Runnable {
     private void dispNotification(int choice) {
         Image nImg = new Image("/ezautomator/icons/checkmark.png");
         String mTxt = "", title = "";
-        
-        switch(choice) {
+
+        switch (choice) {
             case 0:
                 nImg = new Image("/ezautomator/icons/canceled.png");
                 mTxt = "All actions were stopped.";
                 title = "Execution Terminated";
                 break;
-                
+
             case 1:
                 mTxt = "(" + actionTable.getItems().size() + ") actions were executed successfully.";
                 title = "Execution Complete";
                 break;
         }
-        
+
         Notifications messageBuilder = Notifications.create()
                 .title(title)
                 .text(mTxt)
@@ -201,9 +200,8 @@ public class ScriptExecutor implements Runnable {
                         break;
 
                     case "Confirmation":
-                        Confirmation tempConfirm = (Confirmation) tempAction;
-                        new ConfirmationController().loadAlert().showConfirmation(tempConfirm.getSendKeys().get(0), tempConfirm.getSendKeys().get(1),
-                                tempConfirm.getMessage(), EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                        new ConfirmationController().loadAlert().showConfirmation(tempAction.getSendKeys().get(0), tempAction.getSendKeys().get(1),
+                                tempAction.getMessage(), EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
                         setDelay(delay);
                         break;
                 }

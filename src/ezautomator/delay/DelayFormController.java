@@ -8,7 +8,6 @@ package ezautomator.delay;
 import com.jfoenix.controls.JFXTextField;
 import ezautomator.alert.AlertController;
 import ezautomator.main.EzAutomator;
-import ezautomator.main.FXMLDocumentController;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -71,7 +70,7 @@ public class DelayFormController implements Initializable {
     @FXML
     void onBtnConfirmPress(MouseEvent event) {
         if (!delayTxt.getText().isEmpty() && !delayBox.getItems().isEmpty()) {
-            switch(delayBox.getSelectionModel().getSelectedIndex()) {
+            switch (delayBox.getSelectionModel().getSelectedIndex()) {
                 case 0:
                     // Seconds (Convering to miliseconds)
                     delay = (Integer.parseInt(delayTxt.getText())) * 1000;
@@ -82,11 +81,11 @@ public class DelayFormController implements Initializable {
                     delay = (Integer.parseInt(delayTxt.getText())) * 1000 * 60;
                     System.out.println(delay);
                     break;
-                    
+
                 default:
                     System.out.println("Please select mins/secs");
             }
-            
+
 //            delay = Integer.parseInt(delayTxt.getText());
             closeForm();
         } else {
@@ -105,9 +104,7 @@ public class DelayFormController implements Initializable {
 
     private DelayFormController delayCls;
 
-    private Stage callerStage;
-    
-    private Stage stageToHide;
+    private Stage callerStage, stageToHide, tStage;
 
     /**
      * Initializes the controller class.
@@ -172,6 +169,8 @@ public class DelayFormController implements Initializable {
         if (callerStage != null) {
             callerStage.setIconified(false);
         }
+        
+        if(tStage != null) tStage.setOpacity(1);
         getCurrStage().close();
     }
 
@@ -210,21 +209,38 @@ public class DelayFormController implements Initializable {
         getCurrStage().showAndWait();
         return delay;
     }
-    
+
     /**
      * Setting the form we want to minimize before showing the current form
-     * @param stageToHide 
-     * @return 
+     *
+     * @param stageToHide
+     * @return
      */
     public void setHideUponLoad(Stage stageToHide) {
-        if(stageToHide != null) this.stageToHide = stageToHide;
+        if (stageToHide != null) {
+            this.stageToHide = stageToHide;
+        }
     }
-    
+
     /**
      * Hiding the selected stage on the current form load
      */
     private void hideUponLoad() {
-        if(stageToHide != null) stageToHide.setIconified(true);
+        if (stageToHide != null) {
+            stageToHide.setIconified(true);
+        }
+    }
+
+    /**
+     * Blurring the selected stage on the current form load
+     *
+     * @param tStage
+     */
+    public void blurUponLoad(Stage tStage) {
+        if (tStage != null) {
+            this.tStage = tStage;
+            tStage.setOpacity(0.5);
+        }
     }
 
     /**

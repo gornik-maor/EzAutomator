@@ -1,37 +1,46 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <actions>
     <action>
-        <action>Keys</action>
+        <action>Click</action>
         <comment>test1</comment>
-        <coordinates xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string"></coordinates>
-        <sendKeys>86</sendKeys>
-        <delay>0 m/s</delay>
-        <type>69</type>
+        <coordinates>2372</coordinates>
+        <coordinates>447</coordinates>
+        <delay>1000 m/s</delay>
+        <type>67</type>
+        <keyContinue>0</keyContinue>
+        <keyTerminate>0</keyTerminate>
     </action>
     <action>
-        <action>Click</action>
+        <action>Keys</action>
         <comment>test2</comment>
-        <coordinates>946</coordinates>
-        <coordinates>618</coordinates>
-        <delay>0 m/s</delay>
-        <type>67</type>
+        <coordinates xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string"></coordinates>
+        <sendKeys>162</sendKeys>
+        <sendKeys>32</sendKeys>
+        <delay>1000 m/s</delay>
+        <type>69</type>
+        <keyContinue>0</keyContinue>
+        <keyTerminate>0</keyTerminate>
     </action>
     <action>
         <action>Confirmation</action>
         <comment>test3</comment>
-        <coordinates xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string"></coordinates>
-        <sendKeys>83</sendKeys>
-        <sendKeys>70</sendKeys>
+        <message>test3</message>
+        <coordinates>0</coordinates>
+        <sendKeys>65</sendKeys>
+        <sendKeys>66</sendKeys>
         <delay>0 m/s</delay>
         <type>69</type>
+        <keyContinue>65</keyContinue>
+        <keyTerminate>66</keyTerminate>
     </action>
     <action>
-        <action>Keys</action>
+        <action>Hover</action>
         <comment>test4</comment>
-        <coordinates xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string"></coordinates>
-        <sendKeys>162</sendKeys>
-        <sendKeys>86</sendKeys>
+        <coordinates>2713</coordinates>
+        <coordinates>452</coordinates>
         <delay>1000 m/s</delay>
-        <type>69</type>
+        <type>72</type>
+        <keyContinue>0</keyContinue>
+        <keyTerminate>0</keyTerminate>
     </action>
 </actions>

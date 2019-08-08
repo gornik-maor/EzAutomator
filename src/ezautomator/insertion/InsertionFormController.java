@@ -117,7 +117,7 @@ public class InsertionFormController implements Initializable {
                     } else {
                         setPaneID(3);
                         ArrayList<String> confirmationInfo = new ConfirmationControllerSetup().loadForm().showSetup(getCurrStage(), 0.5);
-                        insAction = new Confirmation("", Integer.parseInt(confirmationInfo.get(0)),
+                        insAction = new Action("", Integer.parseInt(confirmationInfo.get(0)),
                                 Integer.parseInt(confirmationInfo.get(1)), confirmationInfo.get(2));
                         FXMLDocumentController.getActionsBox().getSelectionModel().select(2); // <-- NOT SURE IF THAT'D WORK
                     }

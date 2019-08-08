@@ -23,6 +23,7 @@ class EditingCell extends TableCell<Action, String> {
      * Public default constructor
      */
     public EditingCell() {
+        
     }
 
     @Override

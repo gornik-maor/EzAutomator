@@ -19,12 +19,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType (XmlAccessType.FIELD)
 public class Action {
 
-    private String action;
-    private String comment;
+    private String action, comment, message;
     private ArrayList<Integer> coordinates;
     private ArrayList<Integer> sendKeys;
     private String delay;
     private char type;
+    
+    private int keyContinue, keyTerminate;
 
     /**
      * Default constructor
@@ -34,7 +35,7 @@ public class Action {
         this.comment = "";
         this.coordinates = new ArrayList(Arrays.asList());
         this.sendKeys = new ArrayList(Arrays.asList());
-        this.delay = "0";
+        this.delay = "0 m/s";
         this.type = 'E';
     }
 
@@ -51,6 +52,20 @@ public class Action {
         }
 
         this.type = type;
+    }
+    
+    // Confirmation
+    public Action(String comment, int keyContinue, int keyTerminate, String message) {
+        //super("Confirmation", "", new ArrayList<>(Arrays.asList("")), new ArrayList<>(Arrays.asList(keyContinue, keyTerminate)), "", 'E');
+        this.action = "Confirmation";
+        this.comment = comment;
+        this.keyContinue = keyContinue;
+        this.keyTerminate = keyTerminate;
+        this.coordinates = new ArrayList<>(Arrays.asList(0));
+        this.sendKeys = new ArrayList<>(Arrays.asList(keyContinue, keyTerminate));
+        this.delay = "0 m/s";
+        this.type = 'E';
+        this.message = message;
     }
 
     public String getAction() {
@@ -100,8 +115,33 @@ public class Action {
     public void setType(char type) {
         this.type = type;
     }
+    
+    // Confirmation
+    public int getKeyContinue() {
+        return keyContinue;
+    }
+    
+    public void setKeyContinue(int keyContinue) {
+        this.keyContinue = keyContinue;
+    }
+    
+    public int getKeyTerminate() {
+        return keyTerminate;
+    }
+    
+    public void setKeyTerminate(int keyTerminate) {
+        this.keyTerminate = keyTerminate;
+    }
+    
+    public String getMessage() {
+        return message;
+    }
+    
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
-    public void turnInto(Action actionIn) {
+    public void turnIntoAction(Action actionIn) {
         if (!actionIn.getAction().equals("Confirmation")) {
             this.setAction(actionIn.action);
             
@@ -117,6 +157,22 @@ public class Action {
             
             this.setSendKeys(actionIn.getSendKeys());
             this.setType(actionIn.getType());
+        }
+    }
+    
+    public void turnIntoConfirmation(Action actionIn) {
+        if (actionIn != null) {
+            if (!actionIn.getMessage().isEmpty()) {
+                this.setMessage(actionIn.getMessage());
+            }
+            
+            if (!actionIn.getDelay().startsWith("0")) {
+                this.setDelay(actionIn.getDelay());
+            }
+            
+            this.setKeyContinue(actionIn.getKeyContinue());
+            this.setKeyTerminate(actionIn.getKeyTerminate());
+            this.setSendKeys(new ArrayList<>(Arrays.asList(actionIn.getKeyContinue(), actionIn.getKeyTerminate())));
         }
     }
 }

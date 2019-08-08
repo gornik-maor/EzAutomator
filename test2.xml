@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<actions>
+    <action>
+        <action>Keys</action>
+        <comment>updated</comment>
+        <coordinates xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string"></coordinates>
+        <sendKeys>32</sendKeys>
+        <sendKeys>162</sendKeys>
+        <delay>3000 m/s</delay>
+        <type>69</type>
+        <keyContinue>0</keyContinue>
+        <keyTerminate>0</keyTerminate>
+    </action>
+</actions>

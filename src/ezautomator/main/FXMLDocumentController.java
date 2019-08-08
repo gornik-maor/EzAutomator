@@ -184,8 +184,7 @@ public class FXMLDocumentController implements Initializable {
                     // Opening the delay form
                     DelayFormController delayClss = new DelayFormController();
                     DelayFormController currDelayClss = delayClss.loadAlert();
-                    currDelayClss.setHideUponLoad(mainStage);
-                    currDelayClss.onResultFocus(mainStage);
+                    currDelayClss.blurUponLoad(mainStage);
                     tempAction.setDelay(String.valueOf(currDelayClss.getDelay()));
                 }
 
@@ -237,15 +236,20 @@ public class FXMLDocumentController implements Initializable {
 //            ObservableList<Action> test = insert(newIndex, tempAction, actionTable);
 //            actionTable.setItems(test);
 
-            tempAction = null;
-            txtComment.setText("");
-            actionsBox.getItems().clear();
         }
+
+        tempAction = null;
+        txtComment.setText("");
+        actionsBox.getItems().clear();
     }
 
     @FXML
     void onClickRunScript(MouseEvent event) {
-        ScriptExecutor script = new ScriptExecutor(tempTable);
+        //tempTable = actionTable;
+        isEditing = false;
+//        actionsBox.getItems().clear();
+//        tempAction = null;
+        ScriptExecutor script = new ScriptExecutor(actionTable);
         script.run();
     }
 
@@ -285,6 +289,7 @@ public class FXMLDocumentController implements Initializable {
     void onSaveXML(MouseEvent event) {
         if (!actionTable.getItems().isEmpty()) {
             new NameXMLController().loadResources().loadForm(actionTable, EzAutomator.getMainStage(), 0.5);
+            tabPane.getSelectionModel().select(0);
         } else {
             new AlertController().loadAlert().showDialog("Ok", "Cancel", "There aren't any actions to save!", "error",
                     EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
@@ -300,28 +305,28 @@ public class FXMLDocumentController implements Initializable {
             switch (selAction.getAction()) {
                 case "Click":
                     setPaneID(1);
-                    selAction.turnInto(new SetupWindowController().loadForm().showClickForm(selAction.getCoordinates(), EzAutomator.getMainStage(), 0.5));
+                    selAction.turnIntoAction(new SetupWindowController().loadForm().showClickForm(selAction.getCoordinates(), EzAutomator.getMainStage(), 0.5));
                     break;
 
                 case "Click x2":
                     setPaneID(1);
-                    selAction.turnInto(new SetupWindowController().loadForm().showClickForm(selAction.getCoordinates(), EzAutomator.getMainStage(), 0.5));
+                    selAction.turnIntoAction(new SetupWindowController().loadForm().showClickForm(selAction.getCoordinates(), EzAutomator.getMainStage(), 0.5));
                     break;
 
                 case "Hover":
                     setPaneID(1);
-                    selAction.turnInto(new SetupWindowController().loadForm().showClickForm(selAction.getCoordinates(), EzAutomator.getMainStage(), 0.5));
+                    selAction.turnIntoAction(new SetupWindowController().loadForm().showClickForm(selAction.getCoordinates(), EzAutomator.getMainStage(), 0.5));
                     break;
 
                 case "Keys":
                     setPaneID(2);
-                    selAction.turnInto(new SetupWindowController().loadForm().showKeyForm(selAction.getSendKeys(), EzAutomator.getMainStage(), 0.5));
+                    selAction.turnIntoAction(new SetupWindowController().loadForm().showKeyForm(selAction.getSendKeys(), EzAutomator.getMainStage(), 0.5));
                     break;
 
                 case "Confirmation":
-                    Confirmation selConfirmation = (Confirmation) selAction;
-                    ArrayList<String> confirmationInfo = new ConfirmationControllerSetup().loadForm().showSetup(selConfirmation, EzAutomator.getMainStage(), 0.5);
-                    selConfirmation.turnInto(new Confirmation("", Integer.parseInt(confirmationInfo.get(0)),
+//                    Confirmation selConfirmation = (Confirmation) selAction;
+                    ArrayList<String> confirmationInfo = new ConfirmationControllerSetup().loadForm().showSetup(selAction, EzAutomator.getMainStage(), 0.5);
+                    selAction.turnIntoConfirmation(new Action("", Integer.parseInt(confirmationInfo.get(0)),
                             Integer.parseInt(confirmationInfo.get(1)), confirmationInfo.get(2)));
                     break;
             }
@@ -365,7 +370,7 @@ public class FXMLDocumentController implements Initializable {
                     }
 
                 } else {
-                    if (actionTable.getSelectionModel().getSelectedIndex() == actionTable.getItems().size() - 1) {
+                    if (actionTable.getSelectionModel().getSelectedIndex() == actionTable.getItems().size() - 1 && actionTable.getItems().size() > 1) {
                         new AlertController().loadAlert().showDialog("Ok", "Cancel", "You can only insert an action above!",
                                 "warning", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
                         isEditing = false;
@@ -425,8 +430,8 @@ public class FXMLDocumentController implements Initializable {
             populateActionsBox();
             populateColumns();
             actionTable.setEditable(true);
-            tempTable = actionTable;
             tempCBox = actionsBox;
+            tempTable = actionTable;
 
             // Change Listener for choicebox
             if (!actionsBox.getItems().isEmpty()) {
@@ -472,8 +477,10 @@ public class FXMLDocumentController implements Initializable {
                                 currConfirmationClss.setHideUponLoad(EzAutomator.getMainStage());
                                 currConfirmationClss.onResultFocus(EzAutomator.getMainStage());
                                 ArrayList<String> confirmationInfo = currConfirmationClss.getConfirmationInfo();
-                                tempAction = new Confirmation("", Integer.parseInt(confirmationInfo.get(0)),
-                                        Integer.parseInt(confirmationInfo.get(1)), String.valueOf(confirmationInfo.get(2)));
+
+                                //String comment, int keyContinue, int keyTerminate, String message, String delay
+                                tempAction = new Action("", Integer.parseInt(confirmationInfo.get(0)), Integer.parseInt(confirmationInfo.get(1)),
+                                        String.valueOf(confirmationInfo.get(2)));
                             }
                         }
                     }
@@ -577,8 +584,7 @@ public class FXMLDocumentController implements Initializable {
         commentColumn.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Action, String>>() {
             @Override
             public void handle(TableColumn.CellEditEvent<Action, String> event) {
-                Action selAction = actionTable.getSelectionModel().getSelectedItem();
-                selAction.setComment(selAction.getComment());
+                changeComment(event);
             }
         });
 
@@ -753,6 +759,16 @@ public class FXMLDocumentController implements Initializable {
             Logger.getLogger(FXMLDocumentController.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    /**
+     * Changing an action comment based on user click
+     *
+     * @param editedCell
+     */
+    private void changeComment(TableColumn.CellEditEvent editedCell) {
+        Action selAction = actionTable.getSelectionModel().getSelectedItem();
+        selAction.setComment(editedCell.getNewValue().toString());
     }
 
     /**

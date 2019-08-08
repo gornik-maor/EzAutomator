@@ -167,7 +167,7 @@ public class ConfirmationControllerSetup implements Initializable {
     private int keyContinue;
     private int keyTerminate;
     
-    private Confirmation selConfirm;
+    private Action selConfirm;
     
     private boolean isCapConfirm, isCapTerminate;
 
@@ -260,7 +260,7 @@ public class ConfirmationControllerSetup implements Initializable {
         return currStage;
     }
     
-    private void autoFill(Confirmation confirmation) {
+    private void autoFill(Action confirmation) {
         confirmationTxt.setText(confirmation.getMessage());
         keyContinue = confirmation.getKeyContinue();
         keyTerminate = confirmation.getKeyTerminate();
@@ -315,7 +315,7 @@ public class ConfirmationControllerSetup implements Initializable {
      * @param opValue
      * @return 
      */
-    public ArrayList showSetup(Confirmation toFill, Stage tStage, double opValue) {
+    public ArrayList showSetup(Action toFill, Stage tStage, double opValue) {
         autoFill(toFill);
         this.tStage = tStage;
         setTargetOpacity(opValue);

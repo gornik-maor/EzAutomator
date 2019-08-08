@@ -10,7 +10,6 @@ import ezautomator.alert.AlertController;
 import ezautomator.main.Action;
 import ezautomator.main.Actions;
 import ezautomator.main.EzAutomator;
-import ezautomator.main.FXMLDocumentController;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -28,7 +27,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
-import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -61,8 +60,7 @@ public class NameXMLController implements Initializable {
 
     @FXML
     void closeApp(MouseEvent event) {
-        tStage.setOpacity(1);
-        getCurrStage().close();
+        closeForm();
     }
 
     @FXML
@@ -77,36 +75,44 @@ public class NameXMLController implements Initializable {
 
     @FXML
     void OnPathSelection(MouseEvent event) {
-        DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle("Save Script");
-        directoryChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
-        File selectedPath = directoryChooser.showDialog(getCurrStage());
+        FileChooser fileChooser = new FileChooser();
+        //Set extension filter for text files
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("eXtensible Markup Language", "*.xml");
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+        fileChooser.getExtensionFilters().add(extFilter);
 
-        if (selectedPath != null) {
-            closeBtn.requestFocus();
-            path = selectedPath.toString();
-            btnConfirm.setDisable(false);
+        // Saving the script
+        Actions actions = new Actions();
+        actionTable.getItems().forEach(actions.getActions()::add);
+
+        //
+        //Show save file dialog
+        File file = fileChooser.showSaveDialog(getCurrStage());
+
+        if (file != null) {
+            writeActionsToXML(actions, file.toString());
+            closeForm();
         }
     }
 
     @FXML
     void onConfirmation(MouseEvent event) {
         if (!scriptTxt.getText().isEmpty() && !actionTable.getItems().isEmpty()) {
-            Actions actions = new Actions();
-            actionTable.getItems().forEach(actions.getActions()::add);
-            
-            if (!new File(path + "\\" + scriptTxt.getText() + ".xml").exists()) {
-                writeActionsToXML(actions);
-                closeForm();
-            } else {
-                if (new AlertController().loadAlert().showDialog("Yes", "No", "A script with that name already exists! Replace it?", "warning",
-                        getCurrStage(), getCurrStage(), 0.5)) {
-                    writeActionsToXML(actions);
-                    closeForm();
-                } else {
-                    scriptTxt.setText("");
-                }
-            }
+//            Actions actions = new Actions();
+//            actionTable.getItems().forEach(actions.getActions()::add);
+//
+//            if (!new File(path + "\\" + scriptTxt.getText() + ".xml").exists()) {
+//                writeActionsToXML(actions);
+//                closeForm();
+//            } else {
+//                if (new AlertController().loadAlert().showDialog("Yes", "No", "A script with that name already exists! Replace it?", "warning",
+//                        getCurrStage(), getCurrStage(), 0.5)) {
+//                    writeActionsToXML(actions);
+//                    closeForm();
+//                } else {
+//                    scriptTxt.setText("");
+//                }
+//            }
         } else {
             new AlertController().loadAlert().showDialog("Ok", "Cancel", "Please enter a script name!", "error",
                     getCurrStage(), getCurrStage(), 0.5);
@@ -123,6 +129,7 @@ public class NameXMLController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        closeBtn.requestFocus();
         /**
          * Allowing the user to drag the form
          */
@@ -156,9 +163,10 @@ public class NameXMLController implements Initializable {
         Stage currStage = (Stage) root.getScene().getWindow();
         return currStage;
     }
-    
+
     private void closeForm() {
-        closeForm();
+        tStage.setOpacity(1);
+        getCurrStage().close();
     }
 
     public NameXMLController loadResources() {
@@ -194,10 +202,11 @@ public class NameXMLController implements Initializable {
         getCurrStage().show();
     }
 
-    private void writeActionsToXML(Actions actions) {
+    private void writeActionsToXML(Actions actions, String file) {
         if (!actions.getActions().isEmpty()) {
             try {
-                XMLController.ActionsToXML(path + "\\" + scriptTxt.getText() + ".xml", actions);
+//                XMLController.ActionsToXML(path + "\\" + scriptTxt.getText() + ".xml", actions);
+                XMLController.ActionsToXML(file, actions);
                 new AlertController().loadAlert().showDialog("Ok", "Cancel", "Script was saved successfully!", "exclamation",
                         getCurrStage(), getCurrStage(), 0.5);
 
