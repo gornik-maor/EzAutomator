@@ -12,11 +12,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<StackPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="713.0" prefWidth="485.0" stylesheets="@../../resources/dark-theme.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ezautomator.main.FXMLDocumentController">
+<StackPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="713.0" prefWidth="513.0" stylesheets="@../../resources/dark-theme.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ezautomator.main.FXMLDocumentController">
    <children>
       <Pane prefHeight="77.0" prefWidth="1000.0" styleClass="custom-alert">
          <children>
-            <ImageView fx:id="closeBtn" fitHeight="21.0" fitWidth="21.0" layoutX="437.0" layoutY="10.0" onMouseClicked="#closeApp" onMouseEntered="#closeBtnChangeHover" onMouseExited="#closeBtnChangeLeave" pickOnBounds="true" preserveRatio="true" styleClass="image-view">
+            <ImageView fx:id="closeBtn" fitHeight="21.0" fitWidth="21.0" layoutX="478.0" layoutY="10.0" onMouseClicked="#closeApp" onMouseEntered="#closeBtnChangeHover" onMouseExited="#closeBtnChangeLeave" pickOnBounds="true" preserveRatio="true" styleClass="image-view">
                <image>
                   <Image url="@../icons/close.png" />
                </image>
@@ -56,15 +56,15 @@
                 </Menu>
               </menus>
             </MenuBar>
-            <BorderPane layoutY="71.0" prefHeight="565.0" prefWidth="485.0" styleClass="custom-pane">
+            <BorderPane layoutY="71.0" prefHeight="634.0" prefWidth="513.0" styleClass="custom-pane">
                <top>
-                  <JFXTabPane fx:id="tabPane" prefHeight="634.0" prefWidth="485.0" BorderPane.alignment="CENTER">
+                  <JFXTabPane fx:id="tabPane" prefHeight="634.0" prefWidth="513.0" BorderPane.alignment="CENTER">
                      <tabs>
                         <Tab text="Main">
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <TableView fx:id="actionTable" layoutX="7.0" layoutY="7.0" prefHeight="312.0" prefWidth="474.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="10.0">
+                                    <TableView fx:id="actionTable" layoutX="7.0" layoutY="7.0" prefHeight="312.0" prefWidth="499.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="10.0">
                                       <columns>
                                         <TableColumn prefWidth="75.0" text="C1" />
                                         <TableColumn prefWidth="75.0" text="C2" />
@@ -86,9 +86,9 @@
                                           <String fx:value="table-cell" />
                                        </styleClass>
                                     </TableView>
-                                    <Pane layoutX="6.0" layoutY="326.0" prefHeight="174.0" prefWidth="473.0" styleClass="custom-alert">
+                                    <Pane layoutX="6.0" layoutY="326.0" prefHeight="174.0" prefWidth="498.0" styleClass="custom-alert">
                                        <children>
-                                          <ChoiceBox fx:id="actionsBox" layoutX="109.0" layoutY="13.0" onMousePressed="#onActionsBoxPressed" prefHeight="35.0" prefWidth="349.0" styleClass="choicebox-main" />
+                                          <ChoiceBox fx:id="actionsBox" layoutX="109.0" layoutY="13.0" onMousePressed="#onActionsBoxPressed" prefHeight="35.0" prefWidth="367.0" styleClass="choicebox-main" />
                                           <Text fill="WHITE" layoutX="14.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select Action">
                                              <font>
                                                 <Font size="15.0" />
@@ -108,8 +108,8 @@
                                                 <Font size="15.0" />
                                              </font>
                                           </Text>
-                                          <JFXTextField fx:id="txtComment" layoutX="129.0" layoutY="65.0" prefHeight="37.0" prefWidth="331.0" promptText="Enter Comment" />
-                                          <Button layoutX="280.0" layoutY="118.0" mnemonicParsing="false" onMouseClicked="#removeAction" prefHeight="42.0" prefWidth="179.0" text="Remove">
+                                          <JFXTextField fx:id="txtComment" layoutX="129.0" layoutY="65.0" prefHeight="37.0" prefWidth="348.0" promptText="Enter Comment" />
+                                          <Button layoutX="280.0" layoutY="118.0" mnemonicParsing="false" onMouseClicked="#removeAction" prefHeight="42.0" prefWidth="196.0" text="Remove">
                                              <graphic>
                                                 <ImageView fx:id="btnRemove" fitHeight="28.0" fitWidth="30.0" onMouseClicked="#removeAction" pickOnBounds="true" preserveRatio="true">
                                                    <image>
@@ -119,7 +119,7 @@
                                              </graphic>
                                           </Button>
                                        </children></Pane>
-                                    <Pane layoutX="7.0" layoutY="508.0" prefHeight="65.0" prefWidth="473.0" styleClass="custom-alert">
+                                    <Pane layoutX="7.0" layoutY="508.0" prefHeight="65.0" prefWidth="497.0" styleClass="custom-alert">
                                        <children>
                                           <Button fx:id="btnRun" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#onClickRunScript" prefHeight="42.0" prefWidth="256.0" text="Run">
                                              <graphic>
@@ -142,7 +142,7 @@
                                           </ToggleButton>
                                        </children>
                                     </Pane>
-                                    <Separator layoutX="8.0" layoutY="499.0" prefHeight="11.0" prefWidth="472.0" />
+                                    <Separator layoutX="8.0" layoutY="499.0" prefHeight="11.0" prefWidth="495.0" />
                                  </children></AnchorPane>
                           </content>
                         </Tab>
@@ -150,7 +150,7 @@
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <Pane layoutY="11.0" prefHeight="541.0" prefWidth="485.0" styleClass="custom-alert">
+                                    <Pane layoutY="11.0" prefHeight="541.0" prefWidth="513.0" styleClass="custom-alert">
                                        <children>
                                           <Button layoutX="14.0" layoutY="488.0" mnemonicParsing="false" onMousePressed="#onSaveXMLPress" prefHeight="39.0" prefWidth="166.0" text="Save">
                                              <graphic>
@@ -161,7 +161,7 @@
                                                 </ImageView>
                                              </graphic>
                                           </Button>
-                                          <Button layoutX="305.0" layoutY="488.0" mnemonicParsing="false" onMousePressed="#onLoadXMLPress" prefHeight="39.0" prefWidth="166.0" text="Load">
+                                          <Button layoutX="333.0" layoutY="488.0" mnemonicParsing="false" onMousePressed="#onLoadXMLPress" prefHeight="39.0" prefWidth="166.0" text="Load">
                                              <graphic>
                                                 <ImageView fitHeight="25.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                                                    <image>
@@ -170,14 +170,14 @@
                                                 </ImageView>
                                              </graphic>
                                           </Button>
-                                          <Text fill="WHITE" layoutX="48.0" layoutY="262.0" strokeType="OUTSIDE" strokeWidth="0.0" text="More options are coming soon!">
+                                          <Text fill="WHITE" layoutX="62.0" layoutY="262.0" strokeType="OUTSIDE" strokeWidth="0.0" text="More options are coming soon!">
                                              <font>
                                                 <Font size="28.0" />
                                              </font>
                                           </Text>
                                        </children>
                                     </Pane>
-                                    <Label layoutX="133.0" layoutY="556.0" text="© 2019 Maor Gornic.  All rights reserved." textFill="WHITE" />
+                                    <Label layoutX="148.0" layoutY="556.0" text="© 2019 Maor Gornic.  All rights reserved." textFill="WHITE" />
                                  </children></AnchorPane>
                           </content>
                         </Tab>
@@ -185,7 +185,7 @@
                   </JFXTabPane>
                </top>
             </BorderPane>
-            <ImageView fx:id="minBtn" fitHeight="21.0" fitWidth="21.0" layoutX="402.0" layoutY="10.0" onMouseClicked="#minApp" onMouseEntered="#minBtnChangeHover" onMouseExited="#minBtnChangeLeave" pickOnBounds="true" preserveRatio="true" styleClass="image-view">
+            <ImageView fx:id="minBtn" fitHeight="21.0" fitWidth="21.0" layoutX="443.0" layoutY="10.0" onMouseClicked="#minApp" onMouseEntered="#minBtnChangeHover" onMouseExited="#minBtnChangeLeave" pickOnBounds="true" preserveRatio="true" styleClass="image-view">
                <image>
                   <Image url="@../icons/minimize.png" />
                </image>

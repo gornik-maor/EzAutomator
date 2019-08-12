@@ -229,6 +229,7 @@ public class ScriptExecutor implements Runnable {
                     executions = numExcs;
                     // Displaying script status notification
                     dispNotification(0);
+                    break;
                 }
             }
 

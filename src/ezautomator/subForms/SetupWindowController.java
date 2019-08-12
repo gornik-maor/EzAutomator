@@ -39,7 +39,6 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 import org.jnativehook.keyboard.NativeKeyEvent;
@@ -60,6 +59,12 @@ public class SetupWindowController implements Initializable {
 
     @FXML
     private ImageView closeBtn;
+
+    @FXML
+    private ImageView btnEOne;
+
+    @FXML
+    private ImageView btnETwo;
 
     @FXML
     private JFXTextField xValueTxt;
@@ -155,6 +160,32 @@ public class SetupWindowController implements Initializable {
             root.requestFocus();
         } else {
             capKeysBtn.setText("Capturing...");
+        }
+    }
+
+    @FXML
+    void onEraserOnePress(MouseEvent event) {
+        if (new AlertController().loadAlert().showDialog("Yes", "No", "Are you sure you wish to continue?",
+                "exclamation", getSubStage(), getSubStage(), 0.5)) {
+            fKeyTxt.setText("");
+//            keyOne = 0;
+            btnEOne.setVisible(false);
+            isCapKeys = false;
+            capKeysBtn.setText("Capture Keys");
+            root.requestFocus();
+        }
+    }
+
+    @FXML
+    void onEraserTwoPress(MouseEvent event) {
+        if (new AlertController().loadAlert().showDialog("Yes", "No", "Are you sure you wish to continue?",
+                "exclamation", getSubStage(), getSubStage(), 0.5)) {
+            sKeyTxt.setText("");
+//            keyTwo = 0;
+            btnETwo.setVisible(false);
+            isCapKeys = false;
+            capKeysBtn.setText("Capture Keys");
+            root.requestFocus();
         }
     }
 
@@ -374,9 +405,15 @@ public class SetupWindowController implements Initializable {
                     if (fKeyTxt.isFocused()) {
                         fKeyTxt.setText(keyPressed);
                         keyOne = nke.getRawCode();
+                        if (!btnEOne.isVisible()) {
+                            btnEOne.setVisible(true);
+                        }
                     } else {
                         sKeyTxt.setText(keyPressed);
                         keyTwo = nke.getRawCode();
+                        if (!btnETwo.isVisible()) {
+                            btnETwo.setVisible(true);
+                        }
                     }
                 }
 
@@ -488,7 +525,7 @@ public class SetupWindowController implements Initializable {
                 } else {
                     fKeyTxt.setText(EzAutomator.getKeyTextRep((int) givenList.get(0)));
                 }
-
+                
                 break;
 
             case 3:

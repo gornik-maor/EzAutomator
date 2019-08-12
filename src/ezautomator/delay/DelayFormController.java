@@ -53,8 +53,7 @@ public class DelayFormController implements Initializable {
 
     @FXML
     void closeApp(MouseEvent event) {
-        EzAutomator.getMainStage().setIconified(false);
-        getCurrStage().close();
+        closeForm();
     }
 
     @FXML
@@ -70,26 +69,28 @@ public class DelayFormController implements Initializable {
     @FXML
     void onBtnConfirmPress(MouseEvent event) {
         if (!delayTxt.getText().isEmpty() && !delayBox.getItems().isEmpty()) {
-            switch (delayBox.getSelectionModel().getSelectedIndex()) {
-                case 0:
-                    // Seconds (Convering to miliseconds)
-                    delay = (Integer.parseInt(delayTxt.getText())) * 1000;
-                    System.out.println(delay);
-                    break;
-                case 1:
-                    // Minutes (Convering to miliseconds)
-                    delay = (Integer.parseInt(delayTxt.getText())) * 1000 * 60;
-                    System.out.println(delay);
-                    break;
+            if (isNumeric(delayTxt.getText())) {
+                switch (delayBox.getSelectionModel().getSelectedIndex()) {
+                    case 0:
+                        // Seconds (Convering to miliseconds)
+                        delay = Math.abs(Integer.parseInt(delayTxt.getText())) * 1000;
+                        System.out.println(delay);
+                        break;
+                    case 1:
+                        // Minutes (Convering to miliseconds)
+                        delay = Math.abs(Integer.parseInt(delayTxt.getText())) * 1000 * 60;
+                        System.out.println(delay);
+                        break;
 
-                default:
-                    System.out.println("Please select mins/secs");
+                    default:
+                        new AlertController().loadAlert().showDialog("Ok", "Cancel", "Please select the desired time units!",
+                                "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                }
+                closeForm();
             }
-
-//            delay = Integer.parseInt(delayTxt.getText());
-            closeForm();
         } else {
-            System.out.println("No delay was set!");
+            new AlertController().loadAlert().showDialog("Ok", "Cancel", "No delay was set. Please set a delay!",
+                    "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
 //            AlertController alert = new AlertController();
 //            Are you sure you don't need a delay?
 //            alert.loadAlert();
@@ -169,8 +170,10 @@ public class DelayFormController implements Initializable {
         if (callerStage != null) {
             callerStage.setIconified(false);
         }
-        
-        if(tStage != null) tStage.setOpacity(1);
+
+        if (tStage != null) {
+            tStage.setOpacity(1);
+        }
         getCurrStage().close();
     }
 
@@ -211,10 +214,22 @@ public class DelayFormController implements Initializable {
     }
 
     /**
+     * Capturing the desired delay by the user and displaying form
+     *
+     * @param tStage
+     * @return The amount of delay the user has chosen
+     */
+    public int getDelay(Stage tStage) {
+        blurUponLoad(tStage);
+        getCurrStage().showAndWait();
+        return delay;
+    }
+
+    /**
      * Setting the form we want to minimize before showing the current form
      *
      * @param stageToHide
-     * @return
+     *
      */
     public void setHideUponLoad(Stage stageToHide) {
         if (stageToHide != null) {
@@ -265,6 +280,19 @@ public class DelayFormController implements Initializable {
      */
     public DelayFormController getDelayCls() {
         return delayCls;
+    }
+
+    private boolean isNumeric(String input) {
+        try {
+            int num = Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            new AlertController().loadAlert().showDialog("Ok", "Cancel", "Only numbers are allowed!",
+                    "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+            delayTxt.setText("");
+            tStage.setOpacity(0.5);
+            return false;
+        }
+        return true;
     }
 
 }

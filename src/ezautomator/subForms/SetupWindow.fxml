@@ -71,6 +71,16 @@
                      </font>
                   </Label>
                   <JFXTextField fx:id="fKeyTxt" editable="false" layoutX="81.0" layoutY="26.0" prefHeight="37.0" prefWidth="147.0" promptText="Enter" />
+                  <ImageView fx:id="btnEOne" fitHeight="19.0" fitWidth="14.0" layoutX="10.0" layoutY="40.0" onMousePressed="#onEraserOnePress" pickOnBounds="true" preserveRatio="true" visible="false">
+                     <image>
+                        <Image url="@../icons/eraser.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="btnETwo" fitHeight="19.0" fitWidth="14.0" layoutX="7.0" layoutY="90.0" onMousePressed="#onEraserTwoPress" pickOnBounds="true" preserveRatio="true" visible="false">
+                     <image>
+                        <Image url="@../icons/eraser.png" />
+                     </image>
+                  </ImageView>
                </children>
             </Pane>
             <Button fx:id="btnProceed" layoutX="12.0" layoutY="242.0" mnemonicParsing="false" onMousePressed="#proceedOnClick" prefHeight="39.0" prefWidth="462.0" styleClass="common-label" text="Proceed" />

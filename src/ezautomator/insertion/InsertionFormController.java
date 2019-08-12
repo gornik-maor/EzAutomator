@@ -77,6 +77,7 @@ public class InsertionFormController implements Initializable {
         } else {
             new AlertController().loadAlert().showDialog("Ok", "Cancel", "No action was selected!",
                     "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+            tStage.setOpacity(0.5);
         }
     }
 
@@ -104,21 +105,33 @@ public class InsertionFormController implements Initializable {
                     if (selectedAction.startsWith("Click")) {
                         setPaneID(1);
                         insAction = new SetupWindowController().loadForm().showForm(getCurrStage(), 0.5);
-                        System.out.println(insAction);
+                        if (insAction == null) {
+                            actionCmb.getItems().clear();
+                            populateActionsBox();
+                        }
                         FXMLDocumentController.getActionsBox().getSelectionModel().select(0); // <-- NOT SURE IF THAT'D WORK
 
                     } else if (selectedAction.startsWith("Send")) {
                         setPaneID(2);
                         insAction = new SetupWindowController().loadForm().showForm(getCurrStage(), 0.5);
-                        System.out.println(insAction);
+                        if (insAction == null) {
+                            actionCmb.getItems().clear();
+                            populateActionsBox();
+                        }
                         FXMLDocumentController.getActionsBox().getSelectionModel().select(1); // <-- NOT SURE IF THAT'D WORK
 
-                    } else if(selectedAction.startsWith("Confirmation")) {
+                    } else if (selectedAction.equals("Confirmation")) {
                         setPaneID(3);
-                        ArrayList<String> confirmationInfo = new ConfirmationControllerSetup().loadForm().showSetup(getCurrStage(), 0.5);
-                        insAction = new Action("", Integer.parseInt(confirmationInfo.get(0)),
-                                Integer.parseInt(confirmationInfo.get(1)), confirmationInfo.get(2));
-                        FXMLDocumentController.getActionsBox().getSelectionModel().select(2); // <-- NOT SURE IF THAT'D WORK
+                        try {
+                            ArrayList<String> confirmationInfo = new ConfirmationControllerSetup().loadForm().showSetup(getCurrStage(), 0.5);
+                            insAction = new Action("", Integer.parseInt(confirmationInfo.get(0)),
+                                    Integer.parseInt(confirmationInfo.get(1)), confirmationInfo.get(2));
+                            FXMLDocumentController.getActionsBox().getSelectionModel().select("Confirmation"); // <-- NOT SURE IF THAT'D WORK
+                            FXMLDocumentController.getActionsBox().getSelectionModel().select(2);
+                        } catch (NullPointerException e) {
+                            actionCmb.getItems().clear();
+                            populateActionsBox();
+                        }
                     }
                 }
             });

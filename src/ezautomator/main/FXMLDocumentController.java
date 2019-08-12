@@ -188,6 +188,12 @@ public class FXMLDocumentController implements Initializable {
         if (actionsBox.getItems().isEmpty()) {
             populateActionsBox();
         }
+
+        if (isEditing) {
+            new AlertController().loadAlert().showDialog("Ok", "Cancel", "Please insert an action before continuing!",
+                    "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+            actionsBox.setDisable(true);
+        }
     }
 
     @FXML
@@ -245,7 +251,7 @@ public class FXMLDocumentController implements Initializable {
             ScriptExecutor.setExecs(numExcs);
         } else {
             new AlertController().loadAlert().showDialog("Ok", "Cancel", "Please add an action before continuing!",
-                        "warning", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                    "warning", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
         }
     }
 
@@ -272,6 +278,7 @@ public class FXMLDocumentController implements Initializable {
                 txtComment.setText("");
                 actionsBox.getItems().clear();
             } else {
+
                 // Clearing the comment field
                 txtComment.setText("");
                 // Create my own custom expection
@@ -311,14 +318,13 @@ public class FXMLDocumentController implements Initializable {
 
             // Adding the action at the specified index based on the user choice
             actionTable.getItems().add(newIndex, tempAction);
-//            ObservableList<Action> test = insert(newIndex, tempAction, actionTable);
-//            actionTable.setItems(test);
-
         }
 
         tempAction = null;
         txtComment.setText("");
         actionsBox.getItems().clear();
+        actionsBox.setDisable(false);
+        isEditing = false;
     }
 
     @FXML
@@ -346,37 +352,43 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     void onItemEditClick(ActionEvent event) {
         Action selAction = actionTable.getSelectionModel().getSelectedItem();
-
         if (actionTable.getSelectionModel().getSelectedIndex() != -1) {
-            switch (selAction.getAction()) {
-                case "Click":
-                    setPaneID(1);
-                    selAction.turnIntoAction(new SetupWindowController().loadForm().showClickForm(selAction.getCoordinates(), EzAutomator.getMainStage(), 0.5));
-                    break;
+            boolean result = new AlertController().loadAlert().showDialog("Action", "Delay", "What would you like to edit?",
+                    "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
 
-                case "Click x2":
-                    setPaneID(1);
-                    selAction.turnIntoAction(new SetupWindowController().loadForm().showClickForm(selAction.getCoordinates(), EzAutomator.getMainStage(), 0.5));
-                    break;
+            if (result) {
+                switch (selAction.getAction()) {
+                    case "Click":
+                        setPaneID(1);
+                        selAction.turnIntoAction(new SetupWindowController().loadForm().showClickForm(selAction.getCoordinates(), EzAutomator.getMainStage(), 0.5));
+                        break;
 
-                case "Hover":
-                    setPaneID(1);
-                    selAction.turnIntoAction(new SetupWindowController().loadForm().showClickForm(selAction.getCoordinates(), EzAutomator.getMainStage(), 0.5));
-                    break;
+                    case "Click x2":
+                        setPaneID(1);
+                        selAction.turnIntoAction(new SetupWindowController().loadForm().showClickForm(selAction.getCoordinates(), EzAutomator.getMainStage(), 0.5));
+                        break;
 
-                case "Keys":
-                    setPaneID(2);
-                    selAction.turnIntoAction(new SetupWindowController().loadForm().showKeyForm(selAction.getSendKeys(), EzAutomator.getMainStage(), 0.5));
-                    break;
+                    case "Hover":
+                        setPaneID(1);
+                        selAction.turnIntoAction(new SetupWindowController().loadForm().showClickForm(selAction.getCoordinates(), EzAutomator.getMainStage(), 0.5));
+                        break;
 
-                case "Confirmation":
+                    case "Keys":
+                        setPaneID(2);
+                        selAction.turnIntoAction(new SetupWindowController().loadForm().showKeyForm(selAction.getSendKeys(), EzAutomator.getMainStage(), 0.5));
+                        break;
+
+                    case "Confirmation":
 //                    Confirmation selConfirmation = (Confirmation) selAction;
-                    ArrayList<String> confirmationInfo = new ConfirmationControllerSetup().loadForm().showSetup(selAction, EzAutomator.getMainStage(), 0.5);
-                    selAction.turnIntoConfirmation(new Action("", Integer.parseInt(confirmationInfo.get(0)),
-                            Integer.parseInt(confirmationInfo.get(1)), confirmationInfo.get(2)));
-                    break;
+                        ArrayList<String> confirmationInfo = new ConfirmationControllerSetup().loadForm().showSetup(selAction, EzAutomator.getMainStage(), 0.5);
+                        selAction.turnIntoConfirmation(new Action("", Integer.parseInt(confirmationInfo.get(0)),
+                                Integer.parseInt(confirmationInfo.get(1)), confirmationInfo.get(2)));
+                        break;
+                }
+                tempAction = null;
+            } else {
+                selAction.setDelay(String.valueOf(new DelayFormController().loadAlert().getDelay(EzAutomator.getMainStage())));
             }
-            tempAction = null;
         } else if (actionTable.getItems().isEmpty()) {
             new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no items to edit!",
                     "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
@@ -635,7 +647,7 @@ public class FXMLDocumentController implements Initializable {
 //        actionTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         // Setting up the action column
         TableColumn<Action, String> actionColumn = new TableColumn<>("Action");
-        actionColumn.setMinWidth(60);
+        actionColumn.setMinWidth(103);
         actionColumn.setSortable(false);
         actionColumn.setCellValueFactory(new PropertyValueFactory<>("action"));
 
@@ -648,10 +660,10 @@ public class FXMLDocumentController implements Initializable {
         // Enabling the user to edit the comment by double clicking the field
         Callback<TableColumn<Action, String>, TableCell<Action, String>> cellFactor
                 = new Callback<TableColumn<Action, String>, TableCell<Action, String>>() {
-                    public TableCell call(TableColumn p) {
-                        return new EditingCell();
-                    }
-                };
+            public TableCell call(TableColumn p) {
+                return new EditingCell();
+            }
+        };
 
 //        commentColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         commentColumn.setCellFactory(cellFactor);
@@ -683,7 +695,7 @@ public class FXMLDocumentController implements Initializable {
 
         // Setting up the keys column
         TableColumn<Action, ArrayList> sendKeysColumn = new TableColumn<>("Keys");
-        sendKeysColumn.setMinWidth(50);
+        sendKeysColumn.setMinWidth(20);
         sendKeysColumn.setSortable(false);
 
         // Sotring selected keys as string instead of their raw code representation

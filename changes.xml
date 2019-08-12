@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<actions>
+    <action>
+        <action>Click</action>
+        <comment>1</comment>
+        <coordinates>1179</coordinates>
+        <coordinates>159</coordinates>
+        <delay>1000 m/s</delay>
+        <type>67</type>
+        <keyContinue>0</keyContinue>
+        <keyTerminate>0</keyTerminate>
+    </action>
+    <action>
+        <action>Keys</action>
+        <comment>2</comment>
+        <coordinates>0</coordinates>
+        <sendKeys>118</sendKeys>
+        <delay>1000 m/s</delay>
+        <type>69</type>
+        <keyContinue>0</keyContinue>
+        <keyTerminate>0</keyTerminate>
+    </action>
+    <action>
+        <action>Keys</action>
+        <comment>3</comment>
+        <coordinates>0</coordinates>
+        <sendKeys>162</sendKeys>
+        <sendKeys>86</sendKeys>
+        <delay>1000 m/s</delay>
+        <type>69</type>
+        <keyContinue>0</keyContinue>
+        <keyTerminate>0</keyTerminate>
+    </action>
+    <action>
+        <action>Keys</action>
+        <comment>4</comment>
+        <coordinates>0</coordinates>
+        <sendKeys>13</sendKeys>
+        <delay>1000 m/s</delay>
+        <type>69</type>
+        <keyContinue>0</keyContinue>
+        <keyTerminate>0</keyTerminate>
+    </action>
+    <action>
+        <action>Click x2</action>
+        <comment>5</comment>
+        <coordinates>194</coordinates>
+        <coordinates>438</coordinates>
+        <delay>1000 m/s</delay>
+        <type>67</type>
+        <keyContinue>0</keyContinue>
+        <keyTerminate>0</keyTerminate>
+    </action>
+    <action>
+        <action>Keys</action>
+        <comment>6</comment>
+        <coordinates>0</coordinates>
+        <sendKeys>162</sendKeys>
+        <sendKeys>86</sendKeys>
+        <delay>1000 m/s</delay>
+        <type>69</type>
+        <keyContinue>0</keyContinue>
+        <keyTerminate>0</keyTerminate>
+    </action>
+    <action>
+        <action>Keys</action>
+        <comment>7</comment>
+        <coordinates>0</coordinates>
+        <sendKeys>13</sendKeys>
+        <delay>1000 m/s</delay>
+        <type>69</type>
+        <keyContinue>0</keyContinue>
+        <keyTerminate>0</keyTerminate>
+    </action>
+    <action>
+        <action>Hover</action>
+        <comment>8</comment>
+        <coordinates>214</coordinates>
+        <coordinates>310</coordinates>
+        <delay>1000 m/s</delay>
+        <type>72</type>
+        <keyContinue>0</keyContinue>
+        <keyTerminate>0</keyTerminate>
+    </action>
+    <action>
+        <action>Click</action>
+        <comment>9</comment>
+        <coordinates>206</coordinates>
+        <coordinates>355</coordinates>
+        <delay>1000 m/s</delay>
+        <type>67</type>
+        <keyContinue>0</keyContinue>
+        <keyTerminate>0</keyTerminate>
+    </action>
+    <action>
+        <action>Confirmation</action>
+        <comment>10</comment>
+        <message>Continue?</message>
+        <coordinates>0</coordinates>
+        <sendKeys>65</sendKeys>
+        <sendKeys>66</sendKeys>
+        <delay>1000 m/s</delay>
+        <type>69</type>
+        <keyContinue>65</keyContinue>
+        <keyTerminate>66</keyTerminate>
+    </action>
+    <action>
+        <action>Hover</action>
+        <comment>11</comment>
+        <coordinates>215</coordinates>
+        <coordinates>313</coordinates>
+        <delay>1000 m/s</delay>
+        <type>72</type>
+        <keyContinue>0</keyContinue>
+        <keyTerminate>0</keyTerminate>
+    </action>
+    <action>
+        <action>Click</action>
+        <comment>12</comment>
+        <coordinates>200</coordinates>
+        <coordinates>380</coordinates>
+        <delay>1000 m/s</delay>
+        <type>67</type>
+        <keyContinue>0</keyContinue>
+        <keyTerminate>0</keyTerminate>
+    </action>
+    <action>
+        <action>Confirmation</action>
+        <comment>13</comment>
+        <message>Continue?</message>
+        <coordinates>0</coordinates>
+        <sendKeys>65</sendKeys>
+        <sendKeys>66</sendKeys>
+        <delay>1000 m/s</delay>
+        <type>69</type>
+        <keyContinue>65</keyContinue>
+        <keyTerminate>66</keyTerminate>
+    </action>
+    <action>
+        <action>Click x2</action>
+        <comment>14</comment>
+        <coordinates>123</coordinates>
+        <coordinates>315</coordinates>
+        <delay>0 m/s</delay>
+        <type>67</type>
+        <keyContinue>0</keyContinue>
+        <keyTerminate>0</keyTerminate>
+    </action>
+    <action>
+        <action>Hover</action>
+        <comment>15</comment>
+        <coordinates>413</coordinates>
+        <coordinates>373</coordinates>
+        <delay>0 m/s</delay>
+        <type>72</type>
+        <keyContinue>0</keyContinue>
+        <keyTerminate>0</keyTerminate>
+    </action>
+    <action>
+        <action>Confirmation</action>
+        <comment>16</comment>
+        <message>Exit?</message>
+        <coordinates>0</coordinates>
+        <sendKeys>65</sendKeys>
+        <sendKeys>66</sendKeys>
+        <delay>0 m/s</delay>
+        <type>69</type>
+        <keyContinue>65</keyContinue>
+        <keyTerminate>66</keyTerminate>
+    </action>
+    <action>
+        <action>Click</action>
+        <comment>17</comment>
+        <coordinates>123</coordinates>
+        <coordinates>389</coordinates>
+        <delay>0 m/s</delay>
+        <type>67</type>
+        <keyContinue>0</keyContinue>
+        <keyTerminate>0</keyTerminate>
+    </action>
+    <action>
+        <action>Click</action>
+        <comment>18</comment>
+        <coordinates>122</coordinates>
+        <coordinates>410</coordinates>
+        <delay>0 m/s</delay>
+        <type>67</type>
+        <keyContinue>0</keyContinue>
+        <keyTerminate>0</keyTerminate>
+    </action>
+</actions>
