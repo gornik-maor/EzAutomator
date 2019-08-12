@@ -39,6 +39,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 import org.jnativehook.keyboard.NativeKeyEvent;
@@ -447,7 +448,7 @@ public class SetupWindowController implements Initializable {
         getSubStage().showAndWait();
         return tempAction;
     }
-    
+
     public Action showForm(Stage tStage, double opValue) {
         this.tStage = tStage;
         hideUponLoad(tStage, opValue);
@@ -482,10 +483,10 @@ public class SetupWindowController implements Initializable {
             // Send
             case 2:
                 if (givenList.size() == 2) {
-                    fKeyTxt.setText(EzAutomator.getKeyTextRep((int)givenList.get(0)));
-                    sKeyTxt.setText(EzAutomator.getKeyTextRep((int)givenList.get(1)));
+                    fKeyTxt.setText(EzAutomator.getKeyTextRep((int) givenList.get(0)));
+                    sKeyTxt.setText(EzAutomator.getKeyTextRep((int) givenList.get(1)));
                 } else {
-                    fKeyTxt.setText(EzAutomator.getKeyTextRep((int)givenList.get(0)));
+                    fKeyTxt.setText(EzAutomator.getKeyTextRep((int) givenList.get(0)));
                 }
 
                 break;

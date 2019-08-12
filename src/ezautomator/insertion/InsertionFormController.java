@@ -8,7 +8,6 @@ package ezautomator.insertion;
 import ezautomator.alert.AlertController;
 import ezautomator.confirmation.ConfirmationControllerSetup;
 import ezautomator.main.Action;
-import ezautomator.main.Confirmation;
 import ezautomator.main.EzAutomator;
 import ezautomator.main.FXMLDocumentController;
 import static ezautomator.main.FXMLDocumentController.setPaneID;
@@ -114,7 +113,7 @@ public class InsertionFormController implements Initializable {
                         System.out.println(insAction);
                         FXMLDocumentController.getActionsBox().getSelectionModel().select(1); // <-- NOT SURE IF THAT'D WORK
 
-                    } else {
+                    } else if(selectedAction.startsWith("Confirmation")) {
                         setPaneID(3);
                         ArrayList<String> confirmationInfo = new ConfirmationControllerSetup().loadForm().showSetup(getCurrStage(), 0.5);
                         insAction = new Action("", Integer.parseInt(confirmationInfo.get(0)),

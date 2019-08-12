@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.svg.*?>
 <?import com.jfoenix.validation.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.image.*?>
@@ -34,16 +35,22 @@
               <menus>
                 <Menu mnemonicParsing="false" text="File">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="Close" />
+                    <MenuItem fx:id="mMnuNew" mnemonicParsing="false" onAction="#onMenuItemNew" text="New" />
+                        <MenuItem fx:id="mMnuLoad" mnemonicParsing="false" onAction="#onMenuItemLoad" text="Load" />
+                        <MenuItem fx:id="mMnuSave" mnemonicParsing="false" onAction="#onMenuItemSave" text="Save" />
+                        <MenuItem fx:id="mMnuExit" mnemonicParsing="false" onAction="#onMenuItemExit" text="Exit" />
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="Delete" />
+                    <MenuItem fx:id="mMnuCT" mnemonicParsing="false" onAction="#onTableRemoveAll" text="Clear Table" />
+                        <MenuItem fx:id="mMnuRT" mnemonicParsing="false" onAction="#onTableRefreshClick" text="Reload Table" />
+                        <MenuItem fx:id="mMnuRS" mnemonicParsing="false" onAction="#onRemoveSelected" text="Remove Selected" />
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                   <items>
+                        <MenuItem mnemonicParsing="false" text="Manual" />
                     <MenuItem mnemonicParsing="false" text="About" />
                   </items>
                 </Menu>
@@ -57,7 +64,7 @@
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <TableView fx:id="actionTable" layoutX="7.0" layoutY="7.0" prefHeight="312.0" prefWidth="462.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="10.0">
+                                    <TableView fx:id="actionTable" layoutX="7.0" layoutY="7.0" prefHeight="312.0" prefWidth="474.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="10.0">
                                       <columns>
                                         <TableColumn prefWidth="75.0" text="C1" />
                                         <TableColumn prefWidth="75.0" text="C2" />
@@ -67,6 +74,7 @@
                                             <items>
                                                 <MenuItem fx:id="mnuEdit" mnemonicParsing="false" onAction="#onItemEditClick" style="-fx-text-fill: FFFF8D;" text="Edit" />
                                                 <MenuItem fx:id="mnuInsert" mnemonicParsing="false" onAction="#onItemInsertion" style="-fx-text-fill: FFFF8D;" text="Insert" />
+                                                <MenuItem mnemonicParsing="false" onAction="#onTableRemoveAll" style="-fx-text-fill: FFFF8D;" text="Clear" />
                                                 <MenuItem fx:id="mnuRemove" mnemonicParsing="false" onAction="#onItemRemoveClick" style="-fx-text-fill: FFFF8D;" text="Remove" />
                                                 <MenuItem mnemonicParsing="false" onAction="#onItemDuplicateClick" style="-fx-text-fill: FFFF8D;" text="Duplicate" />
                                               <MenuItem fx:id="mnuRefresh" mnemonicParsing="false" onAction="#onTableRefreshClick" style="-fx-text-fill: FFFF8D;" text="Refresh" />
@@ -78,9 +86,9 @@
                                           <String fx:value="table-cell" />
                                        </styleClass>
                                     </TableView>
-                                    <Pane layoutX="14.0" layoutY="326.0" prefHeight="174.0" prefWidth="453.0" styleClass="custom-alert">
+                                    <Pane layoutX="6.0" layoutY="326.0" prefHeight="174.0" prefWidth="473.0" styleClass="custom-alert">
                                        <children>
-                                          <ChoiceBox fx:id="actionsBox" layoutX="109.0" layoutY="13.0" onMousePressed="#onActionsBoxPressed" prefHeight="35.0" prefWidth="335.0" styleClass="choicebox-main" />
+                                          <ChoiceBox fx:id="actionsBox" layoutX="109.0" layoutY="13.0" onMousePressed="#onActionsBoxPressed" prefHeight="35.0" prefWidth="349.0" styleClass="choicebox-main" />
                                           <Text fill="WHITE" layoutX="14.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select Action">
                                              <font>
                                                 <Font size="15.0" />
@@ -100,8 +108,8 @@
                                                 <Font size="15.0" />
                                              </font>
                                           </Text>
-                                          <JFXTextField fx:id="txtComment" layoutX="129.0" layoutY="65.0" prefHeight="37.0" prefWidth="315.0" promptText="Enter Comment" />
-                                          <Button layoutX="280.0" layoutY="118.0" mnemonicParsing="false" onMouseClicked="#removeAction" prefHeight="42.0" prefWidth="155.0" text="Remove">
+                                          <JFXTextField fx:id="txtComment" layoutX="129.0" layoutY="65.0" prefHeight="37.0" prefWidth="331.0" promptText="Enter Comment" />
+                                          <Button layoutX="280.0" layoutY="118.0" mnemonicParsing="false" onMouseClicked="#removeAction" prefHeight="42.0" prefWidth="179.0" text="Remove">
                                              <graphic>
                                                 <ImageView fx:id="btnRemove" fitHeight="28.0" fitWidth="30.0" onMouseClicked="#removeAction" pickOnBounds="true" preserveRatio="true">
                                                    <image>
@@ -111,7 +119,7 @@
                                              </graphic>
                                           </Button>
                                        </children></Pane>
-                                    <Pane layoutX="14.0" layoutY="508.0" prefHeight="65.0" prefWidth="454.0" styleClass="custom-alert">
+                                    <Pane layoutX="7.0" layoutY="508.0" prefHeight="65.0" prefWidth="473.0" styleClass="custom-alert">
                                        <children>
                                           <Button fx:id="btnRun" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#onClickRunScript" prefHeight="42.0" prefWidth="256.0" text="Run">
                                              <graphic>
@@ -123,7 +131,7 @@
                                              </graphic>
                                           </Button>
                                           <RadioButton fx:id="rdoRunF" layoutX="300.0" layoutY="35.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="140.0" text="Forever (F4 to Stop)" textFill="WHITE" />
-                                          <ToggleButton fx:id="btnExecutions" layoutX="292.0" layoutY="2.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="142.0" styleClass="custom-alert" text="Select # Executions">
+                                          <ToggleButton fx:id="btnExecutions" layoutX="288.0" layoutY="3.0" mnemonicParsing="false" onMouseClicked="#onExecutionSelectionPress" prefHeight="25.0" prefWidth="158.0" styleClass="custom-alert" text="Select # of Executions">
                                              <graphic>
                                                 <ImageView fitHeight="16.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                                                    <image>
@@ -134,7 +142,7 @@
                                           </ToggleButton>
                                        </children>
                                     </Pane>
-                                    <Separator layoutX="14.0" layoutY="499.0" prefHeight="11.0" prefWidth="454.0" />
+                                    <Separator layoutX="8.0" layoutY="499.0" prefHeight="11.0" prefWidth="472.0" />
                                  </children></AnchorPane>
                           </content>
                         </Tab>
@@ -144,7 +152,7 @@
                                  <children>
                                     <Pane layoutY="11.0" prefHeight="541.0" prefWidth="485.0" styleClass="custom-alert">
                                        <children>
-                                          <Button layoutX="14.0" layoutY="488.0" mnemonicParsing="false" onMousePressed="#onSaveXML" prefHeight="39.0" prefWidth="166.0" text="Save">
+                                          <Button layoutX="14.0" layoutY="488.0" mnemonicParsing="false" onMousePressed="#onSaveXMLPress" prefHeight="39.0" prefWidth="166.0" text="Save">
                                              <graphic>
                                                 <ImageView fitHeight="25.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                                                    <image>
@@ -153,7 +161,7 @@
                                                 </ImageView>
                                              </graphic>
                                           </Button>
-                                          <Button layoutX="305.0" layoutY="488.0" mnemonicParsing="false" onMousePressed="#onLoadXML" prefHeight="39.0" prefWidth="166.0" text="Load">
+                                          <Button layoutX="305.0" layoutY="488.0" mnemonicParsing="false" onMousePressed="#onLoadXMLPress" prefHeight="39.0" prefWidth="166.0" text="Load">
                                              <graphic>
                                                 <ImageView fitHeight="25.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                                                    <image>

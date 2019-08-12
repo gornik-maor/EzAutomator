@@ -9,7 +9,6 @@ import com.jfoenix.controls.JFXTextField;
 import ezautomator.alert.AlertController;
 import ezautomator.main.Action;
 import ezautomator.main.Actions;
-import ezautomator.main.EzAutomator;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -77,7 +76,7 @@ public class NameXMLController implements Initializable {
     void OnPathSelection(MouseEvent event) {
         FileChooser fileChooser = new FileChooser();
         //Set extension filter for text files
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("eXtensible Markup Language", "*.xml");
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML Document", "*.xml");
         fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
         fileChooser.getExtensionFilters().add(extFilter);
 
@@ -92,30 +91,6 @@ public class NameXMLController implements Initializable {
         if (file != null) {
             writeActionsToXML(actions, file.toString());
             closeForm();
-        }
-    }
-
-    @FXML
-    void onConfirmation(MouseEvent event) {
-        if (!scriptTxt.getText().isEmpty() && !actionTable.getItems().isEmpty()) {
-//            Actions actions = new Actions();
-//            actionTable.getItems().forEach(actions.getActions()::add);
-//
-//            if (!new File(path + "\\" + scriptTxt.getText() + ".xml").exists()) {
-//                writeActionsToXML(actions);
-//                closeForm();
-//            } else {
-//                if (new AlertController().loadAlert().showDialog("Yes", "No", "A script with that name already exists! Replace it?", "warning",
-//                        getCurrStage(), getCurrStage(), 0.5)) {
-//                    writeActionsToXML(actions);
-//                    closeForm();
-//                } else {
-//                    scriptTxt.setText("");
-//                }
-//            }
-        } else {
-            new AlertController().loadAlert().showDialog("Ok", "Cancel", "Please enter a script name!", "error",
-                    getCurrStage(), getCurrStage(), 0.5);
         }
     }
 

@@ -6,7 +6,7 @@
 package ezautomator.confirmation;
 
 import ezautomator.main.EzAutomator;
-import ezautomator.main.ScriptExecutor;
+import ezautomator.main.script.ScriptExecutor;
 import ezautomator.subForms.SetupWindowController;
 import java.io.IOException;
 import java.net.URL;

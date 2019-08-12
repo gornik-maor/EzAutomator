@@ -13,7 +13,7 @@
     <action>
         <action>Keys</action>
         <comment>test2</comment>
-        <coordinates xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string"></coordinates>
+        <coordinates>0</coordinates>
         <sendKeys>162</sendKeys>
         <sendKeys>32</sendKeys>
         <delay>1000 m/s</delay>
@@ -42,5 +42,17 @@
         <type>72</type>
         <keyContinue>0</keyContinue>
         <keyTerminate>0</keyTerminate>
+    </action>
+    <action>
+        <action>Confirmation</action>
+        <comment>test5</comment>
+        <message>hello there, again!</message>
+        <coordinates>0</coordinates>
+        <sendKeys>112</sendKeys>
+        <sendKeys>113</sendKeys>
+        <delay>1000 m/s</delay>
+        <type>69</type>
+        <keyContinue>112</keyContinue>
+        <keyTerminate>113</keyTerminate>
     </action>
 </actions>

@@ -1,5 +1,6 @@
 package ezautomator.main;
 
+import ezautomator.main.script.ScriptExecutor;
 import ezautomator.file.XMLController;
 import com.jfoenix.controls.JFXTabPane;
 import com.jfoenix.controls.JFXTextField;
@@ -8,6 +9,7 @@ import ezautomator.confirmation.ConfirmationControllerSetup;
 import ezautomator.delay.DelayFormController;
 import ezautomator.file.NameXMLController;
 import ezautomator.insertion.InsertionFormController;
+import ezautomator.main.script.ExecutionChooserController;
 import ezautomator.subForms.SetupWindowController;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -15,7 +17,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,7 +25,6 @@ import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -53,7 +53,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import javafx.util.Duration;
-import javax.xml.bind.JAXBException;
 
 /**
  *
@@ -109,6 +108,27 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private MenuItem mnuRefresh;
 
+    @FXML
+    private MenuItem mMnuCT;
+
+    @FXML
+    private MenuItem mMnuRT;
+
+    @FXML
+    private MenuItem mMnuRS;
+
+    @FXML
+    private MenuItem mMnuNew;
+
+    @FXML
+    private MenuItem mMnuLoad;
+
+    @FXML
+    private MenuItem mMnuSave;
+
+    @FXML
+    private MenuItem mMnuExit;
+
     private static int ID;
 
     private static Stage mainStage;
@@ -160,7 +180,6 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     void removeAction(MouseEvent event) {
-        // Are you sure?
         removeItem();
     }
 
@@ -168,6 +187,65 @@ public class FXMLDocumentController implements Initializable {
     void onActionsBoxPressed(MouseEvent event) {
         if (actionsBox.getItems().isEmpty()) {
             populateActionsBox();
+        }
+    }
+
+    @FXML
+    void onMenuItemNew(ActionEvent event) {
+        if (!actionTable.getItems().isEmpty()) {
+            if (new AlertController().loadAlert().showDialog("Yes", "No", "Are you sure you want to delete all the actions?",
+                    "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5)) {
+                actionTable.getItems().clear();
+            }
+        } else {
+            new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no actions in the table to remove!",
+                    "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+        }
+    }
+
+    @FXML
+    void onMenuItemLoad(ActionEvent event) {
+        onLoadXML();
+    }
+
+    @FXML
+    void onMenuItemSave(ActionEvent event) {
+        onSaveXML();
+    }
+
+    @FXML
+    void onMenuItemExit(ActionEvent event) {
+        boolean result = new AlertController().loadAlert().showDialog("Yes", "No", "Are you sure you want to exit?",
+                "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+        if (result) {
+            System.exit(0);
+        }
+    }
+
+    @FXML
+    void onRemoveSelected(ActionEvent event) {
+        removeItem();
+    }
+
+    @FXML
+    void onExecutionSelectionPress(MouseEvent event) {
+        if (!actionTable.getItems().isEmpty()) {
+            int numExcs = new ExecutionChooserController().LoadForm().showDialog(EzAutomator.getMainStage());
+            switch (numExcs) {
+                case 0:
+                    numExcs = 1;
+                    break;
+                case 1:
+                    btnExecutions.setText("Select # of Executions");
+                    break;
+                default:
+                    btnExecutions.setText("Executing: " + String.valueOf(numExcs) + " times.");
+                    break;
+            }
+            ScriptExecutor.setExecs(numExcs);
+        } else {
+            new AlertController().loadAlert().showDialog("Ok", "Cancel", "Please add an action before continuing!",
+                        "warning", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
         }
     }
 
@@ -251,49 +329,17 @@ public class FXMLDocumentController implements Initializable {
 //        tempAction = null;
         ScriptExecutor script = new ScriptExecutor(actionTable);
         script.run();
+//        actionTable.getSelectionModel().select(0);
     }
 
     @FXML
-    void onLoadXML(MouseEvent event) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Load a Script");
-        fileChooser.getExtensionFilters().addAll(
-                new ExtensionFilter("eXtensible Markup Language", "*.xml"));
-        fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
-        File selectedFile = fileChooser.showOpenDialog(EzAutomator.getMainStage());
-
-        if (selectedFile != null) {
-            try {
-                if (!actionTable.getItems().isEmpty()) {
-                    actionTable.getItems().clear();
-                }
-
-                Actions actions = XMLController.XMLtoActions(selectedFile.toString());
-
-                if (!actions.getActions().isEmpty()) {
-                    actions.getActions().forEach(actionTable.getItems()::add);
-                }
-
-                new AlertController().loadAlert().showDialog("Ok", "Cancel", "Script was loaded successfully!", "exclamation",
-                        EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
-                tabPane.getSelectionModel().select(0);
-
-            } catch (Exception ex) {
-                new AlertController().loadAlert().showDialog("Ok", "Cancel", "The selected script is not valid!", "error",
-                        EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
-            }
-        }
+    void onLoadXMLPress(MouseEvent event) {
+        onLoadXML();
     }
 
     @FXML
-    void onSaveXML(MouseEvent event) {
-        if (!actionTable.getItems().isEmpty()) {
-            new NameXMLController().loadResources().loadForm(actionTable, EzAutomator.getMainStage(), 0.5);
-            tabPane.getSelectionModel().select(0);
-        } else {
-            new AlertController().loadAlert().showDialog("Ok", "Cancel", "There aren't any actions to save!", "error",
-                    EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
-        }
+    void onSaveXMLPress(MouseEvent event) {
+        onSaveXML();
     }
 
     // Table Menu Items
@@ -360,12 +406,6 @@ public class FXMLDocumentController implements Initializable {
                 if (posResult) {
                     // We insert an action above as long as the first item isn't selected
                     if (actionTable.getSelectionModel().getSelectedIndex() == 0) {
-                        new AlertController().loadAlert().showDialog("Ok", "Cancel", "You can only insert an action below!",
-                                "warning", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
-                        isEditing = false;
-                        tempAction = null;
-                        actionsBox.getItems().clear();
-                    } else {
                         isAbove = true;
                     }
 
@@ -399,6 +439,19 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     void onItemRemoveClick(ActionEvent event) {
         removeItem();
+    }
+
+    @FXML
+    void onTableRemoveAll(ActionEvent event) {
+        if (!actionTable.getItems().isEmpty()) {
+            if (new AlertController().loadAlert().showDialog("Yes", "No", "Are you sure you want to delete all the actions?",
+                    "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5)) {
+                actionTable.getItems().clear();
+            }
+        } else {
+            new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no actions in the table to remove!",
+                    "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+        }
     }
 
     @FXML
@@ -528,6 +581,28 @@ public class FXMLDocumentController implements Initializable {
                         });
                     }
                 });
+
+                // Attaching icons to main menu items
+                mMnuNew.setGraphic(new ImageView(new Image("/ezautomator/icons/blank.png")));
+
+                ImageView loadIcon = new ImageView(new Image("/ezautomator/icons/load.png"));
+                loadIcon.setFitHeight(20);
+                loadIcon.setFitWidth(20);
+                mMnuLoad.setGraphic(loadIcon);
+
+                ImageView saveIcon = new ImageView(new Image("/ezautomator/icons/save.png"));
+                saveIcon.setFitHeight(20);
+                saveIcon.setFitWidth(20);
+                mMnuSave.setGraphic(saveIcon);
+
+                mMnuExit.setGraphic(new ImageView(new Image("/ezautomator/icons/exit.png")));
+                mMnuCT.setGraphic(new ImageView(new Image("/ezautomator/icons/eraser.png")));
+                mMnuRT.setGraphic(new ImageView(new Image("/ezautomator/icons/reload.png")));
+
+                ImageView removeIcon = new ImageView(new Image("/ezautomator/icons/remove.png"));
+                removeIcon.setFitHeight(20);
+                removeIcon.setFitWidth(20);
+                mMnuRS.setGraphic(removeIcon);
             }
         } else {
             loadSpalshScreen();
@@ -573,10 +648,10 @@ public class FXMLDocumentController implements Initializable {
         // Enabling the user to edit the comment by double clicking the field
         Callback<TableColumn<Action, String>, TableCell<Action, String>> cellFactor
                 = new Callback<TableColumn<Action, String>, TableCell<Action, String>>() {
-            public TableCell call(TableColumn p) {
-                return new EditingCell();
-            }
-        };
+                    public TableCell call(TableColumn p) {
+                        return new EditingCell();
+                    }
+                };
 
 //        commentColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         commentColumn.setCellFactory(cellFactor);
@@ -799,6 +874,54 @@ public class FXMLDocumentController implements Initializable {
             // Displaying an alert
             new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no items to remove!",
                     "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+        }
+    }
+
+    /**
+     * Loading and converting XML files into action objects
+     */
+    private void onLoadXML() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Load a Script");
+        fileChooser.getExtensionFilters().addAll(
+                new ExtensionFilter("XML Document", "*.xml"));
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+        File selectedFile = fileChooser.showOpenDialog(EzAutomator.getMainStage());
+
+        if (selectedFile != null) {
+            try {
+                if (!actionTable.getItems().isEmpty()) {
+                    actionTable.getItems().clear();
+                }
+
+                Actions actions = XMLController.XMLtoActions(selectedFile.toString());
+
+                if (!actions.getActions().isEmpty()) {
+                    actions.getActions().forEach(actionTable.getItems()::add);
+                }
+
+                new AlertController().loadAlert().showDialog("Ok", "Cancel", "Script was loaded successfully!", "exclamation",
+                        EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+
+            } catch (Exception ex) {
+                new AlertController().loadAlert().showDialog("Ok", "Cancel", "The selected script is not valid!", "error",
+                        EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+            }
+            tabPane.getSelectionModel().select(0);
+        }
+    }
+
+    /**
+     * Converting action objects into serializable XML
+     */
+    private void onSaveXML() {
+        if (!actionTable.getItems().isEmpty()) {
+            new NameXMLController().loadResources().loadForm(actionTable, EzAutomator.getMainStage(), 0.5);
+            tabPane.getSelectionModel().select(0);
+        } else {
+            new AlertController().loadAlert().showDialog("Ok", "Cancel", "There aren't any actions to save!", "error",
+                    EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+            tabPane.getSelectionModel().select(0);
         }
     }
 }

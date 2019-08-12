@@ -208,7 +208,7 @@ public class ConfirmationControllerSetup implements Initializable {
                             "exclamation", null, getCurrStage());
                     
                     if (result) {
-                        selConfirm = (Confirmation) aFillCBox.getItems().get((int) newValue);
+                        selConfirm = aFillCBox.getItems().get((int) newValue);
                         autoFill(selConfirm);
                     }
                 }
