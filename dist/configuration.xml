@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch4jConfig>
+  <dontWrapJar>false</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>C:\Users\gornicma\Desktop\Maor\JavaFX\Projects\EzAutomator\dist\EzAutomator.jar</jar>
+  <outfile>C:\Users\gornicma\Desktop\Maor\JavaFX\Projects\EzAutomator\dist\EzAutomator.exe</outfile>
+  <errTitle>Java is required to be installed on this system to access this file.</errTitle>
+  <cmdLine></cmdLine>
+  <chdir>.</chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl></supportUrl>
+  <stayAlive>false</stayAlive>
+  <restartOnCrash>false</restartOnCrash>
+  <manifest></manifest>
+  <icon>C:\Users\gornicma\Downloads\EzAutomator.ico</icon>
+  <classPath>
+    <mainClass>ezautomator.main.EzAutomator</mainClass>
+    <cp>lib/JNativeHook.jar</cp>
+    <cp>lib/controlsfx-8.40.15.jar</cp>
+    <cp>lib/jfoenix-8.0.8.jar</cp>
+  </classPath>
+  <jre>
+    <path></path>
+    <bundledJre64Bit>false</bundledJre64Bit>
+    <bundledJreAsFallback>false</bundledJreAsFallback>
+    <minVersion>1.7.0</minVersion>
+    <maxVersion></maxVersion>
+    <jdkPreference>preferJre</jdkPreference>
+    <runtimeBits>64/32</runtimeBits>
+  </jre>
+</launch4jConfig>

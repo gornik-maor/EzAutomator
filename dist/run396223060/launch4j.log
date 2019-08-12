@@ -1,0 +1,31 @@
+
+
+Version:	3.12
+CmdLine:	C:\Users\gornicma\Desktop\Maor\JavaFX\Projects\EzAutomator\dist\EzAutomator.exe --l4j-debug
+WOW64:		yes
+Working dir:	C:\Users\gornicma\Desktop\Maor\JavaFX\Projects\EzAutomator\dist\.
+Java min ver:	1.007.000
+Java max ver:	
+64-bit search:	SOFTWARE\JavaSoft\Java Runtime Environment...
+Check:		SOFTWARE\JavaSoft\Java Runtime Environment\1.8
+Check launcher:	C:\Program Files\Java\jre1.8.0_221\bin\javaw.exe (OK)
+Match:		1.008.000
+Check:		SOFTWARE\JavaSoft\Java Runtime Environment\1.8.0_221
+Check launcher:	C:\Program Files\Java\jre1.8.0_221\bin\javaw.exe (OK)
+Match:		1.008.000_221
+64-bit search:	SOFTWARE\JavaSoft\Java Development Kit...
+Check:		SOFTWARE\JavaSoft\Java Development Kit\1.8
+Ignore:		1.008.000
+Check:		SOFTWARE\JavaSoft\Java Development Kit\1.8.0_211
+Ignore:		1.008.000_211
+64-bit search:	SOFTWARE\JavaSoft\JRE...
+64-bit search:	SOFTWARE\JavaSoft\JDK...
+Runtime used:	1.008.000_221 (64-bit)
+Main class:	ezautomator.main.EzAutomator
+Add classpath:	lib\JNativeHook.jar
+Add classpath:	lib\controlsfx-8.40.15.jar
+Add classpath:	lib\jfoenix-8.0.8.jar
+Launcher:	C:\Program Files\Java\jre1.8.0_221\bin\javaw.exe
+Launcher args:	-classpath "C:\Users\gornicma\Desktop\Maor\JavaFX\Projects\EzAutomator\dist\EzAutomator.exe;lib\JNativeHook.jar;lib\controlsfx-8.40.15.jar;lib\jfoenix-8.0.8.jar" ezautomator.main.EzAutomator
+Args length:	190/32768 chars
+Exit code:	0

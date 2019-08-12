@@ -130,7 +130,7 @@
                                                 </ImageView>
                                              </graphic>
                                           </Button>
-                                          <RadioButton fx:id="rdoRunF" layoutX="300.0" layoutY="35.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="140.0" text="Forever (F4 to Stop)" textFill="WHITE" />
+                                          <RadioButton fx:id="rdoRunF" disable="true" layoutX="300.0" layoutY="35.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="140.0" text="Forever (F4 to Stop)" textFill="WHITE" />
                                           <ToggleButton fx:id="btnExecutions" layoutX="288.0" layoutY="3.0" mnemonicParsing="false" onMouseClicked="#onExecutionSelectionPress" prefHeight="25.0" prefWidth="158.0" styleClass="custom-alert" text="Select # of Executions">
                                              <graphic>
                                                 <ImageView fitHeight="16.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">

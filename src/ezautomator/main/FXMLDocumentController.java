@@ -800,7 +800,7 @@ public class FXMLDocumentController implements Initializable {
      */
     private void loadSpalshScreen() {
         try {
-            StackPane loginPane = FXMLLoader.load(getClass().getResource("/ezautomator/login/SplashFXML.FXML"));
+            StackPane loginPane = FXMLLoader.load(getClass().getResource("/ezautomator/login/SplashFXML.fxml"));
             root.getChildren().setAll(loginPane);
 
             // Creating fade in transition 
