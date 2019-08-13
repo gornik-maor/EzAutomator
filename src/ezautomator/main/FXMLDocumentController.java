@@ -329,13 +329,14 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     void onClickRunScript(MouseEvent event) {
-        //tempTable = actionTable;
-        isEditing = false;
-//        actionsBox.getItems().clear();
-//        tempAction = null;
-        ScriptExecutor script = new ScriptExecutor(actionTable);
-        script.run();
-//        actionTable.getSelectionModel().select(0);
+        if (!actionTable.getItems().isEmpty()) {
+            isEditing = false;
+            ScriptExecutor script = new ScriptExecutor(actionTable);
+            script.run();
+        } else {
+            new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no actions in the table to run!",
+                    "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+        }
     }
 
     @FXML
@@ -375,6 +376,7 @@ public class FXMLDocumentController implements Initializable {
 
                     case "Keys":
                         setPaneID(2);
+                        // Problem occurs here when editting --> FIX IS NEEDED
                         selAction.turnIntoAction(new SetupWindowController().loadForm().showKeyForm(selAction.getSendKeys(), EzAutomator.getMainStage(), 0.5));
                         break;
 
@@ -518,7 +520,7 @@ public class FXMLDocumentController implements Initializable {
                                 try {
                                     Stage currStage = (Stage) root.getScene().getWindow();
                                     mainStage = currStage;
-                                    StackPane subRoot = FXMLLoader.load(getClass().getResource("/ezautomator/subForms/SetupWindow.FXML"));
+                                    StackPane subRoot = FXMLLoader.load(getClass().getResource("/ezautomator/subForms/SetupWindow.fxml"));
                                     Stage subStage = new Stage();
                                     subStage.initStyle(StageStyle.UNDECORATED);
                                     subStage.initModality(Modality.APPLICATION_MODAL);
@@ -660,10 +662,10 @@ public class FXMLDocumentController implements Initializable {
         // Enabling the user to edit the comment by double clicking the field
         Callback<TableColumn<Action, String>, TableCell<Action, String>> cellFactor
                 = new Callback<TableColumn<Action, String>, TableCell<Action, String>>() {
-            public TableCell call(TableColumn p) {
-                return new EditingCell();
-            }
-        };
+                    public TableCell call(TableColumn p) {
+                        return new EditingCell();
+                    }
+                };
 
 //        commentColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         commentColumn.setCellFactory(cellFactor);

@@ -451,7 +451,7 @@ public class SetupWindowController implements Initializable {
     public SetupWindowController loadForm() {
         try {
             FXMLLoader fxmlLoader
-                    = new FXMLLoader(getClass().getResource("/ezautomator/subForms/SetupWindow.FXML"));
+                    = new FXMLLoader(getClass().getResource("/ezautomator/subForms/SetupWindow.fxml"));
             StackPane confirmPane = fxmlLoader.load();
             setSetupWindowCls(fxmlLoader.getController());
             Stage confirmStage = new Stage();

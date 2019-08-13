@@ -246,6 +246,7 @@ public class InsertionFormController implements Initializable {
 
     private void closeForm() {
         tStage.setOpacity(1);
+        EzAutomator.getMainStage().setIconified(false);
         getCurrStage().close();
     }
 

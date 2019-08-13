@@ -340,7 +340,7 @@ public class ConfirmationControllerSetup implements Initializable {
     public ConfirmationControllerSetup loadForm() {
         try {
             FXMLLoader fxmlLoader
-                    = new FXMLLoader(getClass().getResource("/ezautomator/confirmation/ConfirmationSetup.FXML"));
+                    = new FXMLLoader(getClass().getResource("/ezautomator/confirmation/ConfirmationSetup.fxml"));
             StackPane confirmPane = fxmlLoader.load();
             setConfirmationCls(fxmlLoader.getController());
             Stage confirmStage = new Stage();
