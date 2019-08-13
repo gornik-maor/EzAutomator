@@ -87,7 +87,7 @@ public class ScriptExecutor implements Runnable {
 
             synchronized (scriptThread) {
                 try {
-                    scriptThread.wait(500);
+                    scriptThread.wait(300);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(ScriptExecutor.class.getName()).log(Level.SEVERE, null, ex);
                 }

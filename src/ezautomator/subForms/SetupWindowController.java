@@ -137,7 +137,6 @@ public class SetupWindowController implements Initializable {
         if (!isCapPoint) {
             // [ADD] Create a getter for the current stage for this class
             Stage currStage = (Stage) btnProceed.getScene().getWindow();
-            currStage.setIconified(true);
             startCapCoordinates();
         } else {
             closeBtn.requestFocus();
@@ -197,6 +196,8 @@ public class SetupWindowController implements Initializable {
                 System.out.println("PANE 1 is SELECTED");
                 // Working with the first pane
                 if (!xValueTxt.getText().isEmpty() && !yValueTxt.getText().isEmpty()) {
+                    CancelTimers();
+                    isCapPoint = false;
                     char actionType = 'C';
                     String action = "Click";
 
@@ -369,19 +370,20 @@ public class SetupWindowController implements Initializable {
                 if (FXMLDocumentController.getPaneID() == 1) {
                     switch (nke.getRawCode()) {
                         case KeyEvent.VK_F1: {
-                            // Allowing the user to continue capturing coordinates
-                            // on screen
-                            try {
-                                Platform.runLater(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        // Minimizing this form
-                                        getSubStage().setIconified(true);
-                                        startCapCoordinates();
-                                    }
-                                });
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                            if (!isCapPoint) {
+                                isCapPoint = true;
+                                // Allowing the user to continue capturing coordinates
+                                // on screen
+                                try {
+                                    Platform.runLater(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            startCapCoordinates();
+                                        }
+                                    });
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
                         break;
@@ -389,6 +391,7 @@ public class SetupWindowController implements Initializable {
                         case KeyEvent.VK_F2:
                             // Disabling coordinates screen capture when F2 is pressed
                             CancelTimers();
+                            isCapPoint = false;
 
                             // Bringing back-up the form (Running on a seperated thread)
                             Platform.runLater(new Runnable() {
@@ -525,7 +528,7 @@ public class SetupWindowController implements Initializable {
                 } else {
                     fKeyTxt.setText(EzAutomator.getKeyTextRep((int) givenList.get(0)));
                 }
-                
+
                 break;
 
             case 3:

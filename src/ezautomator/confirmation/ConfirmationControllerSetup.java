@@ -8,7 +8,6 @@ package ezautomator.confirmation;
 import com.jfoenix.controls.JFXTextField;
 import ezautomator.alert.AlertController;
 import ezautomator.main.Action;
-import ezautomator.main.Confirmation;
 import ezautomator.main.EzAutomator;
 import ezautomator.main.FXMLDocumentController;
 import ezautomator.subForms.SetupWindowController;

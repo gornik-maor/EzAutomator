@@ -52,6 +52,7 @@ public class EzAutomator extends Application {
                 } catch (NativeHookException ex) {
                     Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                System.exit(1);
             }
         });
 

@@ -15,7 +15,7 @@
         <comment>2</comment>
         <coordinates>0</coordinates>
         <sendKeys>118</sendKeys>
-        <delay>1000 m/s</delay>
+        <delay>0 m/s</delay>
         <type>69</type>
         <keyContinue>0</keyContinue>
         <keyTerminate>0</keyTerminate>
@@ -26,7 +26,7 @@
         <coordinates>0</coordinates>
         <sendKeys>162</sendKeys>
         <sendKeys>86</sendKeys>
-        <delay>1000 m/s</delay>
+        <delay>0 m/s</delay>
         <type>69</type>
         <keyContinue>0</keyContinue>
         <keyTerminate>0</keyTerminate>
@@ -36,7 +36,7 @@
         <comment>4</comment>
         <coordinates>0</coordinates>
         <sendKeys>13</sendKeys>
-        <delay>1000 m/s</delay>
+        <delay>0 m/s</delay>
         <type>69</type>
         <keyContinue>0</keyContinue>
         <keyTerminate>0</keyTerminate>
@@ -57,7 +57,7 @@
         <coordinates>0</coordinates>
         <sendKeys>162</sendKeys>
         <sendKeys>86</sendKeys>
-        <delay>1000 m/s</delay>
+        <delay>0 m/s</delay>
         <type>69</type>
         <keyContinue>0</keyContinue>
         <keyTerminate>0</keyTerminate>
@@ -97,12 +97,12 @@
         <comment>10</comment>
         <message>Continue?</message>
         <coordinates>0</coordinates>
-        <sendKeys>65</sendKeys>
-        <sendKeys>66</sendKeys>
+        <sendKeys>112</sendKeys>
+        <sendKeys>113</sendKeys>
         <delay>1000 m/s</delay>
         <type>69</type>
-        <keyContinue>65</keyContinue>
-        <keyTerminate>66</keyTerminate>
+        <keyContinue>112</keyContinue>
+        <keyTerminate>113</keyTerminate>
     </action>
     <action>
         <action>Hover</action>
@@ -129,12 +129,12 @@
         <comment>13</comment>
         <message>Continue?</message>
         <coordinates>0</coordinates>
-        <sendKeys>65</sendKeys>
-        <sendKeys>66</sendKeys>
+        <sendKeys>112</sendKeys>
+        <sendKeys>113</sendKeys>
         <delay>1000 m/s</delay>
         <type>69</type>
-        <keyContinue>65</keyContinue>
-        <keyTerminate>66</keyTerminate>
+        <keyContinue>112</keyContinue>
+        <keyTerminate>113</keyTerminate>
     </action>
     <action>
         <action>Click x2</action>
@@ -161,12 +161,12 @@
         <comment>16</comment>
         <message>Exit?</message>
         <coordinates>0</coordinates>
-        <sendKeys>65</sendKeys>
-        <sendKeys>66</sendKeys>
+        <sendKeys>112</sendKeys>
+        <sendKeys>113</sendKeys>
         <delay>0 m/s</delay>
         <type>69</type>
-        <keyContinue>65</keyContinue>
-        <keyTerminate>66</keyTerminate>
+        <keyContinue>112</keyContinue>
+        <keyTerminate>113</keyTerminate>
     </action>
     <action>
         <action>Click</action>

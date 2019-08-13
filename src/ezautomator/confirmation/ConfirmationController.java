@@ -61,6 +61,8 @@ public class ConfirmationController implements Initializable {
     @FXML
     void closeApp(MouseEvent event) {
         // Close and return false
+        keyResult = false;
+        ScriptExecutor.stop();
         closeForm();
     }
 
@@ -171,14 +173,14 @@ public class ConfirmationController implements Initializable {
             }
         };
 
-            try {
-                GlobalScreen.registerNativeHook();
-                GlobalScreen.addNativeKeyListener(keyListener);
+        try {
+            GlobalScreen.registerNativeHook();
+            GlobalScreen.addNativeKeyListener(keyListener);
 
-            } catch (NativeHookException ex) {
-                Logger.getLogger(SetupWindowController.class
-                        .getName()).log(Level.SEVERE, null, ex);
-            }
+        } catch (NativeHookException ex) {
+            Logger.getLogger(SetupWindowController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

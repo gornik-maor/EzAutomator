@@ -149,7 +149,7 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     void closeApp(MouseEvent event) {
-        Platform.exit();
+        System.exit(1);
     }
 
     @FXML
@@ -428,12 +428,16 @@ public class FXMLDocumentController implements Initializable {
                         new AlertController().loadAlert().showDialog("Ok", "Cancel", "You can only insert an action above!",
                                 "warning", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
                         isEditing = false;
+                        actionsBox.setDisable(false);
                         tempAction = null;
                         actionsBox.getItems().clear();
                     } else {
                         isAbove = false;
                     }
                 }
+            } else {
+                isEditing = false;
+                actionsBox.setDisable(false);
             }
 
         } else {

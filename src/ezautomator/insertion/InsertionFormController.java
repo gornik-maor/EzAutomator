@@ -110,7 +110,8 @@ public class InsertionFormController implements Initializable {
                             populateActionsBox();
                         }
                         FXMLDocumentController.getActionsBox().getSelectionModel().select(0); // <-- NOT SURE IF THAT'D WORK
-
+                        FXMLDocumentController.getActionsBox().setDisable(true);
+                        
                     } else if (selectedAction.startsWith("Send")) {
                         setPaneID(2);
                         insAction = new SetupWindowController().loadForm().showForm(getCurrStage(), 0.5);
@@ -119,15 +120,16 @@ public class InsertionFormController implements Initializable {
                             populateActionsBox();
                         }
                         FXMLDocumentController.getActionsBox().getSelectionModel().select(1); // <-- NOT SURE IF THAT'D WORK
-
+                        FXMLDocumentController.getActionsBox().setDisable(true);
+                        
                     } else if (selectedAction.equals("Confirmation")) {
                         setPaneID(3);
                         try {
                             ArrayList<String> confirmationInfo = new ConfirmationControllerSetup().loadForm().showSetup(getCurrStage(), 0.5);
                             insAction = new Action("", Integer.parseInt(confirmationInfo.get(0)),
                                     Integer.parseInt(confirmationInfo.get(1)), confirmationInfo.get(2));
-                            FXMLDocumentController.getActionsBox().getSelectionModel().select("Confirmation"); // <-- NOT SURE IF THAT'D WORK
                             FXMLDocumentController.getActionsBox().getSelectionModel().select(2);
+                            FXMLDocumentController.getActionsBox().setDisable(true);
                         } catch (NullPointerException e) {
                             actionCmb.getItems().clear();
                             populateActionsBox();
