@@ -5,6 +5,7 @@
  */
 package ezautomator.main.script;
 
+import com.sun.org.apache.bcel.internal.generic.AALOAD;
 import ezautomator.confirmation.ConfirmationController;
 import ezautomator.main.Action;
 import ezautomator.main.EzAutomator;
@@ -87,7 +88,7 @@ public class ScriptExecutor implements Runnable {
 
             synchronized (scriptThread) {
                 try {
-                    scriptThread.wait(300);
+                    scriptThread.wait(200);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(ScriptExecutor.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -163,7 +164,9 @@ public class ScriptExecutor implements Runnable {
                 break;
 
             case 1:
-                mTxt = "(" + actionTable.getItems().size() + ") actions were executed successfully.";
+                String numExecsStr = (numExcs > 1) ? " " + numExcs + " times." : ".";
+
+                mTxt = "(" + actionTable.getItems().size() + ") Actions were executed successfully" + numExecsStr;
                 title = "Execution Complete";
                 break;
         }
@@ -194,7 +197,6 @@ public class ScriptExecutor implements Runnable {
 
                     // Selecting the current action that is currently being executed
                     actionTable.getSelectionModel().select(i);
-                    System.out.println("Currently i is: " + i);
 
                     switch (tempAction.getAction()) {
                         case "Click":
@@ -223,6 +225,10 @@ public class ScriptExecutor implements Runnable {
                                     tempAction.getMessage(), EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
                             setDelay(delay);
                             break;
+
+                        default:
+                            System.out.println("Ignoring!");
+                            break;
                     }
                 } else {
                     // Breaking out of while loop 
@@ -236,9 +242,12 @@ public class ScriptExecutor implements Runnable {
             // Displaying script status notification
             if (!canceled) {
                 // All actions were successfully executed
-                dispNotification(1);
                 executions++;
             }
+        }
+
+        if (executions >= numExcs) {
+            dispNotification(1);
         }
 
         // Display message in the top right corner of the screen informing the user the script has been successfully fnished.

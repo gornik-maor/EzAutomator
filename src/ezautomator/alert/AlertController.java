@@ -57,7 +57,8 @@ public class AlertController implements Initializable {
     @FXML
     void closeApp(MouseEvent event) {
         // Close and return false
-        result = false;
+//        result = false;
+        hasClosed = true;
         closeForm();
     }
 
@@ -99,7 +100,7 @@ public class AlertController implements Initializable {
         closeForm();
     }
 
-    private boolean result;
+    private boolean result, hasClosed;
 
     private int btnOneID = 1;
     private int btnTwoID = 0;
@@ -221,7 +222,7 @@ public class AlertController implements Initializable {
         if (callerStage != null) {
             callerStage.setIconified(false);
         }
-        
+
         if (tStage != null) {
             tStage.setOpacity(1);
         }
@@ -272,6 +273,15 @@ public class AlertController implements Initializable {
         displayLbl.requestFocus();
         getCurrStage().showAndWait();
         return result;
+    }
+
+    /**
+     * Returns whether the user has closed out of the alert willingly
+     *
+     * @return
+     */
+    public boolean getStatus() {
+        return hasClosed;
     }
 
     /**

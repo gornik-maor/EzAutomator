@@ -18,10 +18,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
-import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -31,6 +31,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -101,6 +102,9 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private MenuItem mnuInsert;
+
+    @FXML
+    private MenuItem mnuSkip;
 
     @FXML
     private MenuItem mnuRemove;
@@ -302,17 +306,13 @@ public class FXMLDocumentController implements Initializable {
                 // Opening the delay form
                 DelayFormController delayClss = new DelayFormController();
                 DelayFormController currDelayClss = delayClss.loadAlert();
-                currDelayClss.setHideUponLoad(mainStage);
-                currDelayClss.onResultFocus(mainStage);
+                currDelayClss.blurUponLoad(mainStage);
                 tempAction.setDelay(String.valueOf(currDelayClss.getDelay()));
             }
 
             int newIndex = selIndex;
 
-            if (isAbove) {
-//                newIndex = selIndex + 1;
-
-            } else {
+            if (!isAbove) {
                 newIndex = selIndex + 1;
             }
 
@@ -354,7 +354,9 @@ public class FXMLDocumentController implements Initializable {
     void onItemEditClick(ActionEvent event) {
         Action selAction = actionTable.getSelectionModel().getSelectedItem();
         if (actionTable.getSelectionModel().getSelectedIndex() != -1) {
-            boolean result = new AlertController().loadAlert().showDialog("Action", "Delay", "What would you like to edit?",
+            // Creating alert
+            AlertController editAlert = new AlertController().loadAlert();
+            boolean result = editAlert.showDialog("Action", "Delay", "What would you like to edit?",
                     "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
 
             if (result) {
@@ -389,7 +391,10 @@ public class FXMLDocumentController implements Initializable {
                 }
                 tempAction = null;
             } else {
-                selAction.setDelay(String.valueOf(new DelayFormController().loadAlert().getDelay(EzAutomator.getMainStage())));
+                // Ensuring the user did not close out of the alert willingly
+                if (!editAlert.getStatus()) {
+                    selAction.setDelay(String.valueOf(new DelayFormController().loadAlert().getDelay(EzAutomator.getMainStage())));
+                }
             }
         } else if (actionTable.getItems().isEmpty()) {
             new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no items to edit!",
@@ -451,6 +456,21 @@ public class FXMLDocumentController implements Initializable {
                 new AlertController().loadAlert().showDialog("Ok", "Cancel", "Please select an action as the position indication!",
                         "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
             }
+        }
+    }
+
+    @FXML
+    void onActionCommentOut(ActionEvent event) {
+        if (new AlertController().loadAlert().showDialog("Ok", "Cancel", "Do you wish to continue?",
+                "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5)) {
+            Action selAction = actionTable.getSelectionModel().getSelectedItem();
+            int selIndex = actionTable.getSelectionModel().getSelectedIndex();
+            if (selAction.getAction().endsWith(" (IGND)")) {
+                selAction.setAction(selAction.getAction().replace(" (IGND)", ""));
+            } else {
+                selAction.setAction(selAction.getAction() + " (IGND)");
+            }
+            actionTable.refresh();
         }
     }
 
@@ -657,6 +677,24 @@ public class FXMLDocumentController implements Initializable {
         actionColumn.setSortable(false);
         actionColumn.setCellValueFactory(new PropertyValueFactory<>("action"));
 
+        actionColumn.setCellFactory(e -> new TableCell<Action, String>() {
+            @Override
+            public void updateItem(String item, boolean empty) {
+                // Always invoke super constructor.
+                super.updateItem(item, empty);
+
+                if (item == null || empty) {
+                    setText("");
+                    setStyle("");
+                } else {
+                    setText(item);
+                    if (item.endsWith(" (IGND)")) {
+                        setStyle("-fx-background-color: tomato;");
+                    }
+                }
+            }
+        });
+
         // Setting up the comment column
         TableColumn<Action, String> commentColumn = new TableColumn<>("Comment");
         commentColumn.setMinWidth(100);
@@ -666,10 +704,10 @@ public class FXMLDocumentController implements Initializable {
         // Enabling the user to edit the comment by double clicking the field
         Callback<TableColumn<Action, String>, TableCell<Action, String>> cellFactor
                 = new Callback<TableColumn<Action, String>, TableCell<Action, String>>() {
-                    public TableCell call(TableColumn p) {
-                        return new EditingCell();
-                    }
-                };
+            public TableCell call(TableColumn p) {
+                return new EditingCell();
+            }
+        };
 
 //        commentColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         commentColumn.setCellFactory(cellFactor);

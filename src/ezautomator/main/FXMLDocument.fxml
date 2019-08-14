@@ -50,8 +50,9 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                   <items>
-                        <MenuItem mnemonicParsing="false" text="Manual" />
-                    <MenuItem mnemonicParsing="false" text="About" />
+                        <MenuItem fx:id="mMnuManual" mnemonicParsing="false" text="Manual" />
+                        <MenuItem fx:id="mMnuUpdate" mnemonicParsing="false" text="Update" />
+                    <MenuItem fx:id="mMnuAbout" mnemonicParsing="false" text="About" />
                   </items>
                 </Menu>
               </menus>
@@ -74,7 +75,7 @@
                                             <items>
                                                 <MenuItem fx:id="mnuEdit" mnemonicParsing="false" onAction="#onItemEditClick" style="-fx-text-fill: FFFF8D;" text="Edit" />
                                                 <MenuItem fx:id="mnuInsert" mnemonicParsing="false" onAction="#onItemInsertion" style="-fx-text-fill: FFFF8D;" text="Insert" />
-                                                <MenuItem mnemonicParsing="false" onAction="#onTableRemoveAll" style="-fx-text-fill: FFFF8D;" text="Clear" />
+                                                <MenuItem fx:id="mnuSkip" mnemonicParsing="false" onAction="#onActionCommentOut" style="-fx-text-fill: FFFF8D;" text="Disable\Enable" />
                                                 <MenuItem fx:id="mnuRemove" mnemonicParsing="false" onAction="#onItemRemoveClick" style="-fx-text-fill: FFFF8D;" text="Remove" />
                                                 <MenuItem mnemonicParsing="false" onAction="#onItemDuplicateClick" style="-fx-text-fill: FFFF8D;" text="Duplicate" />
                                               <MenuItem fx:id="mnuRefresh" mnemonicParsing="false" onAction="#onTableRefreshClick" style="-fx-text-fill: FFFF8D;" text="Refresh" />
