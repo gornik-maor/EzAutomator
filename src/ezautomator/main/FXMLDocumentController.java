@@ -8,6 +8,7 @@ import ezautomator.alert.AlertController;
 import ezautomator.confirmation.ConfirmationControllerSetup;
 import ezautomator.delay.DelayFormController;
 import ezautomator.file.NameXMLController;
+import ezautomator.help.UpdateFormController;
 import ezautomator.insertion.InsertionFormController;
 import ezautomator.main.script.ExecutionChooserController;
 import ezautomator.subForms.SetupWindowController;
@@ -18,7 +19,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
@@ -31,7 +31,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -98,13 +97,13 @@ public class FXMLDocumentController implements Initializable {
     private JFXTabPane tabPane;
 
     @FXML
-    private MenuItem mnuEdit;
+    private MenuItem mMnuManual;
 
     @FXML
-    private MenuItem mnuInsert;
+    private MenuItem mMnuUpdate;
 
     @FXML
-    private MenuItem mnuSkip;
+    private MenuItem mMnuAbout;
 
     @FXML
     private MenuItem mnuRemove;
@@ -464,12 +463,12 @@ public class FXMLDocumentController implements Initializable {
         if (new AlertController().loadAlert().showDialog("Ok", "Cancel", "Do you wish to continue?",
                 "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5)) {
             Action selAction = actionTable.getSelectionModel().getSelectedItem();
-            int selIndex = actionTable.getSelectionModel().getSelectedIndex();
             if (selAction.getAction().endsWith(" (IGND)")) {
                 selAction.setAction(selAction.getAction().replace(" (IGND)", ""));
             } else {
                 selAction.setAction(selAction.getAction() + " (IGND)");
             }
+
             actionTable.refresh();
         }
     }
@@ -513,6 +512,11 @@ public class FXMLDocumentController implements Initializable {
             new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no items in the table to refresh!",
                     "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
         }
+    }
+
+    @FXML
+    void onShowUpdateForm(ActionEvent event) {
+        new UpdateFormController().loadResources().loadForm(EzAutomator.getMainStage(), 0.5);
     }
 
     @Override
@@ -641,6 +645,10 @@ public class FXMLDocumentController implements Initializable {
                 removeIcon.setFitHeight(20);
                 removeIcon.setFitWidth(20);
                 mMnuRS.setGraphic(removeIcon);
+                
+                mMnuManual.setGraphic(new ImageView(new Image("/ezautomator/icons/manual.png")));
+                mMnuUpdate.setGraphic(new ImageView(new Image("/ezautomator/icons/update.png")));
+                mMnuAbout.setGraphic(new ImageView(new Image("/ezautomator/icons/about.png")));
             }
         } else {
             loadSpalshScreen();

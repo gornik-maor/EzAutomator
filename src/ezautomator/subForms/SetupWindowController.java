@@ -61,6 +61,9 @@ public class SetupWindowController implements Initializable {
     private ImageView closeBtn;
 
     @FXML
+    private ImageView minBtn;
+
+    @FXML
     private ImageView btnEOne;
 
     @FXML
@@ -123,6 +126,11 @@ public class SetupWindowController implements Initializable {
     }
 
     @FXML
+    void minApp(MouseEvent event) {
+        getSubStage().setIconified(true);
+    }
+
+    @FXML
     void closeBtnChangeHover(MouseEvent event) {
         closeBtn.setImage(new Image("/ezautomator/icons/close-hover.png"));
     }
@@ -130,6 +138,16 @@ public class SetupWindowController implements Initializable {
     @FXML
     void closeBtnChangeLeave(MouseEvent event) {
         closeBtn.setImage(new Image("/ezautomator/icons/close.png"));
+    }
+
+    @FXML
+    void minBtnChangeHover(MouseEvent event) {
+        minBtn.setImage(new Image("/ezautomator/icons/minimize-hover.png"));
+    }
+
+    @FXML
+    void minBtnChangeLeave(MouseEvent event) {
+        minBtn.setImage(new Image("/ezautomator/icons/minimize.png"));
     }
 
     @FXML

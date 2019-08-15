@@ -84,6 +84,11 @@
                </children>
             </Pane>
             <Button fx:id="btnProceed" layoutX="12.0" layoutY="242.0" mnemonicParsing="false" onMousePressed="#proceedOnClick" prefHeight="39.0" prefWidth="462.0" styleClass="common-label" text="Proceed" />
+            <ImageView fx:id="minBtn" fitHeight="21.0" fitWidth="21.0" layoutX="404.0" layoutY="10.0" onMouseClicked="#minApp" onMouseEntered="#minBtnChangeHover" onMouseExited="#minBtnChangeLeave" pickOnBounds="true" preserveRatio="true" styleClass="image-view">
+               <image>
+                  <Image url="@../icons/minimize.png" />
+               </image>
+            </ImageView>
          </children>
       </Pane>
    </children>

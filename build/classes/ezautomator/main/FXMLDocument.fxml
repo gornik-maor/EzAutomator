@@ -51,7 +51,7 @@
                 <Menu mnemonicParsing="false" text="Help">
                   <items>
                         <MenuItem fx:id="mMnuManual" mnemonicParsing="false" text="Manual" />
-                        <MenuItem fx:id="mMnuUpdate" mnemonicParsing="false" text="Update" />
+                        <MenuItem fx:id="mMnuUpdate" mnemonicParsing="false" onAction="#onShowUpdateForm" text="Update" />
                     <MenuItem fx:id="mMnuAbout" mnemonicParsing="false" text="About" />
                   </items>
                 </Menu>
@@ -176,6 +176,41 @@
                                                 <Font size="28.0" />
                                              </font>
                                           </Text>
+                                          <Text fill="WHITE" layoutX="62.0" layoutY="79.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Immediate Pause" wrappingWidth="152.56640625">
+                                             <font>
+                                                <Font size="15.0" />
+                                             </font>
+                                          </Text>
+                                          <Text fill="WHITE" layoutX="119.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Important Information">
+                                             <font>
+                                                <Font size="28.0" />
+                                             </font>
+                                          </Text>
+                                          <ImageView fitHeight="50.0" fitWidth="21.0" layoutX="52.0" layoutY="62.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../icons/yellow-bar.png" />
+                                             </image>
+                                          </ImageView>
+                                          <Text fill="WHITE" layoutX="340.0" layoutY="78.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Immediate Exit" wrappingWidth="152.56640625">
+                                             <font>
+                                                <Font size="15.0" />
+                                             </font>
+                                          </Text>
+                                          <ImageView fitHeight="50.0" fitWidth="21.0" layoutX="331.0" layoutY="62.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../icons/yellow-bar.png" />
+                                             </image>
+                                          </ImageView>
+                                          <ImageView fitHeight="49.0" fitWidth="52.0" layoutX="92.0" layoutY="86.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../icons/F5.png" />
+                                             </image>
+                                          </ImageView>
+                                          <ImageView fitHeight="49.0" fitWidth="52.0" layoutX="365.0" layoutY="82.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../icons/F8.png" />
+                                             </image>
+                                          </ImageView>
                                        </children>
                                     </Pane>
                                     <Label layoutX="148.0" layoutY="556.0" text="© 2019 Maor Gornic.  All rights reserved." textFill="WHITE" />

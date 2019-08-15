@@ -49,9 +49,6 @@ public class NameXMLController implements Initializable {
     private StackPane root;
 
     @FXML
-    private ImageView icon;
-
-    @FXML
     private Button btnConfirm;
 
     @FXML

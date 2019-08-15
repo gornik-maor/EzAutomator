@@ -5,16 +5,19 @@
  */
 package ezautomator.main.script;
 
-import com.sun.org.apache.bcel.internal.generic.AALOAD;
 import ezautomator.confirmation.ConfirmationController;
 import ezautomator.main.Action;
 import ezautomator.main.EzAutomator;
+import ezautomator.main.FXMLDocumentController;
+import ezautomator.subForms.SetupWindowController;
 import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.TableView;
@@ -23,6 +26,10 @@ import javafx.scene.image.ImageView;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
+import org.jnativehook.GlobalScreen;
+import org.jnativehook.NativeHookException;
+import org.jnativehook.keyboard.NativeKeyEvent;
+import org.jnativehook.keyboard.NativeKeyListener;
 
 /**
  *
@@ -31,6 +38,7 @@ import org.controlsfx.control.Notifications;
 public class ScriptExecutor implements Runnable {
 
     private static volatile boolean canceled;
+    private boolean isListening;
     private TableView<Action> actionTable;
     private Thread scriptThread;
     private Runnable runnable;
@@ -185,6 +193,7 @@ public class ScriptExecutor implements Runnable {
     @Override
     public void run() {
         canceled = false;
+        if(!isListening) enableListener();
         System.out.println("running...");
         int executions = 0;
         actionTable.getSelectionModel().select(0);
@@ -246,7 +255,7 @@ public class ScriptExecutor implements Runnable {
             }
         }
 
-        if (executions >= numExcs) {
+        if ((executions >= numExcs) && !canceled) {
             dispNotification(1);
         }
 
@@ -258,5 +267,40 @@ public class ScriptExecutor implements Runnable {
                 scriptThread.interrupt();
             }
         });
+    }
+
+    public void enableListener() {
+        NativeKeyListener keyListener = new NativeKeyListener() {
+            @Override
+            public void nativeKeyPressed(NativeKeyEvent nke) {
+                switch (nke.getRawCode()) {
+                    case KeyEvent.VK_F5:
+                        canceled = true;
+                        break;
+                        
+                    case KeyEvent.VK_F8:
+                        System.exit(1);
+                        break;
+                }
+            }
+
+            @Override
+            public void nativeKeyReleased(NativeKeyEvent nke) {
+//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void nativeKeyTyped(NativeKeyEvent nke) {
+
+            }
+        };
+
+        try {
+            GlobalScreen.registerNativeHook();
+            GlobalScreen.addNativeKeyListener(keyListener);
+        } catch (NativeHookException ex) {
+            Logger.getLogger(SetupWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        isListening = true;
     }
 }
