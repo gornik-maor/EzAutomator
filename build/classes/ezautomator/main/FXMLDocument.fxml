@@ -50,9 +50,9 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                   <items>
-                        <MenuItem fx:id="mMnuManual" mnemonicParsing="false" text="Manual" />
+                        <MenuItem fx:id="mMnuManual" mnemonicParsing="false" onAction="#onRedirectionToManualPress" text="Manual" />
                         <MenuItem fx:id="mMnuUpdate" mnemonicParsing="false" onAction="#onShowUpdateForm" text="Update" />
-                    <MenuItem fx:id="mMnuAbout" mnemonicParsing="false" text="About" />
+                    <MenuItem fx:id="mMnuAbout" mnemonicParsing="false" onAction="#onShowAboutForm" text="About" />
                   </items>
                 </Menu>
               </menus>

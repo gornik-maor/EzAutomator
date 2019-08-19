@@ -8,13 +8,16 @@ import ezautomator.alert.AlertController;
 import ezautomator.confirmation.ConfirmationControllerSetup;
 import ezautomator.delay.DelayFormController;
 import ezautomator.file.NameXMLController;
-import ezautomator.help.UpdateFormController;
+import ezautomator.help.about.AboutFormController;
+import ezautomator.help.update.UpdateFormController;
 import ezautomator.insertion.InsertionFormController;
 import ezautomator.main.script.ExecutionChooserController;
 import ezautomator.subForms.SetupWindowController;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -259,6 +262,18 @@ public class FXMLDocumentController implements Initializable {
     }
 
     @FXML
+    void onRedirectionToManualPress(ActionEvent event) {
+        if (new AlertController().loadAlert().showDialog("Yes", "No", "Open software manual now?",
+                "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5)) {
+            try {
+                java.awt.Desktop.getDesktop().browse(new URI("https://docs.google.com/document/d/1X5CgZUKSMCNNjOkJsDutI79nDmhiE0A6k8p541MhDak"));
+            } catch (IOException | URISyntaxException ex) {
+                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    @FXML
     void onActionAddition(MouseEvent event) {
         if (!isEditing) {
             if (tempAction != null && !txtComment.getText().isEmpty()) {
@@ -420,19 +435,17 @@ public class FXMLDocumentController implements Initializable {
                         "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
                 selIndex = actionTable.getSelectionModel().getSelectedIndex();
 
-//                isAbove = (posResult) ? true : false;
                 if (posResult) {
-                    // We insert an action above as long as the first item isn't selected
-                    if (actionTable.getSelectionModel().getSelectedIndex() == 0) {
-                        isAbove = true;
-                    }
-
+                    // We insert an action above
+                    isAbove = true;
                 } else {
                     if (actionTable.getSelectionModel().getSelectedIndex() == actionTable.getItems().size() - 1 && actionTable.getItems().size() > 1) {
                         new AlertController().loadAlert().showDialog("Ok", "Cancel", "You can only insert an action above!",
                                 "warning", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
                         isEditing = false;
                         actionsBox.setDisable(false);
+
+                        // Clearing table and action
                         tempAction = null;
                         actionsBox.getItems().clear();
                     } else {
@@ -460,16 +473,26 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     void onActionCommentOut(ActionEvent event) {
-        if (new AlertController().loadAlert().showDialog("Ok", "Cancel", "Do you wish to continue?",
-                "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5)) {
-            Action selAction = actionTable.getSelectionModel().getSelectedItem();
-            if (selAction.getAction().endsWith(" (IGND)")) {
-                selAction.setAction(selAction.getAction().replace(" (IGND)", ""));
-            } else {
-                selAction.setAction(selAction.getAction() + " (IGND)");
-            }
+        if (actionTable.getSelectionModel().getSelectedIndex() != -1 && !actionTable.getItems().isEmpty()) {
+            if (new AlertController().loadAlert().showDialog("Ok", "Cancel", "Do you wish to continue?",
+                    "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5)) {
+                Action selAction = actionTable.getSelectionModel().getSelectedItem();
+                if (selAction.getAction().endsWith(" (IGND)")) {
+                    selAction.setAction(selAction.getAction().replace(" (IGND)", ""));
+                } else {
+                    selAction.setAction(selAction.getAction() + " (IGND)");
+                }
 
-            actionTable.refresh();
+                actionTable.refresh();
+            }
+        } else {
+            if (actionTable.getItems().isEmpty()) {
+                new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no actions found in the table!",
+                        "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+            } else {
+                new AlertController().loadAlert().showDialog("Ok", "Cancel", "No action was selected! Please select an action. ",
+                        "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+            }
         }
     }
 
@@ -493,11 +516,37 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     void onItemDuplicateClick(ActionEvent event) {
-        if (actionTable.getItems().size() > 0) {
-            // Duplicate to where (INSERT ABOVE / BELOW)
+        if (actionTable.getSelectionModel().getSelectedIndex() != -1 && !actionTable.getItems().isEmpty()) {
+            Action dupAction = actionTable.getSelectionModel().getSelectedItem();
+
+            if (dupAction != null) {
+                boolean posResult = new AlertController().loadAlert().showDialog("ABOVE", "BELOW", "Would you like to insert it above or below?",
+                        "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                selIndex = actionTable.getSelectionModel().getSelectedIndex();
+
+                if (posResult) {
+                    // Duplicate the action and paste it above
+                    actionTable.getItems().add(selIndex, dupAction);
+                } else {
+                    if (actionTable.getSelectionModel().getSelectedIndex() == actionTable.getItems().size() - 1 && actionTable.getItems().size() > 1) {
+                        new AlertController().loadAlert().showDialog("Ok", "Cancel", "You can only insert an action above!",
+                                "warning", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                    } else {
+                        actionTable.getItems().add(selIndex + 1, dupAction);
+                    }
+                }
+            }
         } else {
-            new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no items in the table to refresh!",
-                    "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+            if (actionTable.getItems().isEmpty()) {
+                AlertController alertForm = new AlertController();
+                AlertController currAlert = alertForm.loadAlert();
+                currAlert.setFontSize(17);
+                currAlert.showDialog("Ok", "Cancel", "There are no items in the table. Add an action normally.",
+                        "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+            } else {
+                new AlertController().loadAlert().showDialog("Ok", "Cancel", "Please select an action as the position indication!",
+                        "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+            }
         }
     }
 
@@ -517,6 +566,11 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     void onShowUpdateForm(ActionEvent event) {
         new UpdateFormController().loadResources().loadForm(EzAutomator.getMainStage(), 0.5);
+    }
+
+    @FXML
+    void onShowAboutForm(ActionEvent event) {
+        new AboutFormController().loadResources().loadForm(EzAutomator.getMainStage(), 0.5);
     }
 
     @Override
@@ -645,7 +699,7 @@ public class FXMLDocumentController implements Initializable {
                 removeIcon.setFitHeight(20);
                 removeIcon.setFitWidth(20);
                 mMnuRS.setGraphic(removeIcon);
-                
+
                 mMnuManual.setGraphic(new ImageView(new Image("/ezautomator/icons/manual.png")));
                 mMnuUpdate.setGraphic(new ImageView(new Image("/ezautomator/icons/update.png")));
                 mMnuAbout.setGraphic(new ImageView(new Image("/ezautomator/icons/about.png")));
@@ -712,10 +766,10 @@ public class FXMLDocumentController implements Initializable {
         // Enabling the user to edit the comment by double clicking the field
         Callback<TableColumn<Action, String>, TableCell<Action, String>> cellFactor
                 = new Callback<TableColumn<Action, String>, TableCell<Action, String>>() {
-            public TableCell call(TableColumn p) {
-                return new EditingCell();
-            }
-        };
+                    public TableCell call(TableColumn p) {
+                        return new EditingCell();
+                    }
+                };
 
 //        commentColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         commentColumn.setCellFactory(cellFactor);

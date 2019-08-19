@@ -84,18 +84,13 @@ public class DelayFormController implements Initializable {
 
                     default:
                         new AlertController().loadAlert().showDialog("Ok", "Cancel", "Please select the desired time units!",
-                                "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                                "error", getCurrStage(), getCurrStage(), 0.5);
                 }
                 closeForm();
             }
         } else {
             new AlertController().loadAlert().showDialog("Ok", "Cancel", "No delay was set. Please set a delay!",
-                    "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
-//            AlertController alert = new AlertController();
-//            Are you sure you don't need a delay?
-//            alert.loadAlert();
-//            alert.getAlertCls().onResulgtFocus(getCurrStage());
-//            alert.getAlertCls().setMessage("Delay must be greater than 0!");
+                    "error", getCurrStage(), getCurrStage(), 0.5);
         }
     }
 
@@ -287,7 +282,7 @@ public class DelayFormController implements Initializable {
             int num = Integer.parseInt(input);
         } catch (NumberFormatException e) {
             new AlertController().loadAlert().showDialog("Ok", "Cancel", "Only numbers are allowed!",
-                    "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                    "error", getCurrStage(), getCurrStage(), 0.5);
             delayTxt.setText("");
             tStage.setOpacity(0.5);
             return false;

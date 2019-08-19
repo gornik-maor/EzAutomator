@@ -22,12 +22,11 @@ import org.jnativehook.NativeHookException;
  */
 public class EzAutomator extends Application {
 
+    private static String version = "1.0.0.2";
     public static Boolean isSplashLoaded = false;
-    public static Boolean isMaximized = false;
     private static Stage mainStage;
-
-    double diffX;
-    double diffY;
+    
+    double diffX, diffY;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -105,6 +104,14 @@ public class EzAutomator extends Application {
      */ 
     public static Stage getMainStage() {
         return mainStage;
+    }
+    
+    /**
+     * Returning current version
+     * @return Program version
+     */
+    public static String getVersion() {
+        return version;
     }
     
     /**
