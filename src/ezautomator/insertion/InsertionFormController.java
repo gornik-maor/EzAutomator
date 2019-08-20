@@ -76,7 +76,7 @@ public class InsertionFormController implements Initializable {
             closeForm();
         } else {
             new AlertController().loadAlert().showDialog("Ok", "Cancel", "No action was selected!",
-                    "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                    "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
             tStage.setOpacity(0.5);
         }
     }

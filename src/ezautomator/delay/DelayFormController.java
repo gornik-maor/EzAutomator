@@ -84,13 +84,13 @@ public class DelayFormController implements Initializable {
 
                     default:
                         new AlertController().loadAlert().showDialog("Ok", "Cancel", "Please select the desired time units!",
-                                "error", getCurrStage(), getCurrStage(), 0.5);
+                                "error", getCurrStage(), getCurrStage(), 0.5, true);
                 }
                 closeForm();
             }
         } else {
             new AlertController().loadAlert().showDialog("Ok", "Cancel", "No delay was set. Please set a delay!",
-                    "error", getCurrStage(), getCurrStage(), 0.5);
+                    "error", getCurrStage(), getCurrStage(), 0.5, true);
         }
     }
 
@@ -282,7 +282,7 @@ public class DelayFormController implements Initializable {
             int num = Integer.parseInt(input);
         } catch (NumberFormatException e) {
             new AlertController().loadAlert().showDialog("Ok", "Cancel", "Only numbers are allowed!",
-                    "error", getCurrStage(), getCurrStage(), 0.5);
+                    "error", getCurrStage(), getCurrStage(), 0.5, true);
             delayTxt.setText("");
             tStage.setOpacity(0.5);
             return false;

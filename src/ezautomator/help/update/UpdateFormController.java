@@ -188,30 +188,29 @@ public class UpdateFormController implements Initializable {
             if (!versionLbl.getText().replace("v", "").equals(version)) {
                 if (version.trim().equals("EzAutomator")) {
                     new AlertController().loadAlert().showDialog("Ok", "Cancel", "Update Manager is currently unavailable!",
-                            "error", getCurrStage(), getCurrStage(), 0.5);
+                            "error", getCurrStage(), getCurrStage(), 0.5, true);
                 } else {
                     if (new AlertController().loadAlert().showDialog("Ok", "Cancel", "A new update was found! Download?",
-                            "exclamation", getCurrStage(), getCurrStage(), 0.5)) {
+                            "exclamation", getCurrStage(), getCurrStage(), 0.5, true)) {
                         try {
                             java.awt.Desktop.getDesktop().browse(new URI("http://www.mediafire.com/file/80vqhg0bulcgjc3/EzAutomator.zip"));
                             closeForm();
                         } catch (URISyntaxException ex) {
                             new AlertController().loadAlert().showDialog("Ok", "Cancel", "Could not open download! Please try again later.",
-                                    "error", getCurrStage(), getCurrStage(), 0.5);
+                                    "error", getCurrStage(), getCurrStage(), 0.5, true);
                             Logger.getLogger(UpdateFormController.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
                 }
             } else {
                 new AlertController().loadAlert().showDialog("Ok", "Cancel", "Congratulations! You are up to date.",
-                        "exclamation", getCurrStage(), getCurrStage(), 0.5);
+                        "exclamation", getCurrStage(), getCurrStage(), 0.5, true);
                 closeForm();
             }
         } catch (IOException ex) {
             new AlertController().loadAlert().showDialog("Ok", "Cancel", "Could not check for updates! Please try again later.",
-                    "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                    "error", getCurrStage(), getCurrStage(), 0.5, true);
             Logger.getLogger(UpdateFormController.class.getName()).log(Level.SEVERE, null, ex);
-            System.exit(1);
         }
         closeForm();
     }

@@ -197,7 +197,7 @@ public class FXMLDocumentController implements Initializable {
 
         if (isEditing) {
             new AlertController().loadAlert().showDialog("Ok", "Cancel", "Please insert an action before continuing!",
-                    "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                    "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
             actionsBox.setDisable(true);
         }
     }
@@ -206,12 +206,12 @@ public class FXMLDocumentController implements Initializable {
     void onMenuItemNew(ActionEvent event) {
         if (!actionTable.getItems().isEmpty()) {
             if (new AlertController().loadAlert().showDialog("Yes", "No", "Are you sure you want to delete all the actions?",
-                    "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5)) {
+                    "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true)) {
                 actionTable.getItems().clear();
             }
         } else {
             new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no actions in the table to remove!",
-                    "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                    "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
         }
     }
 
@@ -228,7 +228,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     void onMenuItemExit(ActionEvent event) {
         boolean result = new AlertController().loadAlert().showDialog("Yes", "No", "Are you sure you want to exit?",
-                "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
         if (result) {
             System.exit(0);
         }
@@ -257,14 +257,14 @@ public class FXMLDocumentController implements Initializable {
             ScriptExecutor.setExecs(numExcs);
         } else {
             new AlertController().loadAlert().showDialog("Ok", "Cancel", "Please add an action before continuing!",
-                    "warning", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                    "warning", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
         }
     }
 
     @FXML
     void onRedirectionToManualPress(ActionEvent event) {
         if (new AlertController().loadAlert().showDialog("Yes", "No", "Open software manual now?",
-                "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5)) {
+                "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true)) {
             try {
                 java.awt.Desktop.getDesktop().browse(new URI("https://docs.google.com/document/d/1X5CgZUKSMCNNjOkJsDutI79nDmhiE0A6k8p541MhDak"));
             } catch (IOException | URISyntaxException ex) {
@@ -280,7 +280,7 @@ public class FXMLDocumentController implements Initializable {
                 tempAction.setComment(txtComment.getText());
 
                 boolean resultAlert = new AlertController().loadAlert().showDialog("Yes", "No", "Would you like to set a delay?",
-                        "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                        "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
 
                 if (resultAlert) {
                     // Opening the delay form
@@ -304,7 +304,7 @@ public class FXMLDocumentController implements Initializable {
                 AlertController currAlert = alertForm.loadAlert();
                 currAlert.setFontSize(17.5);
                 currAlert.showDialog("Ok", "Cancel", "Please pick an action and fill all fields before trying again.",
-                        "warning", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                        "warning", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
                 System.out.println("tempAction is: " + tempAction);
             }
             isEditing = false;
@@ -314,7 +314,7 @@ public class FXMLDocumentController implements Initializable {
             tempAction.setComment(txtComment.getText());
 
             boolean resultAlert = new AlertController().loadAlert().showDialog("Yes", "No", "Would you like to set a delay?",
-                    "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                    "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
 
             if (resultAlert) {
                 // Opening the delay form
@@ -349,7 +349,7 @@ public class FXMLDocumentController implements Initializable {
             script.run();
         } else {
             new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no actions in the table to run!",
-                    "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                    "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
         }
     }
 
@@ -371,7 +371,7 @@ public class FXMLDocumentController implements Initializable {
             // Creating alert
             AlertController editAlert = new AlertController().loadAlert();
             boolean result = editAlert.showDialog("Action", "Delay", "What would you like to edit?",
-                    "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                    "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, false);
 
             if (result) {
                 switch (selAction.getAction()) {
@@ -412,11 +412,11 @@ public class FXMLDocumentController implements Initializable {
             }
         } else if (actionTable.getItems().isEmpty()) {
             new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no items to edit!",
-                    "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                    "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
         } else {
             // Displaying an alert
             new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no selected items to edit!",
-                    "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                    "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
 
         }
 
@@ -432,7 +432,7 @@ public class FXMLDocumentController implements Initializable {
             tempAction = new InsertionFormController().loadAlert().showForm(EzAutomator.getMainStage(), 0.5);
             if (tempAction != null) {
                 boolean posResult = new AlertController().loadAlert().showDialog("ABOVE", "BELOW", "Would you like to insert it above or below?",
-                        "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                        "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, false);
                 selIndex = actionTable.getSelectionModel().getSelectedIndex();
 
                 if (posResult) {
@@ -441,7 +441,7 @@ public class FXMLDocumentController implements Initializable {
                 } else {
                     if (actionTable.getSelectionModel().getSelectedIndex() == actionTable.getItems().size() - 1 && actionTable.getItems().size() > 1) {
                         new AlertController().loadAlert().showDialog("Ok", "Cancel", "You can only insert an action above!",
-                                "warning", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                                "warning", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
                         isEditing = false;
                         actionsBox.setDisable(false);
 
@@ -463,10 +463,10 @@ public class FXMLDocumentController implements Initializable {
                 AlertController currAlert = alertForm.loadAlert();
                 currAlert.setFontSize(17);
                 currAlert.showDialog("Ok", "Cancel", "There are no items in the table. Add an action normally.",
-                        "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                        "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
             } else {
                 new AlertController().loadAlert().showDialog("Ok", "Cancel", "Please select an action as the position indication!",
-                        "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                        "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
             }
         }
     }
@@ -475,7 +475,7 @@ public class FXMLDocumentController implements Initializable {
     void onActionCommentOut(ActionEvent event) {
         if (actionTable.getSelectionModel().getSelectedIndex() != -1 && !actionTable.getItems().isEmpty()) {
             if (new AlertController().loadAlert().showDialog("Ok", "Cancel", "Do you wish to continue?",
-                    "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5)) {
+                    "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true)) {
                 Action selAction = actionTable.getSelectionModel().getSelectedItem();
                 if (selAction.getAction().endsWith(" (IGND)")) {
                     selAction.setAction(selAction.getAction().replace(" (IGND)", ""));
@@ -488,10 +488,10 @@ public class FXMLDocumentController implements Initializable {
         } else {
             if (actionTable.getItems().isEmpty()) {
                 new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no actions found in the table!",
-                        "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                        "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
             } else {
                 new AlertController().loadAlert().showDialog("Ok", "Cancel", "No action was selected! Please select an action. ",
-                        "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                        "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
             }
         }
     }
@@ -505,23 +505,24 @@ public class FXMLDocumentController implements Initializable {
     void onTableRemoveAll(ActionEvent event) {
         if (!actionTable.getItems().isEmpty()) {
             if (new AlertController().loadAlert().showDialog("Yes", "No", "Are you sure you want to delete all the actions?",
-                    "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5)) {
+                    "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true)) {
                 actionTable.getItems().clear();
             }
         } else {
             new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no actions in the table to remove!",
-                    "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                    "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
         }
     }
 
     @FXML
     void onItemDuplicateClick(ActionEvent event) {
         if (actionTable.getSelectionModel().getSelectedIndex() != -1 && !actionTable.getItems().isEmpty()) {
-            Action dupAction = actionTable.getSelectionModel().getSelectedItem();
+            Action dupAction = new Action("", "", new ArrayList(Arrays.asList()), new ArrayList(Arrays.asList()), "0", 'E');
+            dupAction.turnIntoAction(actionTable.getSelectionModel().getSelectedItem());
 
-            if (dupAction != null) {
+            try {
                 boolean posResult = new AlertController().loadAlert().showDialog("ABOVE", "BELOW", "Would you like to insert it above or below?",
-                        "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                        "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, false);
                 selIndex = actionTable.getSelectionModel().getSelectedIndex();
 
                 if (posResult) {
@@ -530,11 +531,14 @@ public class FXMLDocumentController implements Initializable {
                 } else {
                     if (actionTable.getSelectionModel().getSelectedIndex() == actionTable.getItems().size() - 1 && actionTable.getItems().size() > 1) {
                         new AlertController().loadAlert().showDialog("Ok", "Cancel", "You can only insert an action above!",
-                                "warning", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                                "warning", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
                     } else {
                         actionTable.getItems().add(selIndex + 1, dupAction);
                     }
                 }
+            } catch (NullPointerException e) {
+                new AlertController().loadAlert().showDialog("Ok", "Cancel", "Oops! something went wrong.",
+                        "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
             }
         } else {
             if (actionTable.getItems().isEmpty()) {
@@ -542,10 +546,10 @@ public class FXMLDocumentController implements Initializable {
                 AlertController currAlert = alertForm.loadAlert();
                 currAlert.setFontSize(17);
                 currAlert.showDialog("Ok", "Cancel", "There are no items in the table. Add an action normally.",
-                        "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                        "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
             } else {
-                new AlertController().loadAlert().showDialog("Ok", "Cancel", "Please select an action as the position indication!",
-                        "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                new AlertController().loadAlert().showDialog("Ok", "Cancel", "Please select an action you wish to copy!",
+                        "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
             }
         }
     }
@@ -556,10 +560,10 @@ public class FXMLDocumentController implements Initializable {
         // Displaying an alert
         if (actionTable.getItems().size() > 0) {
             new AlertController().loadAlert().showDialog("Ok", "Cancel", "Table was refreshed successfully!",
-                    "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                    "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
         } else {
             new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no items in the table to refresh!",
-                    "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                    "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
         }
     }
 
@@ -635,48 +639,8 @@ public class FXMLDocumentController implements Initializable {
                     }
                 });
 
-                // Table tooltip
-                actionTable.setRowFactory(new Callback<TableView<Action>, TableRow<Action>>() {
-                    @Override
-                    public TableRow<Action> call(TableView<Action> param) {
-                        return new TooltipTableRow<Action>((Action tempAction) -> {
-                            // Converting to minutes
-                            double aDelay = (Double.parseDouble(tempAction.getDelay().replace(" m/s", "")) / 60000);
-                            String dataT = "minutes";
-
-                            // Checking if the number is better be shown in seconds rather than minutes
-                            if (aDelay < 0.9) {
-                                dataT = "seconds";
-                                // Converting to seconds
-                                aDelay *= 60;
-                            } else if (aDelay >= 60) {
-                                dataT = "hours";
-                                // Converting to hours
-                                aDelay /= 60;
-                            }
-
-                            // Checking whether the number of seconds or minutes is only 1
-                            dataT = (aDelay == 1.0) ? dataT.substring(0, dataT.length() - 1) : dataT;
-
-                            // Returning the text to display in the tooltip
-                            String actionT = tempAction.getAction();
-                            if (actionT.equals("Keys")) {
-                                actionT = "Send Keys";
-                            } else if (Character.toUpperCase(tempAction.getType()) == 'C'
-                                    || Character.toUpperCase(tempAction.getType()) == 'H') {
-                                actionT = "Mouse " + actionT;
-                            }
-
-                            // Confirmation info displayed
-                            if (tempAction.getAction().equals("Confirmation")) {
-                                return "Action (" + actionT + ") | Continue (" + EzAutomator.getKeyTextRep(tempAction.getSendKeys().get(0)) + ") | Terminate ("
-                                        + EzAutomator.getKeyTextRep(tempAction.getSendKeys().get(1)) + ") | Delay (" + aDelay + ") " + dataT + ".";
-                            }
-
-                            return "Action (" + actionT + ") | Delay (" + aDelay + ") " + dataT + ".";
-                        });
-                    }
-                });
+                // Attaching tool tips to all actions in table
+                attachToolTip();
 
                 // Attaching icons to main menu items
                 mMnuNew.setGraphic(new ImageView(new Image("/ezautomator/icons/blank.png")));
@@ -703,6 +667,9 @@ public class FXMLDocumentController implements Initializable {
                 mMnuManual.setGraphic(new ImageView(new Image("/ezautomator/icons/manual.png")));
                 mMnuUpdate.setGraphic(new ImageView(new Image("/ezautomator/icons/update.png")));
                 mMnuAbout.setGraphic(new ImageView(new Image("/ezautomator/icons/about.png")));
+
+                // Checking for updates once the program completely loads up
+                EzAutomator.checkForUpdates();
             }
         } else {
             loadSpalshScreen();
@@ -771,13 +738,12 @@ public class FXMLDocumentController implements Initializable {
                     }
                 };
 
-//        commentColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         commentColumn.setCellFactory(cellFactor);
-
         commentColumn.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Action, String>>() {
             @Override
             public void handle(TableColumn.CellEditEvent<Action, String> event) {
                 changeComment(event);
+                attachToolTip();
             }
         });
 
@@ -785,7 +751,6 @@ public class FXMLDocumentController implements Initializable {
         TableColumn<Action, ArrayList> coordinatesColumn = new TableColumn<>("Coordinates");
         coordinatesColumn.setMinWidth(100);
         coordinatesColumn.setSortable(false);
-//        coordinatesColumn.setCellValueFactory(new PropertyValueFactory<>("coordinates"));
         coordinatesColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Action, ArrayList>, ObservableValue<ArrayList>>() {
             @Override
             public ObservableValue<ArrayList> call(TableColumn.CellDataFeatures<Action, ArrayList> param) {
@@ -842,7 +807,7 @@ public class FXMLDocumentController implements Initializable {
     /**
      * Returning a list containing all the confirmation actions
      *
-     * @return
+     * @return List containing confirmation instances
      */
     public static ArrayList getConfirmations() {
         ArrayList<Action> confirmations = new ArrayList<>(Arrays.asList());
@@ -891,7 +856,7 @@ public class FXMLDocumentController implements Initializable {
     /**
      * Returning actions box
      *
-     * @return
+     * @return Main form actions box
      */
     public static ChoiceBox<String> getActionsBox() {
         if (tempCBox != null) {
@@ -971,7 +936,7 @@ public class FXMLDocumentController implements Initializable {
         if (!actionTable.getItems().isEmpty()) {
             if (actionTable.getSelectionModel().getSelectedIndex() != -1) {
                 boolean result = new AlertController().loadAlert().showDialog("Yes", "No", "Are you sure you wish to continue?", "exclamation",
-                        EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                        EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
 
                 // If the user confirms the removal
                 if (result) {
@@ -986,12 +951,12 @@ public class FXMLDocumentController implements Initializable {
             } else {
                 // Displaying an alert
                 new AlertController().loadAlert().showDialog("Ok", "Cancel", "Please select one of the items!",
-                        "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                        "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
             }
         } else {
             // Displaying an alert
             new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no items to remove!",
-                    "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                    "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
         }
     }
 
@@ -1019,11 +984,11 @@ public class FXMLDocumentController implements Initializable {
                 }
 
                 new AlertController().loadAlert().showDialog("Ok", "Cancel", "Script was loaded successfully!", "exclamation",
-                        EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                        EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
 
             } catch (Exception ex) {
                 new AlertController().loadAlert().showDialog("Ok", "Cancel", "The selected script is not valid!", "error",
-                        EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                        EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
             }
             tabPane.getSelectionModel().select(0);
         }
@@ -1038,8 +1003,57 @@ public class FXMLDocumentController implements Initializable {
             tabPane.getSelectionModel().select(0);
         } else {
             new AlertController().loadAlert().showDialog("Ok", "Cancel", "There aren't any actions to save!", "error",
-                    EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                    EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
             tabPane.getSelectionModel().select(0);
         }
+    }
+
+    /**
+     * Recreating action table and attaching tool tips for each action
+     */
+    private void attachToolTip() {
+        // Recreating table with tool tips
+        actionTable.setRowFactory(new Callback<TableView<Action>, TableRow<Action>>() {
+            @Override
+            public TableRow<Action> call(TableView<Action> param) {
+                return new TooltipTableRow<Action>((Action tempAction) -> {
+                    // Converting to minutes
+                    double aDelay = (Double.parseDouble(tempAction.getDelay().replace(" m/s", "")) / 60000);
+                    String dataT = "minutes";
+
+                    // Checking if the number is better be shown in seconds rather than minutes
+                    if (aDelay < 0.9) {
+                        dataT = "seconds";
+                        // Converting to seconds
+                        aDelay *= 60;
+                    } else if (aDelay >= 60) {
+                        dataT = "hours";
+                        // Converting to hours
+                        aDelay /= 60;
+                    }
+
+                    // Checking whether the number of seconds or minutes is only 1
+                    dataT = (aDelay == 1.0) ? dataT.substring(0, dataT.length() - 1) : dataT;
+
+                    // Returning the text to display in the tooltip
+                    String actionT = tempAction.getAction();
+                    if (actionT.equals("Keys")) {
+                        actionT = "Send Keys";
+                    } else if (Character.toUpperCase(tempAction.getType()) == 'C'
+                            || Character.toUpperCase(tempAction.getType()) == 'H') {
+                        actionT = "Mouse " + actionT;
+                    }
+
+                    // Confirmation info displayed
+                    if (tempAction.getAction().equals("Confirmation")) {
+                        return "Action (" + actionT + ") | Continue (" + EzAutomator.getKeyTextRep(tempAction.getSendKeys().get(0)) + ") | Terminate ("
+                                + EzAutomator.getKeyTextRep(tempAction.getSendKeys().get(1)) + ") | Comment (" + tempAction.getComment()
+                                + ") | Delay (" + aDelay + ") " + dataT + ".";
+                    }
+
+                    return "Action (" + actionT + ") | Comment (" + tempAction.getComment() + ") | Delay (" + aDelay + ") " + dataT + ".";
+                });
+            }
+        });
     }
 }

@@ -180,11 +180,11 @@ public class NameXMLController implements Initializable {
 //                XMLController.ActionsToXML(path + "\\" + scriptTxt.getText() + ".xml", actions);
                 XMLController.ActionsToXML(file, actions);
                 new AlertController().loadAlert().showDialog("Ok", "Cancel", "Script was saved successfully!", "exclamation",
-                        getCurrStage(), getCurrStage(), 0.5);
+                        getCurrStage(), getCurrStage(), 0.5, true);
 
             } catch (JAXBException ex) {
                 new AlertController().loadAlert().showDialog("Ok", "Cancel", "Oh no! Something went wrong.", "error",
-                        getCurrStage(), getCurrStage(), 0.5);
+                        getCurrStage(), getCurrStage(), 0.5, true);
             }
         }
     }

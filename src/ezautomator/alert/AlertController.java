@@ -18,6 +18,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
@@ -100,7 +102,7 @@ public class AlertController implements Initializable {
         closeForm();
     }
 
-    private boolean result, hasClosed;
+    private boolean result, hasClosed, enableKeys;
 
     private int btnOneID = 1;
     private int btnTwoID = 0;
@@ -140,6 +142,24 @@ public class AlertController implements Initializable {
                 getCurrStage().setY(event.getScreenY() + diffY);
             }
         });
+
+        /*
+         * Allowing the user to either press ENTER to confirm or ESC to cancel
+         */
+        root.setOnKeyReleased(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent e) {
+                if (enableKeys) {
+                    if (e.getCode().equals(KeyCode.ENTER)) {
+                        result = true;
+                        closeForm();
+                    } else if (e.getCode().equals(KeyCode.ESCAPE)) {
+                        result = false;
+                        closeForm();
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -176,6 +196,14 @@ public class AlertController implements Initializable {
             btnTwo.setText(text);
             regainFocus();
         }
+    }
+    
+    /**
+     * Setting key support for alert
+     * @param state 
+     */
+    public void setKeyCapture(boolean state) {
+        enableKeys = state;
     }
 
     /**
@@ -360,13 +388,14 @@ public class AlertController implements Initializable {
      * @param opValue Opacity value to set
      * @return
      */
-    public boolean showDialog(String btnOneTxt, String btnTwoTxt, String message, String icon, Stage focusAfter, Stage tStage, double opValue) {
+    public boolean showDialog(String btnOneTxt, String btnTwoTxt, String message, String icon, Stage focusAfter, Stage tStage, double opValue, boolean enableKeys) {
         this.setBtnOneTxt(btnOneTxt);
         this.setBtnTwoTxt(btnTwoTxt);
         this.setMessage(message);
         this.setIcon(icon);
         this.tStage = tStage;
         setTargetOpacity(opValue);
+        this.enableKeys = enableKeys;
         callerStage = focusAfter;
         hideUponLoad();
         displayLbl.requestFocus();

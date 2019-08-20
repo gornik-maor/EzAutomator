@@ -1,9 +1,17 @@
 package ezautomator.main;
 
+import ezautomator.alert.AlertController;
+import ezautomator.help.update.UpdateFormController;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,6 +23,9 @@ import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 /**
  *
@@ -22,10 +33,10 @@ import org.jnativehook.NativeHookException;
  */
 public class EzAutomator extends Application {
 
-    private static String version = "1.0.0.2";
+    private final static String version = "1.0.0.2";
     public static Boolean isSplashLoaded = false;
     private static Stage mainStage;
-    
+
     double diffX, diffY;
 
     @Override
@@ -101,23 +112,26 @@ public class EzAutomator extends Application {
      * Returns the main stage instance
      *
      * @return main application stage
-     */ 
+     */
     public static Stage getMainStage() {
         return mainStage;
     }
-    
+
     /**
-     * Returning current version
+     * Getter for the software's current version
+     * in a #.#.#.# format
+     *
      * @return Program version
      */
     public static String getVersion() {
         return version;
     }
-    
+
     /**
      * Converting key code to its string representation
+     *
      * @param keyCode
-     * @return 
+     * @return
      */
     public static String getKeyTextRep(int keyCode) {
         String keyPressed = KeyEvent.getKeyText(keyCode);
@@ -128,8 +142,45 @@ public class EzAutomator extends Application {
         keyPressed = (keyPressed.startsWith("Right B")) ? "CTRL" : keyPressed;
         keyPressed = (keyPressed.equals("0xa4")) ? "ALT" : keyPressed;
         keyPressed = (keyPressed.equals("0xd")) ? "ENTER" : keyPressed;
-        
+
         return keyPressed;
     }
 
+    /**
+     * Checks for software updates 5 seconds after the method is invoked
+     */
+    public static void checkForUpdates() {
+        Timer upTimer = new Timer("Update Timer");
+        upTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Document doc = Jsoup.connect("http://www.mediafire.com/file/80vqhg0bulcgjc3/EzAutomator.zip").timeout(0).get();
+                            Element filename = doc.select("div.filename").first();
+                            String pubVersion = filename.text();
+                            pubVersion = pubVersion.replace("EzAutomator v", "");
+                            pubVersion = pubVersion.replace(".zip", "");
+                            if (!getVersion().equals(pubVersion)) {
+                                if (!version.trim().equals("EzAutomator")) {
+                                    if (new AlertController().loadAlert().showDialog("Yes", "No", "A new update is available! Download?",
+                                            "exclamation", getMainStage(), getMainStage(), 0.5, true)) {
+                                        try {
+                                            java.awt.Desktop.getDesktop().browse(new URI("http://www.mediafire.com/file/80vqhg0bulcgjc3/EzAutomator.zip"));
+                                        } catch (URISyntaxException ex) {
+                                            Logger.getLogger(UpdateFormController.class.getName()).log(Level.SEVERE, null, ex);
+                                        }
+                                    }
+                                }
+                            }
+                        } catch (IOException ex) {
+                            Logger.getLogger(UpdateFormController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                });
+            }
+        }, 5000);
+    }
 }

@@ -183,7 +183,7 @@ public class SetupWindowController implements Initializable {
     @FXML
     void onEraserOnePress(MouseEvent event) {
         if (new AlertController().loadAlert().showDialog("Yes", "No", "Are you sure you wish to continue?",
-                "exclamation", getSubStage(), getSubStage(), 0.5)) {
+                "exclamation", getSubStage(), getSubStage(), 0.5, true)) {
             fKeyTxt.setText("");
 //            keyOne = 0;
             btnEOne.setVisible(false);
@@ -196,7 +196,7 @@ public class SetupWindowController implements Initializable {
     @FXML
     void onEraserTwoPress(MouseEvent event) {
         if (new AlertController().loadAlert().showDialog("Yes", "No", "Are you sure you wish to continue?",
-                "exclamation", getSubStage(), getSubStage(), 0.5)) {
+                "exclamation", getSubStage(), getSubStage(), 0.5, true)) {
             sKeyTxt.setText("");
 //            keyTwo = 0;
             btnETwo.setVisible(false);
@@ -221,14 +221,14 @@ public class SetupWindowController implements Initializable {
 
                     // Checking what type the action is
                     boolean result = new AlertController().loadAlert().showDialog("Click", "Hover", "What click action would you like to add?",
-                            "exclamation", getSubStage(), getSubStage(), 0.5);
+                            "exclamation", getSubStage(), getSubStage(), 0.5, false);
                     if (!result) {
                         actionType = 'H';
                         action = "Hover";
                     } else {
                         // Checking how many times to click
                         boolean tChoice = new AlertController().loadAlert().showDialog("Once", "Twice", "How many times would you like to click?",
-                                "exclamation", getSubStage(), getSubStage(), 0.5);
+                                "exclamation", getSubStage(), getSubStage(), 0.5, false);
                         if (!tChoice) {
                             action += " x2";
                         }

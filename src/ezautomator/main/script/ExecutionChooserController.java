@@ -72,7 +72,7 @@ public class ExecutionChooserController implements Initializable {
                 closeForm();
             } else {
                 new AlertController().loadAlert().showDialog("Ok", "Cancel", "Number can not be negative or 0!",
-                        "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                        "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
                 numTxt.setText("");
             }
         } catch (NumberFormatException e) {
@@ -80,10 +80,10 @@ public class ExecutionChooserController implements Initializable {
                 AlertController alert = new AlertController().loadAlert();
                 alert.setFontSize(17.5);
                 alert.showDialog("Ok", "Cancel", "Input must be a number and smaller than " + Integer.MAX_VALUE + "!",
-                        "error", getCurrStage(), getCurrStage(), 0.5);
+                        "error", getCurrStage(), getCurrStage(), 0.5, true);
             } else {
                 new AlertController().loadAlert().showDialog("Ok", "Cancel", "Textfield can not be left blank!",
-                        "error", getCurrStage(), getCurrStage(), 0.5);
+                        "error", getCurrStage(), getCurrStage(), 0.5, true);
             }
             tStage.setOpacity(0.5);
             numTxt.setText("");

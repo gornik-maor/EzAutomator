@@ -5,7 +5,6 @@
  */
 package ezautomator.help.about;
 
-import com.jfoenix.controls.JFXSpinner;
 import ezautomator.alert.AlertController;
 import ezautomator.help.update.UpdateFormController;
 import ezautomator.main.EzAutomator;
@@ -16,7 +15,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -71,7 +69,7 @@ public class AboutFormController implements Initializable {
         java.awt.datatransfer.Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.setContents(stringSelection, null);
         new AlertController().loadAlert().showDialog("Ok", "Cancel", "Email address was copied successfully!", "exclamation",
-                getCurrStage(), getCurrStage(), 0.5);
+                getCurrStage(), getCurrStage(), 0.5, true);
     }
 
     private Stage tStage;
