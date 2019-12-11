@@ -1,5 +1,6 @@
 package ezautomator.main;
 
+import com.jfoenix.controls.JFXCheckBox;
 import ezautomator.main.script.ScriptExecutor;
 import ezautomator.file.XMLController;
 import com.jfoenix.controls.JFXTabPane;
@@ -35,10 +36,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -59,7 +58,7 @@ import javafx.util.Duration;
 
 /**
  *
- * @author Abwatts
+ * @author Maor Gornic
  */
 public class FXMLDocumentController implements Initializable {
 
@@ -70,31 +69,22 @@ public class FXMLDocumentController implements Initializable {
     private ToggleButton btnExecutions;
 
     @FXML
-    private Button btnAdd;
-
-    @FXML
     private ImageView closeBtn;
 
     @FXML
     private ImageView minBtn;
 
     @FXML
-    private RadioButton rdoRunF;
+    private JFXCheckBox chkRunF;
 
     @FXML
     private StackPane root;
-
-    @FXML
-    private ImageView btnRemove;
 
     @FXML
     private TableView<Action> actionTable;
 
     @FXML
     private JFXTextField txtComment;
-
-    @FXML
-    private Button btnRun;
 
     @FXML
     private JFXTabPane tabPane;
@@ -107,12 +97,6 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private MenuItem mMnuAbout;
-
-    @FXML
-    private MenuItem mnuRemove;
-
-    @FXML
-    private MenuItem mnuRefresh;
 
     @FXML
     private MenuItem mMnuCT;
@@ -141,13 +125,9 @@ public class FXMLDocumentController implements Initializable {
 
     private static Action tempAction;
 
-    private static int actionDelay;
-
     private static ChoiceBox<String> tempCBox;
 
     private static TableView<Action> tempTable;
-
-    private AlertController alertClass;
 
     private boolean isEditing, isAbove;
 
@@ -256,7 +236,25 @@ public class FXMLDocumentController implements Initializable {
             }
             ScriptExecutor.setExecs(numExcs);
         } else {
-            new AlertController().loadAlert().showDialog("Ok", "Cancel", "Please add an action before continuing!",
+            new AlertController().loadAlert().showDialog("Ok", "Cancel", "Please first add an action!",
+                    "warning", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
+        }
+    }
+
+    @FXML
+    void onForeverExecution(MouseEvent event) {
+        if (!actionTable.getItems().isEmpty()) {
+            if (chkRunF.isSelected()) {
+                ScriptExecutor.setExecs(Integer.MAX_VALUE);
+                btnExecutions.setText("Select # of Executions");
+                btnExecutions.setDisable(true);
+            } else {
+                ScriptExecutor.setExecs(1);
+                btnExecutions.setDisable(false);
+            }
+        } else {
+            chkRunF.setSelected(false);
+            new AlertController().loadAlert().showDialog("Ok", "Cancel", "Please first add an action!",
                     "warning", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
         }
     }
@@ -287,7 +285,7 @@ public class FXMLDocumentController implements Initializable {
                     DelayFormController delayClss = new DelayFormController();
                     DelayFormController currDelayClss = delayClss.loadAlert();
                     currDelayClss.blurUponLoad(mainStage);
-                    tempAction.setDelay(String.valueOf(currDelayClss.getDelay()));
+                    tempAction.setDelay(String.valueOf(currDelayClss.getEnteredDelay()));
                 }
 
                 addAction(tempAction);
@@ -321,7 +319,7 @@ public class FXMLDocumentController implements Initializable {
                 DelayFormController delayClss = new DelayFormController();
                 DelayFormController currDelayClss = delayClss.loadAlert();
                 currDelayClss.blurUponLoad(mainStage);
-                tempAction.setDelay(String.valueOf(currDelayClss.getDelay()));
+                tempAction.setDelay(String.valueOf(currDelayClss.getEnteredDelay()));
             }
 
             int newIndex = selIndex;
@@ -346,7 +344,8 @@ public class FXMLDocumentController implements Initializable {
         if (!actionTable.getItems().isEmpty()) {
             isEditing = false;
             ScriptExecutor script = new ScriptExecutor(actionTable);
-            script.run();
+            script.runNow();
+
         } else {
             new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no actions in the table to run!",
                     "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
@@ -407,7 +406,10 @@ public class FXMLDocumentController implements Initializable {
             } else {
                 // Ensuring the user did not close out of the alert willingly
                 if (!editAlert.getStatus()) {
-                    selAction.setDelay(String.valueOf(new DelayFormController().loadAlert().getDelay(EzAutomator.getMainStage())));
+                    DelayFormController delayAlert = new DelayFormController().loadAlert();
+                    int tempDelay = Integer.parseInt(selAction.getDelay().replace(" m/s", ""));
+                    delayAlert.setDelay(tempDelay);
+                    selAction.setDelay(String.valueOf(delayAlert.getEnteredDelay(EzAutomator.getMainStage())));
                 }
             }
         } else if (actionTable.getItems().isEmpty()) {
