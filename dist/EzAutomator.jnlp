@@ -8,7 +8,7 @@
   </information>
   <resources>
     <j2se version="1.6+" java-vm-args="-Djava.security.policy=applet.policy "  href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="EzAutomator.jar" size="4790504" download="eager" />
+    <jar href="EzAutomator.jar" size="5218963" download="eager" />
     <jar href="lib\JNativeHook.jar" size="168719" download="eager" />
     <jar href="lib\controlsfx-8.40.15.jar" size="1402490" download="eager" />
     <jar href="lib\jfoenix-8.0.8.jar" size="2708772" download="eager" />

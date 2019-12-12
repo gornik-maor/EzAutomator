@@ -8,6 +8,7 @@ package ezautomator.main.script;
 import ezautomator.confirmation.ConfirmationController;
 import ezautomator.main.Action;
 import ezautomator.main.EzAutomator;
+import ezautomator.main.FXMLDocumentController;
 import ezautomator.subForms.SetupWindowController;
 import java.awt.AWTException;
 import java.awt.Robot;
@@ -32,17 +33,17 @@ import org.jnativehook.keyboard.NativeKeyListener;
 
 /**
  *
- * @author Maor Gornic
+ * @author gornicma
  */
-public class ScriptExecutor {
+public class ScriptExecutor implements Runnable {
 
     private static volatile boolean canceled;
     private boolean isListening;
     private TableView<Action> actionTable;
     private Thread scriptThread;
+    private Runnable runnable;
     private Robot sRobot;
     private static int numExcs = 1;
-    private int counter = 0;
 
     /**
      * Constructor for instances of type ScriptExecutor
@@ -52,8 +53,14 @@ public class ScriptExecutor {
     public ScriptExecutor(TableView<Action> actionTable) {
         try {
             sRobot = new Robot();
-            this.actionTable = actionTable;
 
+            if (!actionTable.getItems().isEmpty()) {
+                this.actionTable = actionTable;
+            } else {
+                // Action table is empty! {THIS MUST BE HANDLED}
+            }
+
+            scriptThread = new Thread(runnable, "Script Thread");
         } catch (AWTException ex) {
             Logger.getLogger(ScriptExecutor.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -75,6 +82,10 @@ public class ScriptExecutor {
         canceled = true;
     }
 
+    public void waitForResponse() {
+
+    }
+
     private void mousePress(ArrayList<Integer> coordinates, int numOfClicks, int delay) {
         sRobot.mouseMove(coordinates.get(0), coordinates.get(1));
 
@@ -88,7 +99,9 @@ public class ScriptExecutor {
                     Logger.getLogger(ScriptExecutor.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+
             sRobot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+
         }
 
         setDelay(delay);
@@ -175,71 +188,16 @@ public class ScriptExecutor {
         messageBuilder.show();
     }
 
-    public synchronized void runNow() {
-        scriptThread = new Thread(scriptRunnable, "Script Thread");
-        if (!scriptThread.isAlive()) {
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    scriptThread.start();
-                    try {
-                        scriptThread.join();
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (!canceled) {
-                                    counter++;
-
-                                    // Checking if the current exection
-                                    // exceeds the specified amount
-                                    if (counter < numExcs) {
-                                        runNow();
-                                    }
-
-                                    // Displaying script status notification
-                                    if (counter == numExcs) {
-                                        Platform.runLater(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                dispNotification(1);
-                                            }
-                                        });
-                                    }
-
-                                } else {
-                                    // Displaying script status notification
-                                    Platform.runLater(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            dispNotification(0);
-                                        }
-                                    });
-                                }
-                            }
-                        });
-
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(ScriptExecutor.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            });
+    @Override
+    public void run() {
+        canceled = false;
+        if (!isListening) {
+            enableListener();
         }
-
-        EzAutomator.getMainStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                scriptThread.interrupt();
-            }
-        });
-    }
-
-    Runnable scriptRunnable = new Runnable() {
-        @Override
-        public void run() {
-            canceled = false;
-            if (!isListening) {
-                enableListener();
-            }
+        System.out.println("running...");
+        int executions = 0;
+        actionTable.getSelectionModel().select(0);
+        while (executions < numExcs) {
             for (int i = 0; i < actionTable.getItems().size(); i++) {
                 if (!canceled) {
                     // Parsing the assigned action delay and storing in a variable
@@ -247,6 +205,8 @@ public class ScriptExecutor {
                     int delay = Integer.parseInt(tempAction.getDelay().replace(" m/s", ""));
 
                     // Selecting the current action that is currently being executed
+                    actionTable.getSelectionModel().select(i);
+
                     switch (tempAction.getAction()) {
                         case "Click":
                             mousePress(tempAction.getCoordinates(), 1, delay);
@@ -281,11 +241,33 @@ public class ScriptExecutor {
                     }
                 } else {
                     // Breaking out of while loop 
+                    executions = numExcs;
+                    // Displaying script status notification
+                    dispNotification(0);
                     break;
                 }
             }
+
+            // Displaying script status notification
+            if (!canceled) {
+                // All actions were successfully executed
+                executions++;
+            }
         }
-    };
+
+        if ((executions >= numExcs) && !canceled) {
+            dispNotification(1);
+        }
+
+        // Display message in the top right corner of the screen informing the user the script has been successfully fnished.
+        // Handling all processes and closing them
+        EzAutomator.getMainStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                scriptThread.interrupt();
+            }
+        });
+    }
 
     public void enableListener() {
         NativeKeyListener keyListener = new NativeKeyListener() {
@@ -304,7 +286,7 @@ public class ScriptExecutor {
 
             @Override
             public void nativeKeyReleased(NativeKeyEvent nke) {
-                
+//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
 
             @Override

@@ -348,7 +348,7 @@ public class FXMLDocumentController implements Initializable {
         if (!actionTable.getItems().isEmpty()) {
             isEditing = false;
             ScriptExecutor script = new ScriptExecutor(actionTable);
-            script.runNow();
+            script.run();
 
         } else {
             new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no actions in the table to run!",
@@ -417,7 +417,7 @@ public class FXMLDocumentController implements Initializable {
                 }
             }
         } else if (actionTable.getItems().isEmpty()) {
-            new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no items to edit!",
+            new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no actions to edit!",
                     "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
         } else {
             // Displaying an alert
@@ -468,7 +468,7 @@ public class FXMLDocumentController implements Initializable {
                 AlertController alertForm = new AlertController();
                 AlertController currAlert = alertForm.loadAlert();
                 currAlert.setFontSize(17);
-                currAlert.showDialog("Ok", "Cancel", "There are no items in the table. Add an action normally.",
+                currAlert.showDialog("Ok", "Cancel", "There are no actions in the table. Add an action normally.",
                         "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
             } else {
                 new AlertController().loadAlert().showDialog("Ok", "Cancel", "Please select an action as the position indication!",
@@ -551,7 +551,7 @@ public class FXMLDocumentController implements Initializable {
                 AlertController alertForm = new AlertController();
                 AlertController currAlert = alertForm.loadAlert();
                 currAlert.setFontSize(17);
-                currAlert.showDialog("Ok", "Cancel", "There are no items in the table. Add an action normally.",
+                currAlert.showDialog("Ok", "Cancel", "There are no actions in the table. Add an action normally.",
                         "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
             } else {
                 new AlertController().loadAlert().showDialog("Ok", "Cancel", "Please select an action you wish to copy!",
@@ -568,7 +568,7 @@ public class FXMLDocumentController implements Initializable {
             new AlertController().loadAlert().showDialog("Ok", "Cancel", "Table was refreshed successfully!",
                     "exclamation", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
         } else {
-            new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no items in the table to refresh!",
+            new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no actions in the table to refresh!",
                     "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
         }
     }
@@ -969,7 +969,7 @@ public class FXMLDocumentController implements Initializable {
             }
         } else {
             // Displaying an alert
-            new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no items to remove!",
+            new AlertController().loadAlert().showDialog("Ok", "Cancel", "There are no actions to remove!",
                     "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
         }
     }

@@ -201,7 +201,7 @@ public class UpdateFormController implements Initializable {
                     }
                 }
             } else {
-                new AlertController().loadAlert().showDialog("Ok", "Cancel", "Congratulations! You are up to date.",
+                new AlertController().loadAlert().showDialog("Ok", "Cancel", "Awesome! you are all up to date.",
                         "exclamation", getCurrStage(), getCurrStage(), 0.5, true);
                 closeForm();
             }

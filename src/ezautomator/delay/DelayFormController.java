@@ -7,7 +7,6 @@ package ezautomator.delay;
 
 import com.jfoenix.controls.JFXTextField;
 import ezautomator.alert.AlertController;
-import ezautomator.main.EzAutomator;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -47,9 +46,6 @@ public class DelayFormController implements Initializable {
 
     @FXML
     private ChoiceBox<String> delayBox;
-
-    @FXML
-    private Button btnConfirm;
 
     @FXML
     void closeApp(MouseEvent event) {
@@ -219,7 +215,7 @@ public class DelayFormController implements Initializable {
         getCurrStage().showAndWait();
         return delay;
     }
-    
+
     public void setDelay(int delay) {
         this.delay = delay;
     }
@@ -283,9 +279,9 @@ public class DelayFormController implements Initializable {
 
     private boolean isNumeric(String input) {
         try {
-            int num = Integer.parseInt(input);
+            Integer.parseInt(input);
         } catch (NumberFormatException e) {
-            new AlertController().loadAlert().showDialog("Ok", "Cancel", "Only numbers are allowed!",
+            new AlertController().loadAlert().showDialog("Ok", "Cancel", "Only whole numbers are allowed!",
                     "error", getCurrStage(), getCurrStage(), 0.5, true);
             delayTxt.setText("");
             tStage.setOpacity(0.5);

@@ -34,7 +34,7 @@ import org.jsoup.nodes.Element;
  */
 public class EzAutomator extends Application {
 
-    private final static String version = "1.0.0.3";
+    private final static String version = "1.0.0.4";
     public static Boolean isSplashLoaded = false;
     private static Stage mainStage;
     private static Parent mainParent;
@@ -189,7 +189,7 @@ public class EzAutomator extends Application {
                     }
                 });
             }
-        }, 2500);
+        }, 3000);
     }
 
     /**
