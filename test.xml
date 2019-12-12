@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<actions>
+    <action>
+        <action>Click</action>
+        <comment>Search</comment>
+        <coordinates>0</coordinates>
+        <coordinates>1079</coordinates>
+        <delay>1000 m/s</delay>
+        <type>67</type>
+        <keyContinue>0</keyContinue>
+        <keyTerminate>0</keyTerminate>
+    </action>
+    <action>
+        <action>Keys</action>
+        <comment>Press "N"</comment>
+        <coordinates xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string"></coordinates>
+        <sendKeys>78</sendKeys>
+        <delay>1000 m/s</delay>
+        <type>69</type>
+        <keyContinue>0</keyContinue>
+        <keyTerminate>0</keyTerminate>
+    </action>
+    <action>
+        <action>Keys</action>
+        <comment>Confirm</comment>
+        <coordinates xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string"></coordinates>
+        <sendKeys>13</sendKeys>
+        <delay>1000 m/s</delay>
+        <type>69</type>
+        <keyContinue>0</keyContinue>
+        <keyTerminate>0</keyTerminate>
+    </action>
+    <action>
+        <action>Click</action>
+        <comment>Close TXT</comment>
+        <coordinates>2707</coordinates>
+        <coordinates>77</coordinates>
+        <delay>1000 m/s</delay>
+        <type>67</type>
+        <keyContinue>0</keyContinue>
+        <keyTerminate>0</keyTerminate>
+    </action>
+</actions>

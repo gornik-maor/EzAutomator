@@ -40,7 +40,6 @@ public class ScriptExecutor {
     private boolean isListening;
     private TableView<Action> actionTable;
     private Thread scriptThread;
-//    private Runnable runnable;
     private Robot sRobot;
     private static int numExcs = 1;
     private int counter = 0;
@@ -68,8 +67,6 @@ public class ScriptExecutor {
     public void load(TableView<Action> actionTable) {
         if (!actionTable.getItems().isEmpty()) {
             this.actionTable = actionTable;
-        } else {
-            // Action table is empty! {THIS MUST BE HANDLED}
         }
     }
 
@@ -192,9 +189,31 @@ public class ScriptExecutor {
                             public void run() {
                                 if (!canceled) {
                                     counter++;
+
+                                    // Checking if the current exection
+                                    // exceeds the specified amount
                                     if (counter < numExcs) {
                                         runNow();
                                     }
+
+                                    // Displaying script status notification
+                                    if (counter == numExcs) {
+                                        Platform.runLater(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                dispNotification(1);
+                                            }
+                                        });
+                                    }
+
+                                } else {
+                                    // Displaying script status notification
+                                    Platform.runLater(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            dispNotification(0);
+                                        }
+                                    });
                                 }
                             }
                         });
@@ -262,28 +281,8 @@ public class ScriptExecutor {
                     }
                 } else {
                     // Breaking out of while loop 
-                    // Displaying script status notification
-                    Platform.runLater(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            dispNotification(0);
-                        }
-                    });
                     break;
                 }
-            }
-
-            // Displaying script status notification
-            if (!canceled) {
-                // All actions were successfully executed
-                Platform.runLater(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        dispNotification(1);
-                    }
-                });
             }
         }
     };
@@ -305,7 +304,7 @@ public class ScriptExecutor {
 
             @Override
             public void nativeKeyReleased(NativeKeyEvent nke) {
-//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                
             }
 
             @Override

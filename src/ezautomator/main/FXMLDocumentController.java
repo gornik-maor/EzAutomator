@@ -6,6 +6,7 @@ import ezautomator.file.XMLController;
 import com.jfoenix.controls.JFXTabPane;
 import com.jfoenix.controls.JFXTextField;
 import ezautomator.alert.AlertController;
+import ezautomator.announcements.AnnouncementsController;
 import ezautomator.confirmation.ConfirmationControllerSetup;
 import ezautomator.delay.DelayFormController;
 import ezautomator.file.NameXMLController;
@@ -118,6 +119,9 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private MenuItem mMnuExit;
+
+    @FXML
+    private MenuItem mnuAnnouncement;
 
     private static int ID;
 
@@ -236,7 +240,7 @@ public class FXMLDocumentController implements Initializable {
             }
             ScriptExecutor.setExecs(numExcs);
         } else {
-            new AlertController().loadAlert().showDialog("Ok", "Cancel", "Please first add an action!",
+            new AlertController().loadAlert().showDialog("Ok", "Cancel", "Please add an action before continuing!",
                     "warning", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
         }
     }
@@ -254,7 +258,7 @@ public class FXMLDocumentController implements Initializable {
             }
         } else {
             chkRunF.setSelected(false);
-            new AlertController().loadAlert().showDialog("Ok", "Cancel", "Please first add an action!",
+            new AlertController().loadAlert().showDialog("Ok", "Cancel", "Please add an action before continuing!",
                     "warning", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
         }
     }
@@ -578,6 +582,11 @@ public class FXMLDocumentController implements Initializable {
     void onShowAboutForm(ActionEvent event) {
         new AboutFormController().loadResources().loadForm(EzAutomator.getMainStage(), 0.5);
     }
+    
+    @FXML
+    void onAnnonucementsView(ActionEvent event) {
+        new AnnouncementsController().loadResources().loadForm(EzAutomator.getMainStage(), false, 0.5);
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -670,6 +679,11 @@ public class FXMLDocumentController implements Initializable {
                 mMnuUpdate.setGraphic(new ImageView(new Image("/ezautomator/icons/update.png")));
                 mMnuAbout.setGraphic(new ImageView(new Image("/ezautomator/icons/about.png")));
 
+                ImageView announcementIcon = new ImageView(new Image("/ezautomator/icons/megaphone.png"));
+                announcementIcon.setFitHeight(20);
+                announcementIcon.setFitWidth(20);
+                mnuAnnouncement.setGraphic(announcementIcon);
+
                 // Checking for updates once the program completely loads up
                 EzAutomator.checkForUpdates();
             }
@@ -700,8 +714,6 @@ public class FXMLDocumentController implements Initializable {
         // Clearing all default columns first
         actionTable.getColumns().clear();
 
-//        // Enabling multi-seleciton
-//        actionTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         // Setting up the action column
         TableColumn<Action, String> actionColumn = new TableColumn<>("Action");
         actionColumn.setMinWidth(103);

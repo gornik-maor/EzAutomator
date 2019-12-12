@@ -6,12 +6,8 @@
 package ezautomator.help;
 
 import com.jfoenix.controls.JFXSpinner;
-import com.sun.javafx.print.Units;
 import ezautomator.alert.AlertController;
 import ezautomator.main.EzAutomator;
-import java.awt.MouseInfo;
-import java.awt.Point;
-import java.awt.PointerInfo;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -19,9 +15,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -46,7 +39,7 @@ import org.jsoup.nodes.Element;
 /**
  * FXML Controller class
  *
- * @author gornicma
+ * @author Maor Gornic
  */
 public class UpdateFormController implements Initializable {
 
@@ -82,16 +75,10 @@ public class UpdateFormController implements Initializable {
 
     @FXML
     void onBtnCheckForUpdates(MouseEvent event) {
-
         btnCheck.setMaxHeight(39);
         btnCheck.setLayoutY(167);
         prgBar.setVisible(true);
 
-//        try {
-//            java.util.concurrent.TimeUnit.SECONDS.sleep(1);
-//        } catch (InterruptedException ex) {
-//            Logger.getLogger(UpdateFormController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
         Timer upTimer = new Timer();
         upTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -193,28 +180,28 @@ public class UpdateFormController implements Initializable {
             if (!versionLbl.getText().replace("v", "").equals(version)) {
                 if (version.trim().equals("EzAutomator")) {
                     new AlertController().loadAlert().showDialog("Ok", "Cancel", "Update Manager is currently unavailable!",
-                            "error", getCurrStage(), getCurrStage(), 0.5);
+                            "error", getCurrStage(), getCurrStage(), 0.5, true);
                 } else {
                     if (new AlertController().loadAlert().showDialog("Ok", "Cancel", "A new update was found! Download?",
-                            "exclamation", getCurrStage(), getCurrStage(), 0.5)) {
+                            "exclamation", getCurrStage(), getCurrStage(), 0.5, true)) {
                         try {
                             java.awt.Desktop.getDesktop().browse(new URI("http://www.mediafire.com/file/80vqhg0bulcgjc3/EzAutomator.zip"));
                             closeForm();
                         } catch (URISyntaxException ex) {
                             new AlertController().loadAlert().showDialog("Ok", "Cancel", "Could not open download! Please try again later.",
-                                    "error", getCurrStage(), getCurrStage(), 0.5);
+                                    "error", getCurrStage(), getCurrStage(), 0.5, true);
                             Logger.getLogger(UpdateFormController.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
                 }
             } else {
                 new AlertController().loadAlert().showDialog("Ok", "Cancel", "Congratulations! You are up to date.",
-                        "exclamation", getCurrStage(), getCurrStage(), 0.5);
+                        "exclamation", getCurrStage(), getCurrStage(), 0.5, true);
                 closeForm();
             }
         } catch (IOException ex) {
             new AlertController().loadAlert().showDialog("Ok", "Cancel", "Could not check for updates! Please try again later.",
-                    "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5);
+                    "error", EzAutomator.getMainStage(), EzAutomator.getMainStage(), 0.5, true);
             Logger.getLogger(UpdateFormController.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(1);
         }

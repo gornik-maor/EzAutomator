@@ -1,6 +1,7 @@
 package ezautomator.main;
 
 import ezautomator.alert.AlertController;
+import ezautomator.announcements.AnnouncementsController;
 import ezautomator.help.update.UpdateFormController;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
@@ -33,9 +34,10 @@ import org.jsoup.nodes.Element;
  */
 public class EzAutomator extends Application {
 
-    private final static String version = "1.0.0.2";
+    private final static String version = "1.0.0.3";
     public static Boolean isSplashLoaded = false;
     private static Stage mainStage;
+    private static Parent mainParent;
 
     double diffX, diffY;
 
@@ -49,7 +51,8 @@ public class EzAutomator extends Application {
         stage.setResizable(false);
         stage.setTitle("EzAutomator");
         stage.show();
-
+        isRunnable();
+        mainParent = root;
         mainStage = stage;
 
         // Ensuring the program stops listening to key events even though the user has closed the program through a different way
@@ -118,8 +121,7 @@ public class EzAutomator extends Application {
     }
 
     /**
-     * Getter for the software's current version
-     * in a #.#.#.# format
+     * Getter for the software's current version in a #.#.#.# format
      *
      * @return Program version
      */
@@ -147,6 +149,50 @@ public class EzAutomator extends Application {
     }
 
     /**
+     * Check if software is software is required to be temporarily blocked
+     */
+    private static void isRunnable() {
+        Timer runTimer = new Timer("Update Timer");
+        runTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Document doc = Jsoup.connect("http://www.mediafire.com/file/264ex1x1fhgp6p9/status.txt").timeout(0).get();
+                            Element filename = doc.select("div.filename").first();
+                            String pubStatus = filename.text();
+                            pubStatus = pubStatus.replace(".txt", "");
+                            String status = pubStatus.substring(0, 3);
+                            String passKey = pubStatus.substring(4, pubStatus.length());
+
+                            if (status.equals("|Y|") && passKey.equals("11a60885fb5868425dac307759e2800c663ec09c")) {
+                                mainParent.setDisable(true);
+                                AlertController blockForm = new AlertController();
+                                AlertController blockAlert = blockForm.loadAlert();
+                                blockAlert.setFontSize(16);
+                                boolean result = blockAlert.showDialog("Confirm", "View Announcements",
+                                        "EzAutomator is temporarily unavailable. Please try again later!",
+                                        "error", mainStage, mainStage, 0.5, true);
+
+                                if (!result) {
+                                    new AnnouncementsController().loadResources().loadForm(EzAutomator.getMainStage(), true, 0.5);
+                                } else {
+                                    System.exit(1);
+                                }
+                            }
+
+                        } catch (IOException ex) {
+                            Logger.getLogger(UpdateFormController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                });
+            }
+        }, 2500);
+    }
+
+    /**
      * Checks for software updates 5 seconds after the method is invoked
      */
     public static void checkForUpdates() {
@@ -168,7 +214,7 @@ public class EzAutomator extends Application {
                                     if (new AlertController().loadAlert().showDialog("Yes", "No", "A new update is available! Download?",
                                             "exclamation", getMainStage(), getMainStage(), 0.5, true)) {
                                         try {
-                                            java.awt.Desktop.getDesktop().browse(new URI("http://www.mediafire.com/file/80vqhg0bulcgjc3/EzAutomator.zip"));
+                                            java.awt.Desktop.getDesktop().browse(new URI("https://bit.ly/EzAutomator"));
                                         } catch (URISyntaxException ex) {
                                             Logger.getLogger(UpdateFormController.class.getName()).log(Level.SEVERE, null, ex);
                                         }

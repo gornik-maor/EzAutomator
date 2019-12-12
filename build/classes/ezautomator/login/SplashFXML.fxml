@@ -12,7 +12,7 @@
    <children>
       <ImageView fitHeight="713.0" fitWidth="513.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../icons/splash-screen.png" />
+            <Image url="@../icons/splash-screen-christmas.png" />
          </image>
       </ImageView>
    </children>

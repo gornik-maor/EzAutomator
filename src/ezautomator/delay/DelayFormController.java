@@ -202,7 +202,7 @@ public class DelayFormController implements Initializable {
      *
      * @return
      */
-    public int getDelay() {
+    public int getEnteredDelay() {
         hideUponLoad();
         getCurrStage().showAndWait();
         return delay;
@@ -214,10 +214,14 @@ public class DelayFormController implements Initializable {
      * @param tStage
      * @return The amount of delay the user has chosen
      */
-    public int getDelay(Stage tStage) {
+    public int getEnteredDelay(Stage tStage) {
         blurUponLoad(tStage);
         getCurrStage().showAndWait();
         return delay;
+    }
+    
+    public void setDelay(int delay) {
+        this.delay = delay;
     }
 
     /**

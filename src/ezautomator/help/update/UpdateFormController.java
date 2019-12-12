@@ -42,67 +42,65 @@ import org.jsoup.nodes.Element;
  * @author gornicma
  */
 public class UpdateFormController implements Initializable {
-    
+
     @FXML
     private ImageView closeBtn;
-    
+
     @FXML
     private Text versionLbl;
-    
+
     @FXML
     private StackPane root;
-    
+
     @FXML
     private Button btnCheck;
-    
+
     @FXML
     private JFXSpinner prgBar;
-    
+
     @FXML
     void closeApp(MouseEvent event) {
         closeForm();
     }
-    
+
     @FXML
     void closeBtnChangeHover(MouseEvent event) {
         closeBtn.setImage(new Image("/ezautomator/icons/close-hover.png"));
     }
-    
+
     @FXML
     void closeBtnChangeLeave(MouseEvent event) {
         closeBtn.setImage(new Image("/ezautomator/icons/close.png"));
     }
-    
+
     @FXML
     void onBtnCheckForUpdates(MouseEvent event) {
-        
-        btnCheck.setMaxHeight(39);
-        btnCheck.setLayoutY(167);
-        prgBar.setVisible(true);
+        if (!isPressed) {
+            isPressed = true;
+            btnCheck.setMaxHeight(39);
+            btnCheck.setLayoutY(167);
+            prgBar.setVisible(true);
 
-//        try {
-//            java.util.concurrent.TimeUnit.SECONDS.sleep(1);
-//        } catch (InterruptedException ex) {
-//            Logger.getLogger(UpdateFormController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-        Timer upTimer = new Timer();
-        upTimer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        checkUpdates();
-                        upTimer.cancel();
-                    }
-                });
-                
-            }
-        }, 10000, 500000000);
+            Timer upTimer = new Timer();
+            upTimer.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            checkUpdates();
+                            upTimer.cancel();
+                        }
+                    });
+
+                }
+            }, 10000, 500000000);
+        }
     }
-    
+
     private Stage tStage;
     private double diffX, diffY;
+    private boolean isPressed;
 
     /**
      * Initializes the controller class.
@@ -131,22 +129,22 @@ public class UpdateFormController implements Initializable {
                 getCurrStage().setY(event.getScreenY() + diffY);
             }
         });
-        
+
         versionLbl.setText("v" + EzAutomator.getVersion());
     }
-    
+
     private void closeForm() {
         tStage.setOpacity(1);
         getCurrStage().close();
     }
-    
+
     private Stage getCurrStage() {
         return (Stage) closeBtn.getScene().getWindow();
     }
-    
+
     public UpdateFormController loadResources() {
         try {
-            
+
             FXMLLoader fxmlLoader
                     = new FXMLLoader(getClass().getResource("/ezautomator/help/update/UpdateForm.fxml"));
             StackPane updatePane = fxmlLoader.load();
@@ -157,20 +155,20 @@ public class UpdateFormController implements Initializable {
             updateStage.setTitle("EzAutomator");
             updateStage.setScene(new Scene(updatePane));
             return fxmlLoader.getController();
-            
+
         } catch (IOException ex) {
             Logger.getLogger(UpdateFormController.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
-    
+
     public void loadForm(Stage tStage, double opValue) {
         if (tStage != null) {
             this.tStage = tStage;
             tStage.setOpacity(opValue);
         }
-        
+
         getCurrStage().show();
     }
 
@@ -214,5 +212,5 @@ public class UpdateFormController implements Initializable {
         }
         closeForm();
     }
-    
+
 }

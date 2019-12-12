@@ -55,6 +55,11 @@
                     <MenuItem fx:id="mMnuAbout" mnemonicParsing="false" onAction="#onShowAboutForm" text="About" />
                   </items>
                 </Menu>
+                  <Menu mnemonicParsing="false" text="Announcements">
+                    <items>
+                      <MenuItem fx:id="mnuAnnouncement" mnemonicParsing="false" onAction="#onAnnonucementsView" text="View" />
+                    </items>
+                  </Menu>
               </menus>
             </MenuBar>
             <BorderPane layoutY="71.0" prefHeight="634.0" prefWidth="513.0" styleClass="custom-pane">
@@ -131,7 +136,6 @@
                                                 </ImageView>
                                              </graphic>
                                           </Button>
-                                          <RadioButton fx:id="rdoRunF" disable="true" layoutX="300.0" layoutY="35.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="140.0" text="Forever (F4 to Stop)" textFill="WHITE" />
                                           <ToggleButton fx:id="btnExecutions" layoutX="288.0" layoutY="3.0" mnemonicParsing="false" onMouseClicked="#onExecutionSelectionPress" prefHeight="25.0" prefWidth="158.0" styleClass="custom-alert" text="Select # of Executions">
                                              <graphic>
                                                 <ImageView fitHeight="16.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
@@ -141,6 +145,7 @@
                                                 </ImageView>
                                              </graphic>
                                           </ToggleButton>
+                                          <JFXCheckBox fx:id="chkRunF" checkedColor="#3f4247" layoutX="301.0" layoutY="33.0" onMouseClicked="#onForeverExecution" text="Forever (F5 to Stop)" textFill="WHITE" />
                                        </children>
                                     </Pane>
                                     <Separator layoutX="8.0" layoutY="499.0" prefHeight="11.0" prefWidth="495.0" />

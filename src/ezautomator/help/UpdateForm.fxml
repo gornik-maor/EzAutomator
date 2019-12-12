@@ -38,7 +38,7 @@
                               <Image url="@../icons/exclamation.png" />
                            </image>
                         </ImageView>
-                        <Button fx:id="btnCheck" layoutX="136.0" layoutY="102.0" mnemonicParsing="false" onMousePressed="#onBtnCheckForUpdates" prefHeight="104.0" prefWidth="218.0" styleClass="checkbox-main" text="Check" />
+                        <Button fx:id="btnCheck" layoutX="136.0" layoutY="102.0" mnemonicParsing="false" onMouseClicked="#onBtnCheckForUpdates" prefHeight="104.0" prefWidth="218.0" styleClass="checkbox-main" text="Check" />
                         <Text fx:id="versionLbl" fill="#acb5ee" layoutX="225.0" layoutY="228.0" strokeType="OUTSIDE" strokeWidth="0.0" text="v1.0.0.1" />
                         <Text fill="WHITE" layoutX="159.0" layoutY="87.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Check for updates?">
                            <font>
